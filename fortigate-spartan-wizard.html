@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FortiGate Spartan Wizard 🏛️⚔️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(6, 182, 212, 0.3);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: #0f172a;
+            margin-bottom: 10px;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .header .tagline {
+            font-size: 0.9em;
+            color: #334155;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #334155;
+            height: fit-content;
+        }
+
+        .sidebar h2 {
+            color: #22d3ee;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #22d3ee;
+            padding-bottom: 10px;
+        }
+
+        .config-type {
+            background: #334155;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .config-type:hover {
+            background: #475569;
+            border-color: #06b6d4;
+            transform: translateX(5px);
+        }
+
+        .config-type.active {
+            background: #06b6d4;
+            border-color: #22d3ee;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .config-type h3 {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .config-type p {
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+
+        .config-area {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #334155;
+        }
+
+        .form-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #22d3ee;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
+            color: #0f172a;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+        }
+
+        .btn-secondary {
+            background: #475569;
+            color: #e2e8f0;
+        }
+
+        .output-section {
+            margin-top: 40px;
+            display: none;
+        }
+
+        .output-section.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .output-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #334155;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            color: #22d3ee;
+        }
+
+        .tab.active {
+            color: #22d3ee;
+            border-bottom-color: #22d3ee;
+        }
+
+        .tab-content {
+            display: none;
+            background: #0f172a;
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid #334155;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .code-block {
+            background: #000;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            border: 1px solid #334155;
+            margin-bottom: 20px;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #22d3ee;
+        }
+
+        .copy-btn {
+            background: #334155;
+            color: #22d3ee;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            float: right;
+            margin-top: -10px;
+        }
+
+        .copy-btn:hover {
+            background: #06b6d4;
+            color: #0f172a;
+        }
+
+        .copy-btn.copied {
+            background: #10b981;
+            color: white;
+        }
+
+        .gui-steps {
+            color: #e2e8f0;
+            line-height: 1.8;
+        }
+
+        .gui-steps ol {
+            margin-left: 20px;
+        }
+
+        .gui-steps li {
+            margin-bottom: 10px;
+        }
+
+        .gui-steps strong {
+            color: #22d3ee;
+        }
+
+        .info-box {
+            background: rgba(6, 182, 212, 0.1);
+            border-left: 4px solid #06b6d4;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .warning-box {
+            background: rgba(251, 191, 36, 0.1);
+            border-left: 4px solid #fbbf24;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .success-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+            font-size: 0.9em;
+            margin-top: 40px;
+        }
+
+        .doc-offer {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(34, 211, 238, 0.2) 100%);
+            border: 2px solid #06b6d4;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .doc-offer h3 {
+            color: #22d3ee;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .doc-offer p {
+            margin-bottom: 20px;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ FORTINET SPARTAN ⚔️</h1>
+            <div class="subtitle">Elite FortiGate Configuration Wizard</div>
+            <div class="tagline">Precision. Excellence. No compromise.</div>
+        </div>
+
+        <div class="main-grid">
+            <div class="sidebar">
+                <h2>Configuration Types</h2>
+                
+                <div class="config-type active" data-type="ipsec">
+                    <h3>🔐 IPsec VPN</h3>
+                    <p>Site-to-site or remote access VPN with DPD, NAT-T, and IKEv2</p>
+                </div>
+
+                <div class="config-type" data-type="sdwan">
+                    <h3>🌐 SD-WAN</h3>
+                    <p>Dual ISP with performance SLA and brownout detection</p>
+                </div>
+
+                <div class="config-type" data-type="firewall">
+                    <h3>🛡️ Firewall Policy</h3>
+                    <p>Security zones with NAT and application control</p>
+                </div>
+
+                <div class="config-type" data-type="interface">
+                    <h3>🔌 Interface Config</h3>
+                    <p>WAN/LAN interfaces with VLAN and segmentation</p>
+                </div>
+
+                <div class="config-type" data-type="ha">
+                    <h3>⚡ High Availability</h3>
+                    <p>Active-passive or active-active HA cluster</p>
+                </div>
+
+                <div class="config-type" data-type="saml">
+                    <h3>🔑 SAML/Entra ID</h3>
+                    <p>SSO integration with Microsoft Entra ID</p>
+                </div>
+            </div>
+
+            <div class="config-area">
+                <!-- IPsec VPN Form -->
+                <div class="form-section active" data-section="ipsec">
+                    <h2 style="color: #22d3ee; margin-bottom: 30px;">🔐 IPsec VPN Configuration</h2>
+                    
+                    <div class="form-group">
+                        <label>VPN Type:</label>
+                        <select id="ipsec-type">
+                            <option value="site-to-site">Site-to-Site</option>
+                            <option value="remote-access">Remote Access</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Local Site Name:</label>
+                        <input type="text" id="ipsec-local-site" placeholder="HQ" value="HQ">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Remote Site Name:</label>
+                        <input type="text" id="ipsec-remote-site" placeholder="Branch01" value="Branch01">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Local WAN Interface:</label>
+                        <input type="text" id="ipsec-local-interface" placeholder="wan1" value="wan1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Local WAN IP:</label>
+                        <input type="text" id="ipsec-local-ip" placeholder="203.0.113.1" value="203.0.113.1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Remote WAN IP:</label>
+                        <input type="text" id="ipsec-remote-ip" placeholder="203.0.113.100" value="203.0.113.100">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Local Subnet:</label>
+                        <input type="text" id="ipsec-local-subnet" placeholder="10.10.0.0/16" value="10.10.0.0/16">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Remote Subnet:</label>
+                        <input type="text" id="ipsec-remote-subnet" placeholder="10.20.0.0/16" value="10.20.0.0/16">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pre-Shared Key (PSK):</label>
+                        <input type="password" id="ipsec-psk" placeholder="Use strong PSK - minimum 24 characters" value="ExamplePSK-ChangeInProduction!">
+                    </div>
+
+                    <button class="btn" onclick="generateConfig('ipsec')">⚔️ Generate Configuration</button>
+                    <button class="btn btn-secondary" onclick="clearForm('ipsec')">Clear</button>
+                </div>
+
+                <!-- SD-WAN Form -->
+                <div class="form-section" data-section="sdwan">
+                    <h2 style="color: #22d3ee; margin-bottom: 30px;">🌐 SD-WAN Configuration</h2>
+                    
+                    <div class="form-group">
+                        <label>ISP 1 Interface:</label>
+                        <input type="text" id="sdwan-isp1-interface" placeholder="wan1" value="wan1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ISP 1 Gateway:</label>
+                        <input type="text" id="sdwan-isp1-gateway" placeholder="203.0.113.1" value="203.0.113.1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ISP 1 Bandwidth (Mbps):</label>
+                        <input type="number" id="sdwan-isp1-bandwidth" placeholder="100" value="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ISP 2 Interface:</label>
+                        <input type="text" id="sdwan-isp2-interface" placeholder="wan2" value="wan2">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ISP 2 Gateway:</label>
+                        <input type="text" id="sdwan-isp2-gateway" placeholder="198.51.100.1" value="198.51.100.1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ISP 2 Bandwidth (Mbps):</label>
+                        <input type="number" id="sdwan-isp2-bandwidth" placeholder="100" value="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Health Check Server:</label>
+                        <input type="text" id="sdwan-health-server" placeholder="8.8.8.8" value="8.8.8.8">
+                    </div>
+
+                    <div class="form-group">
+                        <label>SLA Latency Threshold (ms):</label>
+                        <input type="number" id="sdwan-latency" placeholder="100" value="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label>SLA Jitter Threshold (ms):</label>
+                        <input type="number" id="sdwan-jitter" placeholder="30" value="30">
+                    </div>
+
+                    <div class="form-group">
+                        <label>SLA Packet Loss Threshold (%):</label>
+                        <input type="number" id="sdwan-packetloss" placeholder="2" value="2">
+                    </div>
+
+                    <button class="btn" onclick="generateConfig('sdwan')">⚔️ Generate Configuration</button>
+                    <button class="btn btn-secondary" onclick="clearForm('sdwan')">Clear</button>
+                </div>
+
+                <!-- Firewall Policy Form -->
+                <div class="form-section" data-section="firewall">
+                    <h2 style="color: #22d3ee; margin-bottom: 30px;">🛡️ Firewall Policy Configuration</h2>
+                    
+                    <div class="form-group">
+                        <label>Policy Name:</label>
+                        <input type="text" id="fw-name" placeholder="LAN_to_WAN_Allow" value="LAN_to_WAN_Allow">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Source Interface/Zone:</label>
+                        <input type="text" id="fw-src-interface" placeholder="lan" value="lan">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Destination Interface/Zone:</label>
+                        <input type="text" id="fw-dst-interface" placeholder="wan1" value="wan1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Source Address:</label>
+                        <input type="text" id="fw-src-addr" placeholder="10.10.0.0/16" value="10.10.0.0/16">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Destination Address:</label>
+                        <input type="text" id="fw-dst-addr" placeholder="all" value="all">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Service/Port:</label>
+                        <input type="text" id="fw-service" placeholder="HTTP, HTTPS, DNS" value="HTTP, HTTPS, DNS">
+                    </div>
+
+                    <div class="form-group">
+                        <label>NAT:</label>
+                        <select id="fw-nat">
+                            <option value="enable">Enable (SNAT)</option>
+                            <option value="disable">Disable</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Logging:</label>
+                        <select id="fw-logging">
+                            <option value="all">Log All Sessions</option>
+                            <option value="utm">Log Security Events Only</option>
+                            <option value="disable">Disable Logging</option>
+                        </select>
+                    </div>
+
+                    <button class="btn" onclick="generateConfig('firewall')">⚔️ Generate Configuration</button>
+                    <button class="btn btn-secondary" onclick="clearForm('firewall')">Clear</button>
+                </div>
+
+                <!-- Interface Form -->
+                <div class="form-section" data-section="interface">
+                    <h2 style="color: #22d3ee; margin-bottom: 30px;">🔌 Interface Configuration</h2>
+                    
+                    <div class="form-group">
+                        <label>Interface Name:</label>
+                        <input type="text" id="int-name" placeholder="wan1" value="wan1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Interface Type:</label>
+                        <select id="int-type">
+                            <option value="physical">Physical</option>
+                            <option value="vlan">VLAN</option>
+                            <option value="aggregate">Aggregate</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Role:</label>
+                        <select id="int-role">
+                            <option value="wan">WAN</option>
+                            <option value="lan">LAN</option>
+                            <option value="dmz">DMZ</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>IP Address/Mask:</label>
+                        <input type="text" id="int-ip" placeholder="203.0.113.1 255.255.255.0" value="203.0.113.1 255.255.255.0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Administrative Access:</label>
+                        <div style="display: flex; gap: 15px; margin-top: 10px;">
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="int-access-ping" checked> PING
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="int-access-https" checked> HTTPS
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" id="int-access-ssh" checked> SSH
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="btn" onclick="generateConfig('interface')">⚔️ Generate Configuration</button>
+                    <button class="btn btn-secondary" onclick="clearForm('interface')">Clear</button>
+                </div>
+
+                <!-- HA Form -->
+                <div class="form-section" data-section="ha">
+                    <h2 style="color: #22d3ee; margin-bottom: 30px;">⚡ High Availability Configuration</h2>
+                    
+                    <div class="form-group">
+                        <label>HA Mode:</label>
+                        <select id="ha-mode">
+                            <option value="a-p">Active-Passive (Recommended)</option>
+                            <option value="a-a">Active-Active</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Group Name:</label>
+                        <input type="text" id="ha-group-name" placeholder="FortiGate-HA-Cluster" value="FortiGate-HA-Cluster">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Group ID:</label>
+                        <input type="number" id="ha-group-id" placeholder="10" value="10" min="0" max="255">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="ha-password" placeholder="Strong HA password" value="ExampleHAPassword123!">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Heartbeat Interface:</label>
+                        <input type="text" id="ha-hb-interface" placeholder="port5" value="port5">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Monitor Interfaces:</label>
+                        <input type="text" id="ha-monitor" placeholder="wan1, wan2, lan" value="wan1, wan2">
+                    </div>
+
+                    <button class="btn" onclick="generateConfig('ha')">⚔️ Generate Configuration</button>
+                    <button class="btn btn-secondary" onclick="clearForm('ha')">Clear</button>
+                </div>
+
+                <!-- SAML Form -->
+                <div class="form-section" data-section="saml">
+                    <h2 style="color: #22d3ee; margin-bottom: 30px;">🔑 SAML/Entra ID Configuration</h2>
+                    
+                    <div class="form-group">
+                        <label>SAML Server Name:</label>
+                        <input type="text" id="saml-name" placeholder="EntraID-SSO" value="EntraID-SSO">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Entity ID:</label>
+                        <input type="text" id="saml-entity-id" placeholder="https://fortigate.company.com/remote/saml/metadata" value="https://fortigate.company.com/remote/saml/metadata">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Single Sign-On URL:</label>
+                        <input type="text" id="saml-sso-url" placeholder="https://fortigate.company.com/remote/saml/login" value="https://fortigate.company.com/remote/saml/login">
+                    </div>
+
+                    <div class="form-group">
+                        <label>IdP Entity ID:</label>
+                        <input type="text" id="saml-idp-entity" placeholder="https://sts.windows.net/TENANT-ID/" value="https://sts.windows.net/YOUR-TENANT-ID/">
+                    </div>
+
+                    <div class="form-group">
+                        <label>IdP Single Sign-On URL:</label>
+                        <input type="text" id="saml-idp-sso" placeholder="https://login.microsoftonline.com/TENANT-ID/saml2" value="https://login.microsoftonline.com/YOUR-TENANT-ID/saml2">
+                    </div>
+
+                    <div class="form-group">
+                        <label>IdP Certificate (Upload via GUI):</label>
+                        <textarea id="saml-cert" placeholder="Certificate will be uploaded via GUI" readonly></textarea>
+                    </div>
+
+                    <button class="btn" onclick="generateConfig('saml')">⚔️ Generate Configuration</button>
+                    <button class="btn btn-secondary" onclick="clearForm('saml')">Clear</button>
+                </div>
+
+                <!-- Output Section -->
+                <div class="output-section" id="output-section">
+                    <div class="output-tabs">
+                        <button class="tab active" data-tab="cli" onclick="switchTab('cli')">CLI Configuration</button>
+                        <button class="tab" data-tab="gui" onclick="switchTab('gui')">GUI Procedure</button>
+                        <button class="tab" data-tab="script" onclick="switchTab('script')">Complete Script</button>
+                        <button class="tab" data-tab="validation" onclick="switchTab('validation')">Validation</button>
+                    </div>
+
+                    <div class="tab-content active" data-content="cli">
+                        <button class="copy-btn" onclick="copyToClipboard('cli-output')">📋 Copy</button>
+                        <div class="code-block">
+                            <pre id="cli-output"></pre>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" data-content="gui">
+                        <div class="gui-steps" id="gui-output"></div>
+                    </div>
+
+                    <div class="tab-content" data-content="script">
+                        <button class="copy-btn" onclick="copyToClipboard('script-output')">📋 Copy</button>
+                        <div class="code-block">
+                            <pre id="script-output"></pre>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" data-content="validation">
+                        <button class="copy-btn" onclick="copyToClipboard('validation-output')">📋 Copy</button>
+                        <div class="code-block">
+                            <pre id="validation-output"></pre>
+                        </div>
+                    </div>
+
+                    <div class="doc-offer">
+                        <h3>📄 Create Official Documentation?</h3>
+                        <p>This configuration looks like something the Graphene Networks team would benefit from! Would you like me to create standardized documentation for this?</p>
+                        <button class="btn" onclick="createDocumentation()">✍️ Yes, Create Documentation</button>
+                        <button class="btn btn-secondary" onclick="closeDocOffer()">Not Right Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            🏛️ <strong>FORTINET SPARTAN</strong> ⚔️ | FortiOS 7.4.0+ | Graphene Networks<br>
+            <em>Precision. Excellence. No compromise.</em>
+        </div>
+    </div>
+
+    <script>
+        // Configuration type switching
+        document.querySelectorAll('.config-type').forEach(type => {
+            type.addEventListener('click', function() {
+                document.querySelectorAll('.config-type').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const configType = this.getAttribute('data-type');
+                document.querySelectorAll('.form-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.querySelector(`[data-section="${configType}"]`).classList.add('active');
+                
+                // Hide output when switching
+                document.getElementById('output-section').classList.remove('visible');
+            });
+        });
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.querySelector(`[data-content="${tabName}"]`).classList.add('active');
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Clear form
+        function clearForm(formType) {
+            const section = document.querySelector(`[data-section="${formType}"]`);
+            section.querySelectorAll('input[type="text"], input[type="password"], input[type="number"], textarea').forEach(input => {
+                if (!input.readOnly) input.value = '';
+            });
+            section.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+
+        // Generate configuration
+        function generateConfig(type) {
+            let cliConfig = '';
+            let guiSteps = '';
+            let scriptConfig = '';
+            let validation = '';
+
+            if (type === 'ipsec') {
+                const localSite = document.getElementById('ipsec-local-site').value;
+                const remoteSite = document.getElementById('ipsec-remote-site').value;
+                const localInterface = document.getElementById('ipsec-local-interface').value;
+                const localIP = document.getElementById('ipsec-local-ip').value;
+                const remoteIP = document.getElementById('ipsec-remote-ip').value;
+                const localSubnet = document.getElementById('ipsec-local-subnet').value;
+                const remoteSubnet = document.getElementById('ipsec-remote-subnet').value;
+                const psk = document.getElementById('ipsec-psk').value;
+                const vpnName = `${localSite}_to_${remoteSite}_IPsec`;
+
+                cliConfig = `# IPsec Phase 1 Configuration
+config vpn ipsec phase1-interface
+    edit "${vpnName}"
+        set interface "${localInterface}"
+        set ike-version 2
+        set peertype any
+        set net-device disable
+        set mode-cfg disable
+        set proposal aes256-sha256
+        set dhgrp 14
+        set remote-gw ${remoteIP}
+        set psksecret ${psk}
+        set dpd-retryinterval 5
+        set dpd on-idle
+    next
+end
+
+# IPsec Phase 2 Configuration
+config vpn ipsec phase2-interface
+    edit "${vpnName}"
+        set phase1name "${vpnName}"
+        set proposal aes256-sha256
+        set dhgrp 14
+        set src-subnet ${localSubnet}
+        set dst-subnet ${remoteSubnet}
+        set pfs enable
+    next
+end`;
+
+                guiSteps = `<div class="info-box">
+    <strong>🔐 IPsec VPN Configuration</strong><br>
+    This creates a secure site-to-site tunnel with modern encryption (AES-256, SHA-256, DH Group 14) and Dead Peer Detection.
+</div>
+
+<h3>Phase 1 Configuration</h3>
+<ol>
+    <li>Navigate to <strong>VPN > IPsec Wizard</strong></li>
+    <li>Select <strong>Custom</strong> template and click <strong>Next</strong></li>
+    <li>Configure Phase 1:
+        <ul>
+            <li>Name: <code>${vpnName}</code></li>
+            <li>Interface: <code>${localInterface}</code></li>
+            <li>Remote Gateway: <code>${remoteIP}</code></li>
+            <li>Authentication Method: <strong>Pre-shared Key</strong></li>
+            <li>Pre-shared Key: <code>${psk}</code></li>
+            <li>IKE Version: <strong>2</strong></li>
+            <li>Encryption: <strong>AES-256</strong></li>
+            <li>Authentication: <strong>SHA-256</strong></li>
+            <li>DH Group: <strong>14</strong></li>
+            <li>Dead Peer Detection: <strong>On Idle</strong>, Retry Interval: <code>5</code></li>
+        </ul>
+    </li>
+    <li>Click <strong>Next</strong></li>
+</ol>
+
+<h3>Phase 2 Configuration</h3>
+<ol>
+    <li>Configure Phase 2:
+        <ul>
+            <li>Local Address: <code>${localSubnet}</code></li>
+            <li>Remote Address: <code>${remoteSubnet}</code></li>
+            <li>Encryption: <strong>AES-256</strong></li>
+            <li>Authentication: <strong>SHA-256</strong></li>
+            <li>DH Group: <strong>14</strong></li>
+            <li>Perfect Forward Secrecy: <strong>Enable</strong></li>
+        </ul>
+    </li>
+    <li>Click <strong>OK</strong> to create the tunnel</li>
+</ol>
+
+<div class="warning-box">
+    <strong>⚠️ Important:</strong> Don't forget to create corresponding firewall policies to allow traffic through the VPN tunnel!
+</div>`;
+
+                scriptConfig = `#!/bin/bash
+# Complete IPsec VPN Configuration Script
+# ${vpnName}
+# FortiOS 7.4.0+
+# Generated: ${new Date().toISOString().split('T')[0]}
+
+# Phase 1 - IKE Gateway
+config vpn ipsec phase1-interface
+    edit "${vpnName}"
+        set interface "${localInterface}"
+        set ike-version 2
+        set peertype any
+        set net-device disable
+        set mode-cfg disable
+        set proposal aes256-sha256
+        set dhgrp 14
+        set remote-gw ${remoteIP}
+        set psksecret ${psk}
+        set dpd-retryinterval 5
+        set dpd on-idle
+        set nattraversal enable
+    next
+end
+
+# Phase 2 - IPsec Tunnel
+config vpn ipsec phase2-interface
+    edit "${vpnName}"
+        set phase1name "${vpnName}"
+        set proposal aes256-sha256
+        set dhgrp 14
+        set src-subnet ${localSubnet}
+        set dst-subnet ${remoteSubnet}
+        set pfs enable
+        set keepalive enable
+    next
+end
+
+# Static Routes (if needed)
+config router static
+    edit 0
+        set dst ${remoteSubnet}
+        set device "${vpnName}"
+        set comment "Route to ${remoteSite} via IPsec tunnel"
+    next
+end
+
+# Firewall Policy - Local to Remote
+config firewall policy
+    edit 0
+        set name "${localSite}_to_${remoteSite}_Allow"
+        set srcintf "lan"
+        set dstintf "${vpnName}"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+        set comments "Allow traffic from ${localSite} to ${remoteSite}"
+    next
+end
+
+# Firewall Policy - Remote to Local
+config firewall policy
+    edit 0
+        set name "${remoteSite}_to_${localSite}_Allow"
+        set srcintf "${vpnName}"
+        set dstintf "lan"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+        set comments "Allow traffic from ${remoteSite} to ${localSite}"
+    next
+end
+
+echo "IPsec VPN configuration complete!"
+echo "Run validation commands to verify tunnel status."`;
+
+                validation = `# Check Phase 1 status
+diagnose vpn ike gateway list name ${vpnName}
+
+# Check Phase 2 status
+diagnose vpn tunnel list name ${vpnName}
+
+# Test connectivity through tunnel
+execute ping-options source ${localIP.split(' ')[0]}
+execute ping ${remoteSubnet.split('/')[0].replace(/0$/, '1')}
+
+# Check active sessions
+diagnose sys session filter dst ${remoteSubnet.split('/')[0]}
+diagnose sys session list
+
+# Monitor VPN logs
+diagnose debug application ike -1
+diagnose debug enable
+
+# Expected output:
+# - Phase 1 should show: "established"
+# - Phase 2 should show: "up"
+# - Ping should succeed
+# - Sessions should be visible`;
+            } 
+            else if (type === 'sdwan') {
+                const isp1Interface = document.getElementById('sdwan-isp1-interface').value;
+                const isp1Gateway = document.getElementById('sdwan-isp1-gateway').value;
+                const isp1Bandwidth = document.getElementById('sdwan-isp1-bandwidth').value;
+                const isp2Interface = document.getElementById('sdwan-isp2-interface').value;
+                const isp2Gateway = document.getElementById('sdwan-isp2-gateway').value;
+                const isp2Bandwidth = document.getElementById('sdwan-isp2-bandwidth').value;
+                const healthServer = document.getElementById('sdwan-health-server').value;
+                const latency = document.getElementById('sdwan-latency').value;
+                const jitter = document.getElementById('sdwan-jitter').value;
+                const packetloss = document.getElementById('sdwan-packetloss').value;
+
+                cliConfig = `# SD-WAN Zone Configuration
+config system sdwan
+    set status enable
+    config zone
+        edit "virtual-wan-link"
+        next
+    end
+    config members
+        edit 1
+            set interface "${isp1Interface}"
+            set gateway ${isp1Gateway}
+            set priority 1
+        next
+        edit 2
+            set interface "${isp2Interface}"
+            set gateway ${isp2Gateway}
+            set priority 1
+        next
+    end
+    config health-check
+        edit "Google-DNS"
+            set server "${healthServer}"
+            set protocol ping
+            set interval 1000
+            set probe-timeout 1000
+            set failtime 5
+            set recoverytime 10
+            set update-static-route disable
+            config sla
+                edit 1
+                    set latency-threshold ${latency}
+                    set jitter-threshold ${jitter}
+                    set packetloss-threshold ${packetloss}
+                next
+            end
+        next
+    end
+end`;
+
+                guiSteps = `<div class="info-box">
+    <strong>🌐 SD-WAN Configuration</strong><br>
+    Configures intelligent traffic management across multiple ISP connections with automatic failover.
+</div>
+
+<h3>Enable SD-WAN</h3>
+<ol>
+    <li>Navigate to <strong>Network > SD-WAN</strong></li>
+    <li>Click <strong>Enable SD-WAN</strong></li>
+    <li>Configure SD-WAN Zone:
+        <ul>
+            <li>Zone Name: <code>virtual-wan-link</code> (default)</li>
+        </ul>
+    </li>
+</ol>
+
+<h3>Add WAN Members</h3>
+<ol>
+    <li>Under <strong>SD-WAN Members</strong>, click <strong>Create New</strong></li>
+    <li>Add ISP 1:
+        <ul>
+            <li>Interface: <code>${isp1Interface}</code></li>
+            <li>Gateway: <code>${isp1Gateway}</code></li>
+            <li>Priority: <code>1</code></li>
+        </ul>
+    </li>
+    <li>Click <strong>OK</strong>, then click <strong>Create New</strong> again</li>
+    <li>Add ISP 2:
+        <ul>
+            <li>Interface: <code>${isp2Interface}</code></li>
+            <li>Gateway: <code>${isp2Gateway}</code></li>
+            <li>Priority: <code>1</code></li>
+        </ul>
+    </li>
+    <li>Click <strong>OK</strong></li>
+</ol>
+
+<h3>Configure Health Check</h3>
+<ol>
+    <li>Under <strong>Performance SLA</strong>, click <strong>Create New</strong></li>
+    <li>Configure:
+        <ul>
+            <li>Name: <code>Google-DNS</code></li>
+            <li>Server: <code>${healthServer}</code></li>
+            <li>Protocol: <strong>PING</strong></li>
+            <li>Probe Interval: <code>1000</code> ms</li>
+            <li>Probe Timeout: <code>1000</code> ms</li>
+            <li>Fail Time: <code>5</code> (seconds)</li>
+            <li>Recovery Time: <code>10</code> (seconds)</li>
+        </ul>
+    </li>
+    <li>Under <strong>SLA Targets</strong>, add a target:
+        <ul>
+            <li>Latency: <code>${latency}</code> ms</li>
+            <li>Jitter: <code>${jitter}</code> ms</li>
+            <li>Packet Loss: <code>${packetloss}</code>%</li>
+        </ul>
+    </li>
+    <li>Click <strong>OK</strong></li>
+</ol>
+
+<div class="success-box">
+    <strong>✅ Next Steps:</strong> Create SD-WAN rules to route traffic based on application, SLA, or other criteria.
+</div>`;
+
+                scriptConfig = `#!/bin/bash
+# Complete SD-WAN Configuration Script
+# Dual ISP with Performance SLA
+# FortiOS 7.4.0+
+# Generated: ${new Date().toISOString().split('T')[0]}
+
+# Enable SD-WAN
+config system sdwan
+    set status enable
+    
+    # Create SD-WAN zone
+    config zone
+        edit "virtual-wan-link"
+        next
+    end
+    
+    # Add WAN members
+    config members
+        edit 1
+            set interface "${isp1Interface}"
+            set gateway ${isp1Gateway}
+            set priority 1
+            set source ${isp1Gateway.split('.').slice(0,3).join('.')}.2
+        next
+        edit 2
+            set interface "${isp2Interface}"
+            set gateway ${isp2Gateway}
+            set priority 1
+            set source ${isp2Gateway.split('.').slice(0,3).join('.')}.2
+        next
+    end
+    
+    # Configure health checks
+    config health-check
+        edit "Google-DNS"
+            set server "${healthServer}"
+            set protocol ping
+            set interval 1000
+            set probe-timeout 1000
+            set probe-count 3
+            set failtime 5
+            set recoverytime 10
+            set update-static-route disable
+            set members 1 2
+            config sla
+                edit 1
+                    set latency-threshold ${latency}
+                    set jitter-threshold ${jitter}
+                    set packetloss-threshold ${packetloss}
+                next
+            end
+        next
+    end
+    
+    # Create SD-WAN service rule (example)
+    config service
+        edit 1
+            set name "Critical-Business-Apps"
+            set mode priority
+            set dst "all"
+            set src "all"
+            config sla
+                edit "Google-DNS"
+                    set id 1
+                next
+            end
+            set priority-members 1 2
+        next
+    end
+end
+
+# Configure interface bandwidth for accurate SD-WAN calculations
+config system interface
+    edit "${isp1Interface}"
+        set estimated-upstream-bandwidth ${isp1Bandwidth}000
+        set estimated-downstream-bandwidth ${isp1Bandwidth}000
+    next
+    edit "${isp2Interface}"
+        set estimated-upstream-bandwidth ${isp2Bandwidth}000
+        set estimated-downstream-bandwidth ${isp2Bandwidth}000
+    next
+end
+
+echo "SD-WAN configuration complete!"
+echo "Monitor health checks with: diagnose sys sdwan health-check-status"`;
+
+                validation = `# Check SD-WAN status
+diagnose sys sdwan service
+
+# Check health check status
+diagnose sys sdwan health-check-status
+
+# Check member status
+diagnose sys sdwan member
+
+# View SD-WAN performance
+diagnose sys sdwan member-history
+
+# Monitor link quality
+execute sdwan-monitor
+
+# Check active routes
+get router info routing-table all
+
+# Expected output:
+# - All members should show "alive"
+# - Health checks should show latency/jitter/loss within thresholds
+# - Routes should be distributed across members`;
+            }
+            else if (type === 'firewall') {
+                const name = document.getElementById('fw-name').value;
+                const srcInterface = document.getElementById('fw-src-interface').value;
+                const dstInterface = document.getElementById('fw-dst-interface').value;
+                const srcAddr = document.getElementById('fw-src-addr').value;
+                const dstAddr = document.getElementById('fw-dst-addr').value;
+                const service = document.getElementById('fw-service').value;
+                const nat = document.getElementById('fw-nat').value;
+                const logging = document.getElementById('fw-logging').value;
+
+                cliConfig = `# Firewall Policy Configuration
+config firewall policy
+    edit 0
+        set name "${name}"
+        set srcintf "${srcInterface}"
+        set dstintf "${dstInterface}"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service ${service.includes(',') ? service.split(',').map(s => `"${s.trim()}"`).join(' ') : `"${service}"`}
+        set nat ${nat}
+        set logtraffic ${logging}
+        set comments "Generated by Fortinet Spartan"
+    next
+end`;
+
+                guiSteps = `<div class="info-box">
+    <strong>🛡️ Firewall Policy</strong><br>
+    This policy controls traffic flow between network zones with logging and NAT capabilities.
+</div>
+
+<h3>Create Firewall Policy</h3>
+<ol>
+    <li>Navigate to <strong>Policy & Objects > Firewall Policy</strong></li>
+    <li>Click <strong>Create New</strong></li>
+    <li>Configure basic settings:
+        <ul>
+            <li>Name: <code>${name}</code></li>
+            <li>Incoming Interface: <code>${srcInterface}</code></li>
+            <li>Outgoing Interface: <code>${dstInterface}</code></li>
+            <li>Source: <code>all</code> (or create specific address objects)</li>
+            <li>Destination: <code>all</code> (or create specific address objects)</li>
+            <li>Service: <code>${service}</code></li>
+            <li>Schedule: <strong>always</strong></li>
+            <li>Action: <strong>ACCEPT</strong></li>
+        </ul>
+    </li>
+    <li>Under <strong>NAT</strong>:
+        <ul>
+            <li>Enable NAT: <code>${nat === 'enable' ? 'Yes' : 'No'}</code></li>
+            ${nat === 'enable' ? '<li>Use Outgoing Interface Address: <strong>Enabled</strong></li>' : ''}
+        </ul>
+    </li>
+    <li>Under <strong>Logging Options</strong>:
+        <ul>
+            <li>Log Allowed Traffic: <code>${logging === 'all' ? 'Yes' : logging === 'utm' ? 'Security Events Only' : 'No'}</code></li>
+        </ul>
+    </li>
+    <li>Click <strong>OK</strong></li>
+</ol>
+
+<div class="warning-box">
+    <strong>⚠️ Security Best Practice:</strong> Always be specific with source/destination addresses and services. Avoid using "ALL" in production unless absolutely necessary.
+</div>`;
+
+                scriptConfig = `#!/bin/bash
+# Complete Firewall Policy Configuration
+# ${name}
+# FortiOS 7.4.0+
+# Generated: ${new Date().toISOString().split('T')[0]}
+
+# Create address objects if needed (example)
+config firewall address
+    edit "LAN-Subnet"
+        set subnet ${srcAddr}
+        set comment "Local LAN subnet"
+    next
+end
+
+# Create firewall policy
+config firewall policy
+    edit 0
+        set name "${name}"
+        set srcintf "${srcInterface}"
+        set dstintf "${dstInterface}"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service ${service.includes(',') ? service.split(',').map(s => `"${s.trim()}"`).join(' ') : `"${service}"`}
+        set nat ${nat}
+        set logtraffic ${logging}
+        set comments "Auto-generated policy - Review and customize as needed"
+        ${nat === 'enable' ? 'set ippool disable' : ''}
+    next
+end
+
+echo "Firewall policy created successfully!"
+echo "Policy ID will be assigned automatically."
+echo "Review with: show firewall policy"`;
+
+                validation = `# List all firewall policies
+show firewall policy
+
+# Check policy hit count
+diagnose firewall policy-stat
+
+# Monitor real-time sessions
+diagnose sys session filter src ${srcAddr.split('/')[0]}
+diagnose sys session list
+
+# Check NAT translations (if NAT enabled)
+${nat === 'enable' ? 'diagnose sys session filter dintf ' + dstInterface + '\ndiagnose sys session list' : '# NAT not enabled'}
+
+# View policy logs
+execute log filter category traffic
+execute log display
+
+# Expected output:
+# - Policy should appear in policy list
+# - Hit count should increment when traffic passes
+# - Sessions should be visible for active connections`;
+            }
+            else if (type === 'interface') {
+                const intName = document.getElementById('int-name').value;
+                const intType = document.getElementById('int-type').value;
+                const intRole = document.getElementById('int-role').value;
+                const intIP = document.getElementById('int-ip').value;
+                const accessPing = document.getElementById('int-access-ping').checked;
+                const accessHttps = document.getElementById('int-access-https').checked;
+                const accessSsh = document.getElementById('int-access-ssh').checked;
+                
+                const accessList = [
+                    accessPing ? 'ping' : null,
+                    accessHttps ? 'https' : null,
+                    accessSsh ? 'ssh' : null
+                ].filter(Boolean).join(' ');
+
+                cliConfig = `# Interface Configuration
+config system interface
+    edit "${intName}"
+        set vdom "root"
+        set ip ${intIP}
+        set allowaccess ${accessList}
+        set type ${intType}
+        set role ${intRole}
+        ${intRole === 'wan' ? 'set estimated-upstream-bandwidth 100000\n        set estimated-downstream-bandwidth 100000' : ''}
+    next
+end`;
+
+                guiSteps = `<div class="info-box">
+    <strong>🔌 Interface Configuration</strong><br>
+    This configures a ${intRole.toUpperCase()} interface with administrative access controls.
+</div>
+
+<h3>Configure Interface</h3>
+<ol>
+    <li>Navigate to <strong>Network > Interfaces</strong></li>
+    <li>Click <strong>Edit</strong> on <code>${intName}</code></li>
+    <li>Configure addressing:
+        <ul>
+            <li>Addressing Mode: <strong>Manual</strong></li>
+            <li>IP/Network Mask: <code>${intIP}</code></li>
+            <li>Role: <strong>${intRole.toUpperCase()}</strong></li>
+        </ul>
+    </li>
+    <li>Under <strong>Administrative Access</strong>:
+        <ul>
+            ${accessPing ? '<li>✅ <strong>PING</strong></li>' : ''}
+            ${accessHttps ? '<li>✅ <strong>HTTPS</strong></li>' : ''}
+            ${accessSsh ? '<li>✅ <strong>SSH</strong></li>' : ''}
+        </ul>
+    </li>
+    ${intRole === 'wan' ? '<li>Under <strong>Advanced</strong>, configure bandwidth: <code>100 Mbps</code></li>' : ''}
+    <li>Click <strong>OK</strong></li>
+</ol>
+
+<div class="warning-box">
+    <strong>⚠️ Security:</strong> Only enable administrative access (HTTPS, SSH) on trusted interfaces. WAN interfaces should have minimal access.
+</div>`;
+
+                scriptConfig = `#!/bin/bash
+# Complete Interface Configuration Script
+# ${intName} (${intRole.toUpperCase()})
+# FortiOS 7.4.0+
+# Generated: ${new Date().toISOString().split('T')[0]}
+
+config system interface
+    edit "${intName}"
+        set vdom "root"
+        set mode static
+        set ip ${intIP}
+        set allowaccess ${accessList}
+        set type ${intType}
+        set role ${intRole}
+        set status up
+        ${intRole === 'wan' ? `set estimated-upstream-bandwidth 100000
+        set estimated-downstream-bandwidth 100000` : ''}
+        ${intRole === 'lan' ? 'set device-identification enable' : ''}
+        set lldp-reception enable
+        set lldp-transmission enable
+    next
+end
+
+# Configure DHCP server (if LAN interface)
+${intRole === 'lan' ? `config system dhcp server
+    edit 0
+        set interface "${intName}"
+        set dns-service default
+        set default-gateway ${intIP.split(' ')[0]}
+        set netmask ${intIP.split(' ')[1]}
+        config ip-range
+            edit 1
+                set start-ip ${intIP.split(' ')[0].split('.').slice(0,3).join('.')}.100
+                set end-ip ${intIP.split(' ')[0].split('.').slice(0,3).join('.')}.200
+            next
+        end
+    next
+end` : ''}
+
+echo "Interface ${intName} configured successfully!"`;
+
+                validation = `# Check interface status
+diagnose ip address list | grep -A 5 ${intName}
+
+# Test interface connectivity
+execute ping-options interface ${intName}
+execute ping 8.8.8.8
+
+# Check interface statistics
+diagnose hardware deviceinfo nic ${intName}
+
+# View interface details
+get system interface ${intName}
+
+# Test administrative access
+${accessHttps ? 'execute ping-options source ' + intIP.split(' ')[0] + '\n# Access GUI via https://' + intIP.split(' ')[0] : ''}
+${accessSsh ? '# SSH via: ssh admin@' + intIP.split(' ')[0] : ''}
+
+# Expected output:
+# - Interface status: up
+# - IP address correctly assigned
+# - Ping should succeed (if routing configured)`;
+            }
+            else if (type === 'ha') {
+                const mode = document.getElementById('ha-mode').value;
+                const groupName = document.getElementById('ha-group-name').value;
+                const groupId = document.getElementById('ha-group-id').value;
+                const password = document.getElementById('ha-password').value;
+                const hbInterface = document.getElementById('ha-hb-interface').value;
+                const monitorInterfaces = document.getElementById('ha-monitor').value;
+
+                cliConfig = `# High Availability Configuration
+config system ha
+    set group-id ${groupId}
+    set group-name "${groupName}"
+    set mode ${mode === 'a-p' ? 'a-p' : 'a-a'}
+    set password ${password}
+    set hbdev "${hbInterface}" 100
+    set session-pickup enable
+    set session-pickup-connectionless enable
+    set session-pickup-nat enable
+    set ha-mgmt-status enable
+    set monitor ${monitorInterfaces.split(',').map(i => `"${i.trim()}"`).join(' ')}
+    set pingserver-monitor-interface ${monitorInterfaces.split(',')[0].trim()}
+    set priority 200
+end`;
+
+                guiSteps = `<div class="info-box">
+    <strong>⚡ High Availability</strong><br>
+    Configure ${mode === 'a-p' ? 'Active-Passive' : 'Active-Active'} HA for automatic failover and redundancy.
+</div>
+
+<div class="warning-box">
+    <strong>⚠️ Critical:</strong> Both FortiGates must have identical models, firmware versions, and licensing. Complete this configuration on BOTH units with identical settings except for priority values.
+</div>
+
+<h3>Configure HA on Primary Unit</h3>
+<ol>
+    <li>Navigate to <strong>System > HA</strong></li>
+    <li>Configure HA settings:
+        <ul>
+            <li>Mode: <strong>${mode === 'a-p' ? 'Active-Passive' : 'Active-Active'}</strong></li>
+            <li>Device Priority: <code>200</code> (higher = master)</li>
+            <li>Group Name: <code>${groupName}</code></li>
+            <li>Password: <code>${password}</code></li>
+        </ul>
+    </li>
+    <li>Under <strong>Heartbeat</strong>:
+        <ul>
+            <li>Interface: <code>${hbInterface}</code></li>
+            <li>Priority: <code>100</code></li>
+        </ul>
+    </li>
+    <li>Under <strong>Monitored Interfaces</strong>:
+        <ul>
+            <li>Add: <code>${monitorInterfaces}</code></li>
+        </ul>
+    </li>
+    <li>Enable <strong>Session Pick-up</strong></li>
+    <li>Click <strong>OK</strong></li>
+</ol>
+
+<h3>Configure HA on Secondary Unit</h3>
+<ol>
+    <li>Repeat the same steps but with:
+        <ul>
+            <li>Device Priority: <code>100</code> (lower than primary)</li>
+            <li>All other settings MUST match exactly</li>
+        </ul>
+    </li>
+</ol>
+
+<div class="success-box">
+    <strong>✅ Verification:</strong> Units should form an HA cluster within 30 seconds. Primary will become master, secondary will become slave.
+</div>`;
+
+                scriptConfig = `#!/bin/bash
+# Complete HA Configuration Script
+# ${groupName} - ${mode === 'a-p' ? 'Active-Passive' : 'Active-Active'}
+# FortiOS 7.4.0+
+# Generated: ${new Date().toISOString().split('T')[0]}
+
+# === RUN ON PRIMARY (MASTER) ===
+config system ha
+    set group-id ${groupId}
+    set group-name "${groupName}"
+    set mode ${mode === 'a-p' ? 'a-p' : 'a-a'}
+    set password ${password}
+    set hbdev "${hbInterface}" 100
+    set session-pickup enable
+    set session-pickup-connectionless enable
+    set session-pickup-nat enable
+    set session-pickup-expectation enable
+    set ha-mgmt-status enable
+    config ha-mgmt-interfaces
+        edit 1
+            set interface "port1"
+            set gateway 192.0.2.1
+        next
+    end
+    set override enable
+    set priority 200
+    set monitor ${monitorInterfaces.split(',').map(i => `"${i.trim()}"`).join(' ')}
+    set pingserver-monitor-interface ${monitorInterfaces.split(',')[0].trim()}
+    set pingserver-failover-threshold 3
+    set vcluster2 enable
+end
+
+# === RUN ON SECONDARY (SLAVE) - Change priority only ===
+config system ha
+    set group-id ${groupId}
+    set group-name "${groupName}"
+    set mode ${mode === 'a-p' ? 'a-p' : 'a-a'}
+    set password ${password}
+    set hbdev "${hbInterface}" 100
+    set session-pickup enable
+    set session-pickup-connectionless enable
+    set session-pickup-nat enable
+    set session-pickup-expectation enable
+    set ha-mgmt-status enable
+    config ha-mgmt-interfaces
+        edit 1
+            set interface "port1"
+            set gateway 192.0.2.1
+        next
+    end
+    set override enable
+    set priority 100
+    set monitor ${monitorInterfaces.split(',').map(i => `"${i.trim()}"`).join(' ')}
+    set pingserver-monitor-interface ${monitorInterfaces.split(',')[0].trim()}
+    set pingserver-failover-threshold 3
+    set vcluster2 enable
+end
+
+echo "HA configuration complete!"
+echo "Units should form cluster within 30 seconds."
+echo "Verify with: get system ha status"`;
+
+                validation = `# Check HA status
+get system ha status
+
+# View cluster information
+diagnose sys ha status
+
+# Check synchronization status
+diagnose sys ha showcsum
+
+# Monitor heartbeat
+diagnose sys ha haddrindex
+
+# View failover history
+diagnose sys ha history read
+
+# Test failover (CAUTION: causes brief outage)
+# execute ha manage 0 admin
+# diagnose sys ha reset-uptime
+
+# Expected output:
+# - Mode: ${mode === 'a-p' ? 'a-p (Active-Passive)' : 'a-a (Active-Active)'}
+# - Master: Unit with priority 200
+# - Slave: Unit with priority 100
+# - Sync status: synchronized
+# - All monitored interfaces should be up`;
+            }
+            else if (type === 'saml') {
+                const samlName = document.getElementById('saml-name').value;
+                const entityId = document.getElementById('saml-entity-id').value;
+                const ssoUrl = document.getElementById('saml-sso-url').value;
+                const idpEntity = document.getElementById('saml-idp-entity').value;
+                const idpSso = document.getElementById('saml-idp-sso').value;
+
+                cliConfig = `# SAML Configuration
+config user saml
+    edit "${samlName}"
+        set cert "Fortinet_Factory"
+        set entity-id "${entityId}"
+        set single-sign-on-url "${ssoUrl}"
+        set single-logout-url "${ssoUrl.replace('/login', '/logout')}"
+        set idp-entity-id "${idpEntity}"
+        set idp-single-sign-on-url "${idpSso}"
+        set idp-single-logout-url "${idpSso.replace('/saml2', '/logout')}"
+        set idp-cert "REMOTE_Cert_1"
+        set user-name username
+        set group-name group
+    next
+end`;
+
+                guiSteps = `<div class="info-box">
+    <strong>🔑 SAML/Entra ID Integration</strong><br>
+    This enables Single Sign-On (SSO) authentication using Microsoft Entra ID (formerly Azure AD).
+</div>
+
+<div class="warning-box">
+    <strong>⚠️ Prerequisites:</strong>
+    <ul>
+        <li>Register FortiGate as an Enterprise Application in Entra ID</li>
+        <li>Download the Entra ID SAML signing certificate</li>
+        <li>Note your Tenant ID from Entra ID</li>
+    </ul>
+</div>
+
+<h3>Step 1: Upload IdP Certificate</h3>
+<ol>
+    <li>Navigate to <strong>System > Certificates</strong></li>
+    <li>Click <strong>Import > Remote Certificate</strong></li>
+    <li>Upload the certificate downloaded from Entra ID</li>
+    <li>Name it: <code>EntraID-SAML-Cert</code></li>
+</ol>
+
+<h3>Step 2: Configure SAML Server</h3>
+<ol>
+    <li>Navigate to <strong>User & Authentication > SAML SSO</strong></li>
+    <li>Click <strong>Create New</strong></li>
+    <li>Configure SAML settings:
+        <ul>
+            <li>Name: <code>${samlName}</code></li>
+            <li>Entity ID: <code>${entityId}</code></li>
+            <li>Single Sign-On URL: <code>${ssoUrl}</code></li>
+            <li>Single Logout URL: <code>${ssoUrl.replace('/login', '/logout')}</code></li>
+            <li>IdP Entity ID: <code>${idpEntity}</code></li>
+            <li>IdP Single Sign-On URL: <code>${idpSso}</code></li>
+            <li>IdP Certificate: Select <strong>EntraID-SAML-Cert</strong></li>
+            <li>User Name Attribute: <code>username</code></li>
+            <li>Group Name Attribute: <code>group</code></li>
+        </ul>
+    </li>
+    <li>Click <strong>OK</strong></li>
+</ol>
+
+<h3>Step 3: Configure in Entra ID</h3>
+<ol>
+    <li>In Entra ID, configure:
+        <ul>
+            <li>Identifier (Entity ID): <code>${entityId}</code></li>
+            <li>Reply URL: <code>${ssoUrl}</code></li>
+            <li>Sign on URL: <code>${ssoUrl}</code></li>
+            <li>Logout URL: <code>${ssoUrl.replace('/login', '/logout')}</code></li>
+        </ul>
+    </li>
+    <li>Assign users/groups to the application</li>
+</ol>
+
+<div class="success-box">
+    <strong>✅ Testing:</strong> Navigate to your FortiGate's HTTPS admin interface, select SAML authentication, and verify login redirects to Entra ID.
+</div>`;
+
+                scriptConfig = `#!/bin/bash
+# Complete SAML/Entra ID Configuration
+# ${samlName}
+# FortiOS 7.4.0+
+# Generated: ${new Date().toISOString().split('T')[0]}
+
+# Note: Upload IdP certificate via GUI first
+# System > Certificates > Import > Remote Certificate
+
+# Configure SAML server
+config user saml
+    edit "${samlName}"
+        set cert "Fortinet_Factory"
+        set entity-id "${entityId}"
+        set single-sign-on-url "${ssoUrl}"
+        set single-logout-url "${ssoUrl.replace('/login', '/logout')}"
+        set idp-entity-id "${idpEntity}"
+        set idp-single-sign-on-url "${idpSso}"
+        set idp-single-logout-url "${idpSso.replace('/saml2', '/logout')}"
+        set idp-cert "EntraID-SAML-Cert"
+        set user-name username
+        set group-name group
+        set digest-method sha256
+    next
+end
+
+# Create user group mapped to SAML
+config user group
+    edit "SAML-Users"
+        set member "${samlName}"
+    next
+end
+
+# Enable SAML on admin interface (if needed)
+config system admin
+    edit "saml-admin"
+        set accprofile "super_admin"
+        set vdom "root"
+        set wildcard enable
+        set remote-auth enable
+        set remote-group "SAML-Users"
+    next
+end
+
+echo "SAML configuration complete!"
+echo "Test SSO login via: https://<your-fortigate-ip>/remote/saml/login"`;
+
+                validation = `# Test SAML configuration
+diagnose test authserver saml ${samlName}
+
+# Check SAML user sessions
+diagnose debug application samld -1
+diagnose debug enable
+
+# View SAML metadata
+execute saml-sp get-metadata
+
+# Monitor authentication
+execute log filter category event
+execute log filter field subtype admin
+execute log display
+
+# Test SSO login
+# Navigate to: https://<your-fortigate-ip>/remote/saml/login
+# Should redirect to Entra ID login page
+
+# Expected output:
+# - SAML test should succeed
+# - Successful authentication should create admin session
+# - User should be assigned to correct group`;
+            }
+
+            // Display the configuration
+            document.getElementById('cli-output').textContent = cliConfig;
+            document.getElementById('gui-output').innerHTML = guiSteps;
+            document.getElementById('script-output').textContent = scriptConfig;
+            document.getElementById('validation-output').textContent = validation;
+            document.getElementById('output-section').classList.add('visible');
+
+            // Scroll to output
+            document.getElementById('output-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function createDocumentation() {
+            alert('📄 Documentation creation feature coming soon!\n\nThis will generate enterprise-grade Markdown documentation following Graphene Networks standards, complete with:\n\n✅ Configuration details\n✅ Security considerations\n✅ Troubleshooting guide\n✅ Official FortiOS references\n\nStay tuned! 🏛️⚔️');
+        }
+
+        function closeDocOffer() {
+            document.querySelector('.doc-offer').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
