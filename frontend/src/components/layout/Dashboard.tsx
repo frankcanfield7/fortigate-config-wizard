@@ -53,7 +53,10 @@ const Dashboard: React.FC = () => {
             <p className="text-gray-400 text-sm mb-4">
               Create a new FortiGate configuration using the wizard
             </p>
-            <button className="w-full py-2 px-4 bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] text-[#0f172a] font-bold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all">
+            <button
+              onClick={() => navigate('/dashboard/wizard')}
+              className="w-full py-2 px-4 bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] text-[#0f172a] font-bold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all"
+            >
               Start Wizard
             </button>
           </div>
