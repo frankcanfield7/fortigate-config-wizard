@@ -53,7 +53,7 @@ api.interceptors.response.use(
           throw new Error('No refresh token available');
         }
 
-        const response = await axios.post<{ access_token: string }>(
+        const response = await axios.post<ApiResponse<{ access_token: string }>>(
           `${API_BASE_URL}/api/auth/refresh`,
           {},
           {
@@ -63,7 +63,7 @@ api.interceptors.response.use(
           }
         );
 
-        const { access_token } = response.data;
+        const { access_token } = response.data.data;
         localStorage.setItem('access_token', access_token);
 
         // Retry original request with new token
@@ -84,16 +84,23 @@ api.interceptors.response.use(
   }
 );
 
+// Backend response wrapper type
+interface ApiResponse<T> {
+  success: boolean;
+  message?: string;
+  data: T;
+}
+
 // Authentication API
 export const authApi = {
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/api/auth/login', credentials);
-    return response.data;
+    const response = await api.post<ApiResponse<AuthResponse>>('/api/auth/login', credentials);
+    return response.data.data;
   },
 
   register: async (userData: RegisterData): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/api/auth/register', userData);
-    return response.data;
+    const response = await api.post<ApiResponse<AuthResponse>>('/api/auth/register', userData);
+    return response.data.data;
   },
 
   logout: async (): Promise<void> => {
@@ -103,13 +110,13 @@ export const authApi = {
   },
 
   getCurrentUser: async (): Promise<User> => {
-    const response = await api.get<User>('/api/auth/me');
-    return response.data;
+    const response = await api.get<ApiResponse<User>>('/api/auth/me');
+    return response.data.data;
   },
 
   refreshToken: async (): Promise<{ access_token: string }> => {
     const refreshToken = localStorage.getItem('refresh_token');
-    const response = await api.post<{ access_token: string }>(
+    const response = await api.post<ApiResponse<{ access_token: string }>>(
       '/api/auth/refresh',
       {},
       {
@@ -118,32 +125,32 @@ export const authApi = {
         },
       }
     );
-    return response.data;
+    return response.data.data;
   },
 };
 
 // Configuration API
 export const configApi = {
   getAll: async (page = 1, perPage = 20): Promise<PaginatedResponse<Configuration>> => {
-    const response = await api.get<PaginatedResponse<Configuration>>(
+    const response = await api.get<ApiResponse<PaginatedResponse<Configuration>>>(
       `/api/configs?page=${page}&per_page=${perPage}`
     );
-    return response.data;
+    return response.data.data;
   },
 
   getById: async (id: number): Promise<Configuration> => {
-    const response = await api.get<Configuration>(`/api/configs/${id}`);
-    return response.data;
+    const response = await api.get<ApiResponse<Configuration>>(`/api/configs/${id}`);
+    return response.data.data;
   },
 
   create: async (data: ConfigurationCreate): Promise<Configuration> => {
-    const response = await api.post<Configuration>('/api/configs', data);
-    return response.data;
+    const response = await api.post<ApiResponse<Configuration>>('/api/configs', data);
+    return response.data.data;
   },
 
   update: async (id: number, data: ConfigurationUpdate): Promise<Configuration> => {
-    const response = await api.put<Configuration>(`/api/configs/${id}`, data);
-    return response.data;
+    const response = await api.put<ApiResponse<Configuration>>(`/api/configs/${id}`, data);
+    return response.data.data;
   },
 
   delete: async (id: number): Promise<void> => {
@@ -151,33 +158,33 @@ export const configApi = {
   },
 
   duplicate: async (id: number): Promise<Configuration> => {
-    const response = await api.post<Configuration>(`/api/configs/${id}/duplicate`);
-    return response.data;
+    const response = await api.post<ApiResponse<Configuration>>(`/api/configs/${id}/duplicate`);
+    return response.data.data;
   },
 
   export: async (
     id: number,
     format: 'cli' | 'json' | 'yaml'
   ): Promise<{ data: string; filename: string }> => {
-    const response = await api.get<{ data: string; filename: string }>(
+    const response = await api.get<ApiResponse<{ data: string; filename: string }>>(
       `/api/configs/${id}/export?format=${format}`
     );
-    return response.data;
+    return response.data.data;
   },
 };
 
 // Template API
 export const templateApi = {
   getAll: async (): Promise<Configuration[]> => {
-    const response = await api.get<Configuration[]>('/api/templates');
-    return response.data;
+    const response = await api.get<ApiResponse<Configuration[]>>('/api/templates');
+    return response.data.data;
   },
 
   createFromTemplate: async (templateId: number, name: string): Promise<Configuration> => {
-    const response = await api.post<Configuration>(`/api/templates/${templateId}/create`, {
+    const response = await api.post<ApiResponse<Configuration>>(`/api/templates/${templateId}/create`, {
       name,
     });
-    return response.data;
+    return response.data.data;
   },
 };
 

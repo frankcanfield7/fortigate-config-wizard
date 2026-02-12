@@ -70,7 +70,10 @@ const Dashboard: React.FC = () => {
             <p className="text-gray-400 text-sm mb-4">
               View and manage your saved configurations
             </p>
-            <button className="w-full py-2 px-4 bg-[#334155] text-white font-bold rounded-lg hover:bg-[#475569] transition-colors">
+            <button
+              onClick={() => navigate('/dashboard/library')}
+              className="w-full py-2 px-4 bg-[#334155] text-white font-bold rounded-lg hover:bg-[#475569] transition-colors"
+            >
               View Library
             </button>
           </div>

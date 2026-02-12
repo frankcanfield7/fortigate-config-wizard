@@ -57,15 +57,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(null);
       setLoading(true);
 
+      console.log('AuthContext: Calling login API...');
       const response: AuthResponse = await authApi.login(credentials);
+      console.log('AuthContext: Login API response:', response);
 
       // Store tokens
       localStorage.setItem('access_token', response.access_token);
       localStorage.setItem('refresh_token', response.refresh_token);
+      console.log('AuthContext: Tokens stored in localStorage');
 
       // Set user
       setUser(response.user);
+      console.log('AuthContext: User state set to:', response.user);
     } catch (err: any) {
+      console.error('AuthContext: Login error:', err);
       const errorMessage = err.response?.data?.error || 'Login failed. Please try again.';
       setError(errorMessage);
       throw new Error(errorMessage);

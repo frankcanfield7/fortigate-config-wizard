@@ -5,6 +5,9 @@ import { configApi } from '../../utils/api';
 import type { ConfigurationCreate } from '../../types';
 import OutputDisplay from './output/OutputDisplay';
 import IPsecForm from './sections/IPsecForm';
+import SdwanForm from './sections/SdwanForm';
+import FirewallForm from './sections/FirewallForm';
+import InterfaceForm from './sections/InterfaceForm';
 
 // Configuration type options
 const CONFIG_TYPES = [
@@ -58,7 +61,7 @@ const ConfigWizard: React.FC = () => {
       config_type: selectedType,
       name: configName,
       description: configDescription,
-      data_json: formData,
+      data: formData,
     };
 
     createConfigMutation.mutate(configData);
@@ -170,17 +173,26 @@ const ConfigWizard: React.FC = () => {
             {selectedType === 'ipsec' && (
               <IPsecForm formData={formData} onChange={handleFormChange} />
             )}
+            {selectedType === 'sdwan' && (
+              <SdwanForm formData={formData} onChange={handleFormChange} />
+            )}
+            {selectedType === 'firewall' && (
+              <FirewallForm formData={formData} onChange={handleFormChange} />
+            )}
+            {selectedType === 'interfaces' && (
+              <InterfaceForm formData={formData} onChange={handleFormChange} />
+            )}
 
-            {/* Placeholder for other config types */}
-            {selectedType !== 'ipsec' && (
+            {/* Placeholder for remaining config types */}
+            {!['ipsec', 'sdwan', 'firewall', 'interfaces'].includes(selectedType) && (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">🚧</div>
                 <p className="text-xl font-bold text-[#22d3ee] mb-2">
                   {CONFIG_TYPES.find((t) => t.value === selectedType)?.label} Form
                 </p>
                 <p className="text-gray-400">
-                  This configuration type will be implemented in Phase 3.
-                  For now, you can use the IPsec VPN configuration.
+                  This configuration type will be available in a future update.
+                  Currently available: IPsec VPN, SD-WAN, Firewall Policy, and Interface Config.
                 </p>
               </div>
             )}

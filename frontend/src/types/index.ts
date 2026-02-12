@@ -44,7 +44,7 @@ export interface ConfigurationCreate {
   config_type: string;
   name: string;
   description?: string;
-  data_json: Record<string, any>;
+  data: Record<string, any>;
   tags?: string;
   is_template?: boolean;
 }

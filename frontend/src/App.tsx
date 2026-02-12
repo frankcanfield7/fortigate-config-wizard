@@ -5,6 +5,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Dashboard from './components/layout/Dashboard';
 import ConfigWizard from './components/wizard/ConfigWizard';
+import ConfigLibrary from './components/library/ConfigLibrary';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
 // Create a React Query client
@@ -42,6 +43,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ConfigWizard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/library"
+              element={
+                <ProtectedRoute>
+                  <ConfigLibrary />
                 </ProtectedRoute>
               }
             />
