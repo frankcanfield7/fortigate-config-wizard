@@ -8,7 +8,7 @@ interface OutputDisplayProps {
 
 type TabType = 'cli' | 'gui' | 'script';
 
-const OutputDisplay: React.FC<OutputDisplayProps> = ({ configType, formData, onClose }) => {
+const OutputDisplay: React.FC<OutputDisplayProps> = ({ configType, formData: _formData, onClose }) => {
   const [activeTab, setActiveTab] = useState<TabType>('cli');
   const [copied, setCopied] = useState<boolean>(false);
 

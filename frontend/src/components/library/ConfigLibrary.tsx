@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { configApi } from '../../utils/api';
-import type { Configuration } from '../../types';
 
 const ConfigLibrary: React.FC = () => {
   const navigate = useNavigate();
