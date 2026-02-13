@@ -52,9 +52,10 @@ export interface ConfigurationCreate {
 export interface ConfigurationUpdate {
   name?: string;
   description?: string;
-  data_json?: Record<string, any>;
+  data?: Record<string, any>;
   tags?: string;
   is_template?: boolean;
+  change_description?: string;
 }
 
 // Version types

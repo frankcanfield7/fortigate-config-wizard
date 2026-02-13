@@ -47,6 +47,14 @@ function App() {
               }
             />
             <Route
+              path="/dashboard/wizard/:id"
+              element={
+                <ProtectedRoute>
+                  <ConfigWizard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/dashboard/library"
               element={
                 <ProtectedRoute>
