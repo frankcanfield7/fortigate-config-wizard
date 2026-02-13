@@ -38,6 +38,10 @@ def validate_subnet(subnet_str):
     if not subnet_str:
         return True, None  # Empty is valid (optional field)
 
+    # Ensure CIDR notation is present (must contain "/")
+    if '/' not in subnet_str:
+        return False, f"Invalid subnet (missing CIDR notation): {subnet_str}"
+
     try:
         ipaddress.ip_network(subnet_str, strict=False)
         return True, None
@@ -55,7 +59,8 @@ def validate_port(port):
     Returns:
         tuple: (is_valid, error_message)
     """
-    if not port:
+    # Check for empty/None (not just falsy, since 0 is falsy but invalid)
+    if port is None or port == '':
         return True, None  # Empty is valid (optional field)
 
     try:
