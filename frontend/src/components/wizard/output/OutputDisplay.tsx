@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { generateIPsecCLI, generateIPsecGUI, generateIPsecScript } from '../../../utils/generators/ipsec';
 import { generateSDWANCLI, generateSDWANGUI, generateSDWANScript } from '../../../utils/generators/sdwan';
-
-// Placeholder generators for firewall (to be implemented in Task #4)
-const generateFirewallCLI = (_data: Record<string, any>) => `# Firewall CLI (placeholder)\n# Implement in generators/firewall.ts`;
-const generateFirewallGUI = (_data: Record<string, any>) => `Firewall GUI steps (placeholder)`;
-const generateFirewallScript = (_data: Record<string, any>) => `#!/bin/bash\n# Firewall script (placeholder)`;
+import { generateFirewallCLI, generateFirewallGUI, generateFirewallScript } from '../../../utils/generators/firewall';
 
 interface OutputDisplayProps {
   configType: string;
