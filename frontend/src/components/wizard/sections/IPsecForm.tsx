@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { validateIPAddress, validateSubnet, validatePhase1Name } from '../../../utils/validators';
 
 interface IPsecFormProps {
   formData: Record<string, any>;
@@ -13,12 +14,14 @@ interface FormField {
   options?: { value: string; label: string }[];
   required?: boolean;
   section: 'phase1' | 'phase2' | 'network';
+  validator?: (value: any) => { isValid: boolean; error?: string };
 }
 
 const IPsecForm: React.FC<IPsecFormProps> = ({ formData, onChange }) => {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
     new Set(['network', 'phase1'])
   );
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const toggleSection = (section: string) => {
     setExpandedSections((prev) => {
@@ -34,11 +37,11 @@ const IPsecForm: React.FC<IPsecFormProps> = ({ formData, onChange }) => {
 
   const fields: FormField[] = [
     // Network Configuration
-    { name: 'tunnel_name', label: 'Tunnel Name', type: 'text', placeholder: 'HQ-to-Branch', section: 'network', required: true },
-    { name: 'local_gateway', label: 'Local Gateway IP', type: 'text', placeholder: '203.0.113.1', section: 'network', required: true },
-    { name: 'remote_gateway', label: 'Remote Gateway IP', type: 'text', placeholder: '198.51.100.1', section: 'network', required: true },
-    { name: 'local_subnet', label: 'Local Subnet', type: 'text', placeholder: '192.168.1.0/24', section: 'network', required: true },
-    { name: 'remote_subnet', label: 'Remote Subnet', type: 'text', placeholder: '10.0.1.0/24', section: 'network', required: true },
+    { name: 'tunnel_name', label: 'Tunnel Name', type: 'text', placeholder: 'HQ-to-Branch', section: 'network', required: true, validator: validatePhase1Name },
+    { name: 'local_gateway', label: 'Local Gateway IP', type: 'text', placeholder: '203.0.113.1', section: 'network', required: true, validator: validateIPAddress },
+    { name: 'remote_gateway', label: 'Remote Gateway IP', type: 'text', placeholder: '198.51.100.1', section: 'network', required: true, validator: validateIPAddress },
+    { name: 'local_subnet', label: 'Local Subnet', type: 'text', placeholder: '192.168.1.0/24', section: 'network', required: true, validator: validateSubnet },
+    { name: 'remote_subnet', label: 'Remote Subnet', type: 'text', placeholder: '10.0.1.0/24', section: 'network', required: true, validator: validateSubnet },
     { name: 'interface', label: 'WAN Interface', type: 'select', section: 'network', options: [
       { value: 'wan1', label: 'wan1' },
       { value: 'wan2', label: 'wan2' },
@@ -120,8 +123,37 @@ const IPsecForm: React.FC<IPsecFormProps> = ({ formData, onChange }) => {
     });
   }, []);
 
+  // Handle field validation
+  const handleFieldChange = (field: FormField, value: any) => {
+    onChange(field.name, value);
+
+    // Clear error when user starts typing
+    if (fieldErrors[field.name]) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field.name];
+        return newErrors;
+      });
+    }
+  };
+
+  const handleFieldBlur = (field: FormField, value: any) => {
+    if (!field.validator) return;
+
+    const result = field.validator(value);
+    if (!result.isValid && result.error) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        [field.name]: result.error!,
+      }));
+    }
+  };
+
   const renderField = (field: FormField) => {
     const value = formData[field.name] || '';
+    const hasError = fieldErrors[field.name];
+    const borderColor = hasError ? 'border-red-500' : 'border-[#334155]';
+    const focusBorderColor = hasError ? 'focus:border-red-400' : 'focus:border-[#06b6d4]';
 
     return (
       <div key={field.name} className="space-y-2">
@@ -133,8 +165,9 @@ const IPsecForm: React.FC<IPsecFormProps> = ({ formData, onChange }) => {
         {field.type === 'select' ? (
           <select
             value={value}
-            onChange={(e) => onChange(field.name, e.target.value)}
-            className="w-full px-4 py-2 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white focus:border-[#06b6d4] focus:outline-none"
+            onChange={(e) => handleFieldChange(field, e.target.value)}
+            onBlur={(e) => handleFieldBlur(field, e.target.value)}
+            className={`w-full px-4 py-2 bg-[#0f172a] border-2 ${borderColor} rounded-lg text-white ${focusBorderColor} focus:outline-none transition-colors`}
           >
             {field.options?.map((option) => (
               <option key={option.value} value={option.value}>
@@ -146,18 +179,28 @@ const IPsecForm: React.FC<IPsecFormProps> = ({ formData, onChange }) => {
           <input
             type="number"
             value={value}
-            onChange={(e) => onChange(field.name, e.target.value)}
+            onChange={(e) => handleFieldChange(field, e.target.value)}
+            onBlur={(e) => handleFieldBlur(field, e.target.value)}
             placeholder={field.placeholder}
-            className="w-full px-4 py-2 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white placeholder-gray-500 focus:border-[#06b6d4] focus:outline-none"
+            className={`w-full px-4 py-2 bg-[#0f172a] border-2 ${borderColor} rounded-lg text-white placeholder-gray-500 ${focusBorderColor} focus:outline-none transition-colors`}
           />
         ) : (
           <input
             type="text"
             value={value}
-            onChange={(e) => onChange(field.name, e.target.value)}
+            onChange={(e) => handleFieldChange(field, e.target.value)}
+            onBlur={(e) => handleFieldBlur(field, e.target.value)}
             placeholder={field.placeholder}
-            className="w-full px-4 py-2 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white placeholder-gray-500 focus:border-[#06b6d4] focus:outline-none"
+            className={`w-full px-4 py-2 bg-[#0f172a] border-2 ${borderColor} rounded-lg text-white placeholder-gray-500 ${focusBorderColor} focus:outline-none transition-colors`}
           />
+        )}
+
+        {/* Error Message */}
+        {hasError && (
+          <p className="text-red-400 text-sm flex items-center gap-1">
+            <span>⚠️</span>
+            <span>{hasError}</span>
+          </p>
         )}
       </div>
     );
