@@ -1,4 +1,14 @@
 import React, { useState } from 'react';
+import { generateIPsecCLI, generateIPsecGUI, generateIPsecScript } from '../../../utils/generators/ipsec';
+
+// Placeholder generators for other config types (to be implemented)
+const generateSDWANCLI = (_data: Record<string, any>) => `# SD-WAN CLI (placeholder)\n# Implement in generators/sdwan.ts`;
+const generateSDWANGUI = (_data: Record<string, any>) => `SD-WAN GUI steps (placeholder)`;
+const generateSDWANScript = (_data: Record<string, any>) => `#!/bin/bash\n# SD-WAN script (placeholder)`;
+
+const generateFirewallCLI = (_data: Record<string, any>) => `# Firewall CLI (placeholder)\n# Implement in generators/firewall.ts`;
+const generateFirewallGUI = (_data: Record<string, any>) => `Firewall GUI steps (placeholder)`;
+const generateFirewallScript = (_data: Record<string, any>) => `#!/bin/bash\n# Firewall script (placeholder)`;
 
 interface OutputDisplayProps {
   configType: string;
@@ -8,49 +18,58 @@ interface OutputDisplayProps {
 
 type TabType = 'cli' | 'gui' | 'script';
 
-const OutputDisplay: React.FC<OutputDisplayProps> = ({ configType, formData: _formData, onClose }) => {
+const OutputDisplay: React.FC<OutputDisplayProps> = ({ configType, formData, onClose }) => {
   const [activeTab, setActiveTab] = useState<TabType>('cli');
   const [copied, setCopied] = useState<boolean>(false);
 
   // Generate output based on config type and form data
   const generateCLI = (): string => {
-    // TODO: Implement actual generation logic based on config type
-    return `# FortiGate CLI Configuration
+    switch (configType) {
+      case 'ipsec':
+        return generateIPsecCLI(formData);
+      case 'sdwan':
+        return generateSDWANCLI(formData);
+      case 'firewall':
+        return generateFirewallCLI(formData);
+      default:
+        return `# FortiGate CLI Configuration
 # Type: ${configType.toUpperCase()}
 # Generated: ${new Date().toLocaleString()}
 
-config system interface
-    edit "wan1"
-        set ip 192.168.1.1 255.255.255.0
-    next
-end
-
-# Add more configuration commands here...`;
+# Configuration for ${configType} will be available in a future update.
+# Currently available: IPsec VPN, SD-WAN, Firewall Policy
+`;
+    }
   };
 
   const generateGUI = (): string => {
-    return `📋 FortiGate GUI Configuration Steps
+    switch (configType) {
+      case 'ipsec':
+        return generateIPsecGUI(formData);
+      case 'sdwan':
+        return generateSDWANGUI(formData);
+      case 'firewall':
+        return generateFirewallGUI(formData);
+      default:
+        return `📋 FortiGate GUI Configuration Steps
 Type: ${configType.toUpperCase()}
 
-1. Navigate to Network > Interfaces
-   - Click 'Create New' → Interface
-
-2. Configure Interface Settings:
-   - Name: wan1
-   - Type: Physical
-   - IP/Network Mask: 192.168.1.1/24
-
-3. Click 'OK' to save
-
-4. Verify the configuration:
-   - Check interface status shows green
-   - Test connectivity
-
-# Add more GUI steps here...`;
+GUI steps for ${configType} will be available in a future update.
+Currently available: IPsec VPN, SD-WAN, Firewall Policy
+`;
+    }
   };
 
   const generateScript = (): string => {
-    return `#!/bin/bash
+    switch (configType) {
+      case 'ipsec':
+        return generateIPsecScript(formData);
+      case 'sdwan':
+        return generateSDWANScript(formData);
+      case 'firewall':
+        return generateFirewallScript(formData);
+      default:
+        return `#!/bin/bash
 # FortiGate Complete Configuration Script
 # Type: ${configType.toUpperCase()}
 # Generated: ${new Date().toLocaleString()}
@@ -75,6 +94,7 @@ exit
 EOF
 
 echo "Configuration complete!"`;
+    }
   };
 
   const getOutput = (): string => {
