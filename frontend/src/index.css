@@ -11,7 +11,7 @@
   }
 
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #171717 0%, #262626 100%);
     color: #e5e5e5;
     min-height: 100vh;
