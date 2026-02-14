@@ -82,7 +82,7 @@ const Login: React.FC = () => {
         </div>
 
         {/* Login Card */}
-        <div className="bg-[#1e293b] border-2 border-[#334155] rounded-2xl p-8 shadow-2xl">
+        <div className="bg-[#262626] border-2 border-[#404040] rounded-2xl p-8 shadow-2xl">
           <h2 className="text-2xl font-bold text-red-400 mb-6">Login</h2>
 
           {/* Error Alert */}
@@ -104,8 +104,8 @@ const Login: React.FC = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 bg-[#0f172a] border-2 ${
-                  validationErrors.username ? 'border-red-500' : 'border-[#334155]'
+                className={`w-full px-4 py-3 bg-[#171717] border-2 ${
+                  validationErrors.username ? 'border-red-500' : 'border-[#404040]'
                 } rounded-lg text-white placeholder-gray-500 focus:border-red-700 focus:outline-none transition-colors`}
                 placeholder="Enter your username"
                 disabled={isSubmitting}
@@ -126,8 +126,8 @@ const Login: React.FC = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 bg-[#0f172a] border-2 ${
-                  validationErrors.password ? 'border-red-500' : 'border-[#334155]'
+                className={`w-full px-4 py-3 bg-[#171717] border-2 ${
+                  validationErrors.password ? 'border-red-500' : 'border-[#404040]'
                 } rounded-lg text-white placeholder-gray-500 focus:border-red-700 focus:outline-none transition-colors`}
                 placeholder="Enter your password"
                 disabled={isSubmitting}

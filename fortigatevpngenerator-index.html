@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FortiGate IPSEC VPN + Entra ID SAML Config Generator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>tailwind.config={darkMode:'class',theme:{extend:{colors:{fg:{50:'#ecfeff',100:'#cffafe',200:'#a5f3fc',300:'#67e8f9',400:'#22d3ee',500:'#06b6d4',600:'#0891b2',700:'#0e7490',800:'#155e75',900:'#164e63'},srf:{50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',300:'#cbd5e1',400:'#94a3b8',500:'#64748b',600:'#475569',700:'#334155',800:'#1e293b',900:'#0f172a',950:'#020617'}}}}}</script>
+<style>
+/* ===== CUSTOM FONTS ===== */
+body { font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.mono { font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, 'Courier New', monospace; }
+
+/* ===== SCROLLBAR ===== */
+* { scrollbar-width: thin; scrollbar-color: #64748b transparent; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; transition: background 0.2s; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+.dark ::-webkit-scrollbar-thumb { background: #475569; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* ===== BACKGROUND PATTERNS ===== */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.03;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(34, 211, 238, 0.1) 0%, transparent 50%);
+}
+
+.dark body::before {
+  opacity: 0.05;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(6, 182, 212, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(34, 211, 238, 0.15) 0%, transparent 50%);
+}
+
+/* ===== ANIMATED GRADIENT MESH ===== */
+.header-glow {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(34, 211, 238, 0.05) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.dark .header-glow {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(34, 211, 238, 0.08) 100%);
+}
+
+/* ===== SECTION ANIMATIONS ===== */
+[x-cloak] { display: none !important; }
+
+.sec-panel {
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top;
+}
+
+.sec-panel.shut {
+  max-height: 0 !important;
+  opacity: 0;
+  overflow: hidden;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  transform: scaleY(0.95);
+}
+
+.chev {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shut-t .chev {
+  transform: rotate(-90deg);
+}
+
+/* Section button hover effects */
+section button[type="button"]:hover .chev {
+  transform: translateY(2px);
+}
+
+section button[type="button"].shut-t:hover .chev {
+  transform: rotate(-90deg) translateX(2px);
+}
+
+/* ===== TUNNEL & USER GROUP ANIMATIONS ===== */
+.tunnel-item,
+.user-group-item {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* ===== FIELD VALIDATION ===== */
+.field-ok {
+  border-color: #22c55e !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.field-err {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* ===== BADGES ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.badge-r {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.badge-y {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.badge-g {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.dark .badge-r {
+  background: linear-gradient(135deg, #450a0a 0%, #7f1d1d 100%);
+  color: #fca5a5;
+  border-color: #7f1d1d;
+}
+
+.dark .badge-y {
+  background: linear-gradient(135deg, #451a03 0%, #78350f 100%);
+  color: #fcd34d;
+  border-color: #78350f;
+}
+
+.dark .badge-g {
+  background: linear-gradient(135deg, #052e16 0%, #14532d 100%);
+  color: #86efac;
+  border-color: #14532d;
+}
+
+/* ===== PRE & CODE ===== */
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
+}
+
+/* ===== PROGRESS RING ===== */
+.ring-prog {
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.ring-prog circle {
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              stroke 0.3s ease;
+}
+
+/* ===== TOOLTIPS ===== */
+.tip { position: relative; }
+
+.tip .tip-t {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  z-index: 60;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  width: max-content;
+  max-width: 280px;
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #f1f5f9;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .tip .tip-t {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: #1e293b;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tip:hover .tip-t,
+.tip:focus-within .tip-t {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tip .tip-t::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #1e293b;
+}
+
+.dark .tip .tip-t::after {
+  border-top-color: #f1f5f9;
+}
+
+/* ===== SECTION CARDS ===== */
+section {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+.dark section:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ===== ENHANCED LOGO ===== */
+.logo-icon {
+  background: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
+  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-icon:hover {
+  transform: rotate(-5deg) scale(1.05);
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .mono { font-size: 11px; }
+}
+
+/* ===== BUTTON ANIMATIONS ===== */
+button, .btn-dark, .btn-outline, .btn-red, .btn-green {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* ===== INPUT FOCUS GLOW ===== */
+.inp:focus {
+  border-color: #06b6d4;
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15), 0 4px 12px rgba(6, 182, 212, 0.1);
+  outline: none;
+}
+
+/* ===== TAB ANIMATIONS ===== */
+.tab-btn {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #06b6d4, transparent);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-btn.active::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* ===== COMPLETENESS BAR GLOW ===== */
+#compBar {
+  background: linear-gradient(90deg, #06b6d4, #22d3ee);
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== FADE IN ANIMATION ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* ===== SECTION NUMBER BADGES ===== */
+.section-num {
+  background: linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%);
+  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .section-num {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(34, 211, 238, 0.15) 100%);
+  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.25);
+}
+
+section:hover .section-num {
+  transform: scale(1.1);
+  box-shadow: 0 3px 12px rgba(6, 182, 212, 0.3);
+}
+</style>
+</head>
+<body class="bg-srf-50 dark:bg-srf-950 text-srf-800 dark:text-srf-200 min-h-screen transition-colors relative">
+
+<!-- ===== HEADER ===== -->
+<header class="sticky top-0 z-50 header-glow bg-white/80 dark:bg-srf-900/80 border-b border-srf-200/50 dark:border-srf-700/50 shadow-lg">
+<div class="max-w-[1440px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3 flex-wrap">
+  <div class="flex items-center gap-3">
+    <div class="logo-icon w-11 h-11 rounded-xl flex items-center justify-center">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+    </div>
+    <div>
+      <h1 class="text-base sm:text-lg font-bold leading-tight tracking-tight bg-gradient-to-r from-srf-900 to-srf-700 dark:from-srf-50 dark:to-srf-200 bg-clip-text text-transparent">FortiGate VPN Config Generator</h1>
+      <p class="text-[11px] text-srf-500 dark:text-srf-400 font-medium">IPSEC + Microsoft Entra ID SAML &bull; FortiOS 7.4.11+</p>
+    </div>
+  </div>
+  <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+    <!-- Security Score Ring -->
+    <div class="flex items-center gap-2" title="Security Score">
+      <svg class="ring-prog w-11 h-11" viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="16" fill="none" stroke="currentColor" class="text-srf-200 dark:text-srf-700" stroke-width="3.5"/>
+        <circle id="scoreRing" cx="20" cy="20" r="16" fill="none" stroke="#22c55e" stroke-width="3.5" stroke-dasharray="100.53" stroke-dashoffset="100.53" stroke-linecap="round"/>
+      </svg>
+      <div class="text-[11px] leading-tight font-bold">
+        <span id="scoreVal" class="text-lg bg-gradient-to-r from-fg-600 to-fg-500 bg-clip-text text-transparent">0</span><span class="text-srf-400">%</span><br>
+        <span class="font-medium text-srf-400 text-[10px]">Security</span>
+      </div>
+    </div>
+    <!-- Completeness -->
+    <div class="hidden sm:flex items-center gap-2.5">
+      <div class="w-24 h-2.5 bg-srf-200 dark:bg-srf-700 rounded-full overflow-hidden shadow-inner">
+        <div id="compBar" class="h-full rounded-full" style="width:0"></div>
+      </div>
+      <span class="text-[11px] font-bold text-srf-600 dark:text-srf-300" id="compPct">0%</span>
+    </div>
+    <!-- Best Practices -->
+    <button onclick="bestPractices()" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-gradient-to-r from-fg-600 to-fg-500 hover:from-fg-700 hover:to-fg-600 text-white text-xs font-bold transition-all shadow-md hover:shadow-lg" title="Ctrl+B: Apply best practices">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      Best Practices
+    </button>
+    <!-- Dark Toggle -->
+    <button onclick="toggleDark()" class="p-2.5 rounded-lg hover:bg-srf-100 dark:hover:bg-srf-800 transition-all" aria-label="Toggle dark mode">
+      <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg class="w-5 h-5 dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+    </button>
+  </div>
+</div>
+</header>
+
+<main class="max-w-[1440px] mx-auto px-4 sm:px-6 py-6 relative z-10">
+<!-- Error Banner -->
+<div id="errBanner" class="hidden mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-700 dark:text-red-300 font-medium"></div>
+
+<div class="grid grid-cols-1 xl:grid-cols-5 gap-5">
+
+<!-- ============ LEFT: FORM (3 cols) ============ -->
+<div class="xl:col-span-3 space-y-3.5" id="formWrap">
+
+<!-- SEC 1: IPSEC Tunnels (Dynamic) -->
+<section class="bg-white dark:bg-srf-800 rounded-xl shadow-md border border-srf-200/50 dark:border-srf-700/50 overflow-hidden">
+<button type="button" onclick="togSec(this)" aria-expanded="true" class="w-full flex items-center justify-between px-5 py-4 text-left group hover:bg-srf-50/50 dark:hover:bg-srf-700/30 transition-colors">
+  <div class="flex items-center gap-3">
+    <span class="section-num w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold text-fg-700 dark:text-fg-300">1</span>
+    <span class="font-bold text-sm">IPSEC Tunnels</span>
+  </div>
+  <svg class="chev w-5 h-5 text-srf-400 group-hover:text-fg-500 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div class="sec-panel px-5 pb-5 space-y-4">
+  <div class="flex items-center justify-between">
+    <p class="text-xs text-srf-500 dark:text-srf-400 font-medium">Configure one or more IPSEC tunnels (e.g., for dual ISP setups)</p>
+    <button type="button" onclick="addTunnel()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-fg-500 to-fg-600 hover:from-fg-600 hover:to-fg-700 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+      Add Tunnel
+    </button>
+  </div>
+
+  <div id="tunnelsContainer" class="space-y-4">
+    <!-- Tunnels will be dynamically added here -->
+  </div>
+</div>
+</section>
+
+<!-- SEC 2: Phase 1 -->
+<section class="bg-white dark:bg-srf-800 rounded-xl shadow-md border border-srf-200/50 dark:border-srf-700/50 overflow-hidden">
+<button type="button" onclick="togSec(this)" aria-expanded="true" class="w-full flex items-center justify-between px-5 py-4 text-left group hover:bg-srf-50/50 dark:hover:bg-srf-700/30 transition-colors">
+  <div class="flex items-center gap-3">
+    <span class="section-num w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold text-fg-700 dark:text-fg-300">2</span>
+    <span class="font-bold text-sm">Phase 1 (IKEv2)</span>
+    <span id="p1Bdg"></span>
+  </div>
+  <svg class="chev w-5 h-5 text-srf-400 group-hover:text-fg-500 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div class="sec-panel px-5 pb-5 space-y-4">
+  <div class="tip"><span class="tip-t">Select one or more encryption proposals. AES256-SHA256 provides strong security with broad compatibility across client platforms.</span>
+    <label class="lbl">Encryption/Hash Proposals</label>
+    <div class="flex flex-wrap gap-x-4 gap-y-2 mt-1" id="p1Props">
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p1p rounded accent-fg-600" value="aes256-sha256" checked onchange="v();gen()"> aes256-sha256</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p1p rounded accent-fg-600" value="aes128-sha256" checked onchange="v();gen()"> aes128-sha256</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p1p rounded accent-fg-600" value="aes256gcm-prfsha384" onchange="v();gen()"> aes256gcm-prfsha384</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p1p rounded accent-fg-600" value="aes128gcm-prfsha256" onchange="v();gen()"> aes128gcm-prfsha256</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p1p rounded accent-fg-600" value="chacha20poly1305-prfsha256" onchange="v();gen()"> chacha20poly1305-prfsha256</label>
+    </div>
+  </div>
+  <div class="tip"><span class="tip-t">DH Groups 19-21 (Elliptic Curve) provide the strongest key exchange security. Groups below 15 are considered weak and should be avoided.</span>
+    <label class="lbl">DH Groups</label>
+    <div class="flex flex-wrap gap-x-4 gap-y-2 mt-1" id="p1Dh">
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p1d rounded accent-fg-600" value="14" onchange="v();gen()"> 14</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p1d rounded accent-fg-600" value="15" onchange="v();gen()"> 15</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p1d rounded accent-fg-600" value="19" checked onchange="v();gen()"> 19</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p1d rounded accent-fg-600" value="20" checked onchange="v();gen()"> 20</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p1d rounded accent-fg-600" value="21" checked onchange="v();gen()"> 21</label>
+    </div>
+    <div id="dhWarn" class="hidden mt-2"></div>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div><label class="lbl" for="p1kl">Key Lifetime (sec)</label><input id="p1kl" type="number" value="86400" min="120" placeholder="86400" class="inp" oninput="gen()"></div>
+    <div><label class="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" id="natTrav" checked class="rounded accent-fg-600" onchange="gen()"> NAT Traversal</label></div>
+  </div>
+  <div class="border-t border-srf-200 dark:border-srf-700 pt-4">
+    <label class="flex items-center gap-2 text-xs font-semibold mb-3 cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" id="dpdOn" checked class="rounded accent-fg-600" onchange="togDpd();gen()"> Dead Peer Detection (DPD)</label>
+    <div id="dpdBox" class="grid grid-cols-2 gap-4">
+      <div><label class="lbl" for="dpdInt">DPD Interval (sec)</label><input id="dpdInt" type="number" value="5" min="1" class="inp" oninput="gen()"></div>
+      <div><label class="lbl" for="dpdRet">DPD Retry Count</label><input id="dpdRet" type="number" value="3" min="1" class="inp" oninput="gen()"></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SEC 3: Phase 2 -->
+<section class="bg-white dark:bg-srf-800 rounded-xl shadow-md border border-srf-200/50 dark:border-srf-700/50 overflow-hidden">
+<button type="button" onclick="togSec(this)" aria-expanded="true" class="w-full flex items-center justify-between px-5 py-4 text-left group hover:bg-srf-50/50 dark:hover:bg-srf-700/30 transition-colors">
+  <div class="flex items-center gap-3">
+    <span class="section-num w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold text-fg-700 dark:text-fg-300">3</span>
+    <span class="font-bold text-sm">Phase 2 (IPsec)</span>
+  </div>
+  <svg class="chev w-5 h-5 text-srf-400 group-hover:text-fg-500 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div class="sec-panel px-5 pb-5 space-y-4">
+  <div>
+    <label class="lbl">Encryption/Hash Proposals</label>
+    <div class="flex flex-wrap gap-x-4 gap-y-2 mt-1">
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p2p rounded accent-fg-600" value="aes256-sha256" checked onchange="v();gen()"> aes256-sha256</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p2p rounded accent-fg-600" value="aes128-sha256" checked onchange="v();gen()"> aes128-sha256</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p2p rounded accent-fg-600" value="aes256gcm" onchange="v();gen()"> aes256gcm</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p2p rounded accent-fg-600" value="aes128gcm" onchange="v();gen()"> aes128gcm</label>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" class="p2p rounded accent-fg-600" value="chacha20poly1305" onchange="v();gen()"> chacha20poly1305</label>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+    <div><label class="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" id="pfsOn" checked class="rounded accent-fg-600" onchange="togPfs();gen()"> Enable PFS</label></div>
+    <div id="pfsDhW"><label class="lbl" for="pfsDh">PFS DH Group</label><select id="pfsDh" class="inp" onchange="gen()"><option>14</option><option>15</option><option selected>19</option><option>20</option><option>21</option></select></div>
+    <div><label class="lbl" for="p2kl">Key Lifetime (sec)</label><input id="p2kl" type="number" value="43200" min="120" placeholder="43200" class="inp" oninput="gen()"></div>
+  </div>
+</div>
+</section>
+
+<!-- SEC 4: IP & DNS -->
+<section class="bg-white dark:bg-srf-800 rounded-xl shadow-md border border-srf-200/50 dark:border-srf-700/50 overflow-hidden">
+<button type="button" onclick="togSec(this)" aria-expanded="true" class="w-full flex items-center justify-between px-5 py-4 text-left group hover:bg-srf-50/50 dark:hover:bg-srf-700/30 transition-colors">
+  <div class="flex items-center gap-3">
+    <span class="section-num w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold text-fg-700 dark:text-fg-300">4</span>
+    <span class="font-bold text-sm">IP Addressing &amp; DNS</span>
+  </div>
+  <svg class="chev w-5 h-5 text-srf-400 group-hover:text-fg-500 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div class="sec-panel px-5 pb-5 space-y-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div><label class="lbl" for="startIp">IPv4 Start IP</label><input id="startIp" type="text" placeholder="10.212.134.1" class="inp" oninput="v();gen()"></div>
+    <div><label class="lbl" for="endIp">IPv4 End IP</label><input id="endIp" type="text" placeholder="10.212.134.254" class="inp" oninput="v();gen()"></div>
+  </div>
+  <div id="ipErr" class="hidden text-xs text-red-500 font-semibold -mt-2"></div>
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div><label class="lbl" for="dnsMode">DNS Mode</label><select id="dnsMode" class="inp" onchange="togDns();gen()"><option value="auto" selected>auto</option><option value="manual">manual</option></select></div>
+    <div id="d1W" class="hidden"><label class="lbl" for="dns1">Primary DNS</label><input id="dns1" type="text" placeholder="8.8.8.8" class="inp" oninput="v();gen()"></div>
+    <div id="d2W" class="hidden"><label class="lbl" for="dns2">Secondary DNS</label><input id="dns2" type="text" placeholder="8.8.4.4" class="inp" oninput="gen()"></div>
+  </div>
+</div>
+</section>
+
+<!-- SEC 5: Split Tunneling -->
+<section class="bg-white dark:bg-srf-800 rounded-xl shadow-md border border-srf-200/50 dark:border-srf-700/50 overflow-hidden">
+<button type="button" onclick="togSec(this)" aria-expanded="true" class="w-full flex items-center justify-between px-5 py-4 text-left group hover:bg-srf-50/50 dark:hover:bg-srf-700/30 transition-colors">
+  <div class="flex items-center gap-3">
+    <span class="section-num w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold text-fg-700 dark:text-fg-300">5</span>
+    <span class="font-bold text-sm">Split Tunneling</span>
+  </div>
+  <svg class="chev w-5 h-5 text-srf-400 group-hover:text-fg-500 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div class="sec-panel px-5 pb-5 space-y-4">
+  <div><label class="lbl" for="splitMode">Mode</label><select id="splitMode" class="inp w-full sm:w-72" onchange="togSplit();gen()"><option value="disabled" selected>Disabled [Full Tunnel]</option><option value="enabled">Enabled [Split Tunnel]</option></select></div>
+  <div id="splitW" class="hidden">
+    <label class="lbl" for="splitGrpName">Address Group Name (Optional)</label>
+    <input id="splitGrpName" type="text" pattern="[A-Za-z0-9_-]+" placeholder="Protected-Networks" class="inp" oninput="gen()">
+    <p class="help"><strong>Custom name for the address group.</strong> If subnets are listed below, creates a new group with this name. If no subnets, references an existing FortiGate group. Leave empty to auto-generate name.</p>
+
+    <label class="lbl" for="splitNets">Protected Subnets (CIDR)</label>
+    <textarea id="splitNets" rows="4" placeholder="192.168.1.0/24&#10;10.0.0.0/8&#10;172.16.0.0/12" class="inp mono text-sm" oninput="v();gen()"></textarea>
+    <p class="help">Enter one CIDR subnet per line. Only traffic to these networks will route through the VPN. <strong>Leave empty to reference an existing address group by name above.</strong></p>
+    <div id="cidrErr" class="hidden text-xs text-red-500 font-semibold mt-1"></div>
+  </div>
+</div>
+</section>
+
+<!-- SEC 6: Entra ID / SAML -->
+<section class="bg-white dark:bg-srf-800 rounded-xl shadow-md border border-srf-200/50 dark:border-srf-700/50 overflow-hidden">
+<button type="button" onclick="togSec(this)" aria-expanded="true" class="w-full flex items-center justify-between px-5 py-4 text-left group hover:bg-srf-50/50 dark:hover:bg-srf-700/30 transition-colors">
+  <div class="flex items-center gap-3">
+    <span class="section-num w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold text-fg-700 dark:text-fg-300">6</span>
+    <span class="font-bold text-sm">Entra ID / SAML</span>
+  </div>
+  <svg class="chev w-5 h-5 text-srf-400 group-hover:text-fg-500 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div class="sec-panel px-5 pb-5 space-y-5">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div><label class="lbl" for="samlName">SAML Server Name</label><input id="samlName" type="text" pattern="[A-Za-z0-9-]+" placeholder="Entra-ID-SAML" class="inp" oninput="v();gen()"><p class="help">Unique name for your SAML server object. Use alphanumeric and hyphens.</p></div>
+    <div><label class="lbl">FortiGate FQDN</label><input id="samlFqdn" type="text" readonly class="inp bg-srf-100 dark:bg-srf-900 text-srf-500 cursor-not-allowed"><p class="help">Automatically populated from Network configuration.</p></div>
+  </div>
+  <!-- Auto URLs -->
+  <div class="rounded-xl bg-gradient-to-br from-srf-50 to-srf-100 dark:from-srf-900 dark:to-srf-800 border border-srf-200/50 dark:border-srf-700/50 p-4 space-y-2.5 shadow-inner">
+    <p class="text-[11px] font-extrabold text-srf-500 uppercase tracking-wider flex items-center gap-2">
+      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"/></svg>
+      Auto-Generated SAML URLs
+    </p>
+    <div><span class="text-[11px] text-srf-400 font-semibold">Entity ID:</span><p id="urlEid" class="text-xs mono text-fg-600 dark:text-fg-400 break-all mt-0.5">&mdash;</p></div>
+    <div><span class="text-[11px] text-srf-400 font-semibold">ACS URL:</span><p id="urlAcs" class="text-xs mono text-fg-600 dark:text-fg-400 break-all mt-0.5">&mdash;</p></div>
+    <div><span class="text-[11px] text-srf-400 font-semibold">SLO URL:</span><p id="urlSlo" class="text-xs mono text-fg-600 dark:text-fg-400 break-all mt-0.5">&mdash;</p></div>
+  </div>
+  <!-- Entra URLs -->
+  <div class="space-y-4">
+    <div><label class="lbl" for="eLoginUrl">Entra ID Login URL</label><input id="eLoginUrl" type="url" placeholder="https://login.microsoftonline.com/{tenant-id}/saml2" class="inp" oninput="v();gen()"></div>
+    <div><label class="lbl" for="eEntityId">Entra ID Entity ID / Identifier</label><input id="eEntityId" type="url" placeholder="https://sts.windows.net/{tenant-id}/" class="inp" oninput="v();gen()"></div>
+    <div><label class="lbl" for="eLogoutUrl">Entra ID Logout URL</label><input id="eLogoutUrl" type="url" placeholder="https://login.microsoftonline.com/{tenant-id}/saml2" class="inp" oninput="v();gen()"></div>
+  </div>
+  <!-- Cert Alert -->
+  <div class="rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800/50 p-4 shadow-sm">
+    <p class="text-xs font-bold text-amber-800 dark:text-amber-300 mb-2 flex items-center gap-2">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+      Certificate Prerequisites
+    </p>
+    <ol class="text-xs text-amber-700 dark:text-amber-400 list-decimal list-inside space-y-1 leading-relaxed">
+      <li>Download the Base64 certificate from Azure Enterprise Application</li>
+      <li>Import to FortiGate: System &gt; Certificates &gt; Import &gt; Remote Certificate</li>
+      <li>Note the certificate name (e.g. 'REMOTE_Cert_1' or give it a custom name)</li>
+    </ol>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div><label class="lbl" for="idpCert">Entra ID Certificate Name</label><input id="idpCert" type="text" pattern="[A-Za-z0-9_-]+" placeholder="Entra-SAML-Cert" class="inp" oninput="v();gen()"><p class="help">The name you assigned when importing the Entra ID remote certificate to FortiGate.</p></div>
+    <div class="tip"><span class="tip-t">For testing: Use 'Fortinet_Factory' (built-in). For production: Use a valid certificate matching your FQDN to avoid client warnings.</span>
+      <label class="lbl" for="srvCert">FortiGate Server Certificate</label><input id="srvCert" type="text" value="Fortinet_Factory" placeholder="Fortinet_Factory" class="inp" oninput="gen()"><p class="help">The local certificate FortiGate presents to VPN clients during connection.</p>
+    </div>
+  </div>
+  <!-- User Groups (Dynamic) -->
+  <div class="border-t border-srf-200 dark:border-srf-700 pt-5 space-y-4">
+    <div class="flex items-center justify-between">
+      <p class="text-[11px] font-extrabold text-srf-500 uppercase tracking-wider">User Group Configuration</p>
+      <button type="button" onclick="addUserGroup()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-fg-500 to-fg-600 hover:from-fg-600 hover:to-fg-700 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        Add Group
+      </button>
+    </div>
+
+    <div id="userGroupsContainer" class="space-y-4">
+      <!-- User groups will be dynamically added here -->
+    </div>
+
+    <div class="rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border border-blue-200 dark:border-blue-800/50 p-3.5 shadow-sm">
+      <p class="text-xs text-blue-700 dark:text-blue-300 leading-relaxed"><strong class="font-bold">Finding the Object ID:</strong> Azure Portal &rarr; Microsoft Entra ID &rarr; Groups &rarr; Select group &rarr; Copy Object ID from Overview page</p>
+    </div>
+    <div>
+      <label class="flex items-center gap-2 text-sm cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" id="grpP1" class="rounded accent-fg-600" onchange="gen()"><span class="text-xs font-semibold">Apply user groups in Phase 1 tunnel configuration</span></label>
+      <p class="help ml-6 mt-1"><strong>Unchecked (Recommended):</strong> Apply user group authorization in firewall policies for maximum flexibility.<br><strong>Checked:</strong> Enforce user group restrictions directly at the VPN tunnel level.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SEC 7: Advanced -->
+<section class="bg-white dark:bg-srf-800 rounded-xl shadow-md border border-srf-200/50 dark:border-srf-700/50 overflow-hidden">
+<button type="button" onclick="togSec(this)" aria-expanded="true" class="w-full flex items-center justify-between px-5 py-4 text-left group hover:bg-srf-50/50 dark:hover:bg-srf-700/30 transition-colors">
+  <div class="flex items-center gap-3">
+    <span class="section-num w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold text-fg-700 dark:text-fg-300">7</span>
+    <span class="font-bold text-sm">Advanced Options</span>
+  </div>
+  <svg class="chev w-5 h-5 text-srf-400 group-hover:text-fg-500 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+</button>
+<div class="sec-panel px-5 pb-5 space-y-4">
+  <div class="flex flex-wrap gap-x-6 gap-y-2.5">
+    <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" id="autoNeg" checked class="rounded accent-fg-600" onchange="gen()"> Client Auto-Negotiate</label>
+    <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" id="keepAlive" checked class="rounded accent-fg-600" onchange="gen()"> Client Keep-Alive</label>
+    <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" id="childless" checked class="rounded accent-fg-600" onchange="gen()"> Childless IKE</label>
+    <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-fg-600 transition-colors"><input type="checkbox" id="savePw" checked class="rounded accent-fg-600" onchange="gen()"> Save Password</label>
+  </div>
+  <div>
+    <label class="lbl" for="psk">Pre-Shared Key (PSK) <span class="text-amber-500 text-[10px] font-medium">FortiClient XML only</span></label>
+    <div class="flex items-center gap-2">
+      <input id="psk" type="password" placeholder="Enter PSK for FortiClient XML export" class="inp flex-1 mono text-sm" oninput="gen()">
+      <button type="button" onclick="togPsk()" class="px-3 py-2.5 rounded-lg border border-srf-300 dark:border-srf-600 hover:bg-srf-100 dark:hover:bg-srf-700 transition-all text-xs font-bold" title="Show/Hide PSK">
+        <svg id="pskEye" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+      </button>
+    </div>
+    <p class="help">Required for FortiClient XML profile. The PSK is excluded from CLI/GUI outputs for security.</p>
+  </div>
+  <div><label class="lbl" for="banner">Banner Message</label><textarea id="banner" rows="2" placeholder="Welcome to Corporate VPN" class="inp" oninput="gen()"></textarea></div>
+</div>
+</section>
+
+<!-- Mobile Action Buttons -->
+<div class="xl:hidden flex flex-wrap gap-2.5 mt-5">
+  <button onclick="saveCfg()" class="flex-1 min-w-[120px] btn-dark">Save JSON</button>
+  <button onclick="$('loadF').click()" class="flex-1 min-w-[120px] btn-outline">Load JSON</button>
+  <button onclick="resetAll()" class="btn-red">Reset</button>
+</div>
+<input type="file" id="loadF" accept=".json" class="hidden" onchange="loadCfg(event)">
+
+</div><!-- /form -->
+
+<!-- ============ RIGHT: OUTPUT (2 cols) ============ -->
+<div class="xl:col-span-2">
+<div class="sticky top-[80px] space-y-3.5">
+
+<!-- Desktop Btns -->
+<div class="hidden xl:flex flex-wrap gap-2.5 items-center">
+  <button onclick="saveCfg()" class="btn-dark text-xs" title="Ctrl+S">Save</button>
+  <button onclick="$('loadF').click()" class="btn-outline text-xs">Load</button>
+  <button onclick="bestPractices()" class="sm:hidden btn-green text-xs">Best Practices</button>
+  <button onclick="resetAll()" class="btn-red text-xs">Reset All</button>
+</div>
+
+<!-- Output Panel -->
+<div class="bg-white dark:bg-srf-800 rounded-xl shadow-lg border border-srf-200/50 dark:border-srf-700/50 overflow-hidden">
+  <!-- Tabs -->
+  <div class="flex border-b border-srf-200 dark:border-srf-700 text-xs font-bold bg-srf-50/50 dark:bg-srf-900/30">
+    <button onclick="tab('cli')" id="t-cli" class="tab-btn active flex-1 px-3 py-3.5 text-center border-b-2 border-fg-500 text-fg-600 dark:text-fg-400 transition-all whitespace-nowrap hover:bg-srf-100 dark:hover:bg-srf-800/50">CLI Script</button>
+    <button onclick="tab('gui')" id="t-gui" class="tab-btn flex-1 px-3 py-3.5 text-center border-b-2 border-transparent text-srf-400 hover:text-srf-600 dark:hover:text-srf-300 transition-all whitespace-nowrap hover:bg-srf-100 dark:hover:bg-srf-800/50">GUI Steps</button>
+    <button onclick="tab('az')" id="t-az" class="tab-btn flex-1 px-3 py-3.5 text-center border-b-2 border-transparent text-srf-400 hover:text-srf-600 dark:hover:text-srf-300 transition-all whitespace-nowrap hover:bg-srf-100 dark:hover:bg-srf-800/50">Azure Setup</button>
+    <button onclick="tab('xml')" id="t-xml" class="tab-btn flex-1 px-3 py-3.5 text-center border-b-2 border-transparent text-srf-400 hover:text-srf-600 dark:hover:text-srf-300 transition-all whitespace-nowrap hover:bg-srf-100 dark:hover:bg-srf-800/50">FortiClient XML</button>
+  </div>
+  <!-- Action bar -->
+  <div class="flex items-center gap-2.5 px-4 py-3 bg-srf-50 dark:bg-srf-900/50 border-b border-srf-100 dark:border-srf-700">
+    <button onclick="copyOut()" class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-gradient-to-r from-fg-600 to-fg-500 text-white text-xs font-bold hover:from-fg-700 hover:to-fg-600 transition-all shadow-md hover:shadow-lg">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+      <span id="cpTxt">Copy</span>
+    </button>
+    <button onclick="dlOut()" class="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-srf-300 dark:border-srf-600 text-xs font-bold hover:bg-srf-100 dark:hover:bg-srf-700 transition-all shadow-sm hover:shadow-md">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17v3a2 2 0 002 2h14a2 2 0 002-2v-3"/></svg>
+      Download
+    </button>
+  </div>
+  <!-- Output -->
+  <div class="max-h-[calc(100vh-220px)] overflow-y-auto">
+    <pre id="o-cli" class="mono text-xs leading-relaxed p-5 text-srf-700 dark:text-srf-300"></pre>
+    <pre id="o-gui" class="mono text-xs leading-relaxed p-5 text-srf-700 dark:text-srf-300 hidden"></pre>
+    <pre id="o-az" class="mono text-xs leading-relaxed p-5 text-srf-700 dark:text-srf-300 hidden"></pre>
+    <pre id="o-xml" class="mono text-xs leading-relaxed p-5 text-srf-700 dark:text-srf-300 hidden"></pre>
+  </div>
+</div>
+
+</div></div>
+
+</div>
+</main>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-2xl text-sm font-bold z-50 transition-all duration-300 translate-y-20 opacity-0 pointer-events-none backdrop-blur-md"></div>
+
+<script>
+// ===== HELPERS =====
+const $=id=>document.getElementById(id),$$=s=>[...document.querySelectorAll(s)],
+V=id=>$(id)?.value?.trim()||'',C=id=>$(id)?.checked||false,
+CV=s=>$$(s).filter(c=>c.checked).map(c=>c.value);
+let curTab='cli';
+
+// ===== SHARED STYLES (injected via classes) =====
+document.head.insertAdjacentHTML('beforeend',`<style>
+.lbl{display:block;font-size:12px;font-weight:700;margin-bottom:5px;letter-spacing:0.01em}
+.inp{width:100%;padding:10px 14px;border-radius:10px;border:2px solid;font-size:14px;outline:none;transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);border-color:#cbd5e1;background:white;font-family:'IBM Plex Sans',sans-serif}
+.dark .inp{border-color:#475569;background:#0f172a;color:#e2e8f0}
+.inp:focus{border-color:#06b6d4;box-shadow:0 0 0 4px rgba(6,182,212,.15),0 4px 12px rgba(6,182,212,.1);transform:translateY(-1px)}
+.inp.field-err{border-color:#ef4444!important}
+.help{font-size:11px;font-weight:600;color:#64748b;margin-top:4px;line-height:1.4}
+.dark .help{color:#94a3b8}
+.btn-dark{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;border-radius:10px;font-weight:700;font-size:13px;background:linear-gradient(135deg,#1e293b,#0f172a);color:white;transition:all 0.2s ease;cursor:pointer;border:none;shadow:0 2px 6px rgba(0,0,0,.1)}
+.dark .btn-dark{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);color:#0f172a}
+.btn-dark:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.btn-outline{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;border-radius:10px;font-weight:700;font-size:13px;border:2px solid #cbd5e1;background:transparent;cursor:pointer;transition:all 0.2s ease}
+.dark .btn-outline{border-color:#475569;color:#e2e8f0}
+.btn-outline:hover{background:#f1f5f9;transform:translateY(-2px)}.dark .btn-outline:hover{background:#1e293b}
+.btn-red{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;border-radius:10px;font-weight:700;font-size:13px;border:2px solid #fecaca;color:#dc2626;background:transparent;cursor:pointer;transition:all 0.2s ease}
+.dark .btn-red{border-color:#7f1d1d;color:#fca5a5}
+.btn-red:hover{background:#fef2f2;transform:translateY(-2px)}.dark .btn-red:hover{background:#450a0a}
+.btn-green{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;border-radius:10px;font-weight:700;font-size:13px;background:linear-gradient(135deg,#16a34a,#15803d);color:white;cursor:pointer;border:none;transition:all 0.2s ease;box-shadow:0 2px 6px rgba(22,163,74,.2)}
+.btn-green:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(22,163,74,.3)}
+</style>`);
+
+// ===== TOAST =====
+function toast(m,ok=true){const t=$('toast');t.textContent=m;t.className='fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-2xl text-sm font-bold z-50 transition-all duration-300 backdrop-blur-md '+(ok?'bg-gradient-to-r from-fg-600 to-fg-500 text-white':'bg-gradient-to-r from-red-600 to-red-500 text-white');t.style.transform='translateY(0)';t.style.opacity='1';t.style.pointerEvents='auto';setTimeout(()=>{t.style.transform='translateY(20px)';t.style.opacity='0';t.style.pointerEvents='none'},2800)}
+
+// ===== DARK MODE =====
+function toggleDark(){document.documentElement.classList.toggle('dark');localStorage.setItem('fgDk',document.documentElement.classList.contains('dark'))}
+if(localStorage.getItem('fgDk')==='false')document.documentElement.classList.remove('dark');
+
+// ===== PSK TOGGLE =====
+function togPsk(){const i=$('psk');i.type=i.type==='password'?'text':'password'}
+
+// ===== SECTIONS =====
+function togSec(b){const p=b.nextElementSibling,open=b.getAttribute('aria-expanded')==='true';b.setAttribute('aria-expanded',!open);if(open){p.classList.add('shut');b.classList.add('shut-t')}else{p.classList.remove('shut');b.classList.remove('shut-t')}}
+
+// ===== CONDITIONAL TOGGLES =====
+function togDpd(){$('dpdBox').style.display=C('dpdOn')?'':'none'}
+function togPfs(){$('pfsDhW').style.display=C('pfsOn')?'':'none'}
+function togDns(){const m=V('dnsMode')==='manual';$('d1W').classList.toggle('hidden',!m);$('d2W').classList.toggle('hidden',!m)}
+function togSplit(){$('splitW').classList.toggle('hidden',V('splitMode')!=='enabled')}
+
+// ===== SYNC FQDN =====
+function syncFqdn(){const tunnels=getTunnels();const f=tunnels[0]?.fqdn||'';const p=tunnels[0]?.port||'';$('samlFqdn').value=f;if(f&&p){const b=`https://${f}:${p}`;$('urlEid').textContent=b+'/remote/saml/metadata';$('urlAcs').textContent=b+'/remote/saml/login';$('urlSlo').textContent=b+'/remote/saml/logout'}else{$('urlEid').innerHTML=$('urlAcs').innerHTML=$('urlSlo').innerHTML='&mdash;'}}
+
+// ===== VALIDATORS =====
+const reIP=/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/,
+reCIDR=/^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)\/(3[0-2]|[12]?\d)$/,
+reUUID=/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
+reFQDN=/^([a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+function ip2n(ip){return ip.split('.').reduce((a,b)=>(a<<8)+parseInt(b),0)>>>0}
+function isUrl(s){try{new URL(s);return true}catch{return false}}
+
+function setF(el,ok){if(!el)return;el.classList.toggle('field-err',!ok);el.classList.toggle('field-ok',ok&&!!el.value.trim())}
+
+function v(){
+  let ok=true;
+  // Validate format only when a value is present — nothing is required
+  // Simple text fields: show green when filled, clear state when empty
+  ['samlName','idpCert'].forEach(id=>{const el=$(id),val=el?.value?.trim();if(val)setF(el,true);else el?.classList.remove('field-ok','field-err')});
+
+  // Validate all dynamic tunnel fields
+  $$('.tunnel-item').forEach((item) => {
+    const index = item.dataset.tunnelIndex;
+
+    // Tunnel name
+    const tnEl = $('tunnelName' + index);
+    if (tnEl) {
+      const tnVal = tnEl.value.trim();
+      if(tnVal) setF(tnEl, true);
+      else tnEl.classList.remove('field-ok','field-err');
+    }
+
+    // FQDN: validate format only if a value is entered
+    const fEl = $('fqdn' + index);
+    if (fEl) {
+      const f = fEl.value.trim();
+      if(f){
+        const g = reFQDN.test(f) || reIP.test(f);
+        setF(fEl, g);
+        if(!g) ok=false;
+      } else {
+        fEl.classList.remove('field-ok','field-err');
+      }
+    }
+
+    // Port: validate range only if a value is entered (only show badge for first tunnel)
+    const portEl = $('samlPort' + index);
+    if (portEl) {
+      const port = parseInt(portEl.value) || 0;
+      const pb = index === '0' ? $('portBdg') : null;
+      if(port > 0){
+        setF(portEl, port >= 1 && port <= 65535);
+        if(port < 1 || port > 65535) ok = false;
+        if(pb) pb.innerHTML = port === 10428 ? '<span class="badge badge-y">DEFAULT</span>' : port >= 1 && port <= 65535 ? '<span class="badge badge-g">CUSTOM</span>' : '';
+      } else {
+        portEl.classList.remove('field-ok','field-err');
+        if(pb) pb.innerHTML = '';
+      }
+    }
+  });
+  // IPs: validate format only when a value is entered; validate ordering only when both are present
+  const sip=V('startIp'),eip=V('endIp'),ie=$('ipErr');
+  let ipOk=true;
+  if(sip){if(!reIP.test(sip)){setF($('startIp'),false);ipOk=false}else setF($('startIp'),true)}else $('startIp').classList.remove('field-ok','field-err');
+  if(eip){if(!reIP.test(eip)){setF($('endIp'),false);ipOk=false}else setF($('endIp'),true)}else $('endIp').classList.remove('field-ok','field-err');
+  if(sip&&eip&&reIP.test(sip)&&reIP.test(eip)&&ip2n(sip)>=ip2n(eip)){ie.textContent='Start IP must be less than End IP';ie.classList.remove('hidden');setF($('startIp'),false);setF($('endIp'),false);ipOk=false}else ie.classList.add('hidden');
+  if(!ipOk)ok=false;
+  // UUID: validate format for all dynamic user group Object IDs
+  $$('.user-group-item').forEach((item) => {
+    const index = item.dataset.groupIndex;
+    const uidEl = $('azGrpId' + index);
+    const ueEl = $('uuidErr' + index);
+    if (uidEl && ueEl) {
+      const uid = uidEl.value.trim();
+      if(uid){
+        if(!reUUID.test(uid)){
+          setF(uidEl,false);
+          ueEl.textContent='Invalid UUID format (8-4-4-4-12)';
+          ueEl.classList.remove('hidden');
+          ok=false;
+        } else {
+          setF(uidEl,true);
+          ueEl.classList.add('hidden');
+        }
+      } else {
+        uidEl.classList.remove('field-ok','field-err');
+        ueEl.classList.add('hidden');
+      }
+    }
+  });
+  // URLs: validate format only if a value is entered
+  ['eLoginUrl','eEntityId','eLogoutUrl'].forEach(id=>{const u=V(id);if(u){const g=isUrl(u);setF($(id),g);if(!g)ok=false}else $(id).classList.remove('field-ok','field-err')});
+  // DNS manual: validate format only if a value is entered
+  if(V('dnsMode')==='manual'){const d=V('dns1');if(d){if(!reIP.test(d)){setF($('dns1'),false);ok=false}else setF($('dns1'),true)}else $('dns1').classList.remove('field-ok','field-err')}
+  // Split CIDR: validate format only if lines are entered
+  if(V('splitMode')==='enabled'){const ce=$('cidrErr'),lines=V('splitNets').split('\n').map(l=>l.trim()).filter(Boolean);
+    if(lines.length){const bad=lines.filter(l=>!reCIDR.test(l));if(bad.length){ce.textContent='Invalid CIDR: '+bad.join(', ');ce.classList.remove('hidden');ok=false}else ce.classList.add('hidden')}else ce.classList.add('hidden')}
+  // DH group strength warnings (informational, does not block generation)
+  const dh=CV('.p1d').map(Number),dw=$('dhWarn'),pb1=$('p1Bdg');
+  if(dh.some(g=>g<15)){dw.innerHTML='<span class="badge badge-r">WEAK SECURITY</span> <span class="text-xs text-red-500 font-medium">DH groups below 15 are not recommended</span>';dw.classList.remove('hidden');pb1.innerHTML='<span class="badge badge-r">WEAK</span>'}
+  else if(dh.length&&dh.every(g=>g>=19)){dw.classList.add('hidden');pb1.innerHTML='<span class="badge badge-g">STRONG</span>'}
+  else{dw.classList.add('hidden');pb1.innerHTML=''}
+
+  updComp();updScore();return ok
+}
+
+function updComp(){
+  const sharedFlds=['startIp','endIp','samlName','eLoginUrl','eEntityId','eLogoutUrl','idpCert'];
+  let filled=sharedFlds.filter(id=>V(id).length>0).length;
+
+  // Count filled fields in dynamic tunnels
+  const tunnels = getTunnels();
+  tunnels.forEach(t => {
+    if(t.name) filled++;
+    if(t.fqdn) filled++;
+    if(t.port) filled++;
+  });
+
+  // Add dynamic user groups to count
+  const userGroups = getUserGroups();
+  filled += userGroups.filter(g => g.name || g.objId).length;
+
+  const tunnelFields = tunnels.length * 3; // 3 key fields per tunnel (name, fqdn, port)
+  const totalFields = sharedFlds.length + tunnelFields + 2; // +2 for at least one user group (name + objId)
+  const extras=(CV('.p1p').length>0?1:0)+(CV('.p1d').length>0?1:0)+(CV('.p2p').length>0?1:0);
+  const pct=Math.round(((filled+extras)/(totalFields+3))*100);
+  $('compBar').style.width=pct+'%';$('compPct').textContent=pct+'%'
+}
+
+function updScore(){
+  let s=0;const dh=CV('.p1d').map(Number);
+  if(dh.every(g=>g>=19)&&dh.length)s+=30;else if(dh.every(g=>g>=15)&&dh.length)s+=20;else if(dh.length)s+=5;
+  const p1=CV('.p1p');if(p1.includes('aes256-sha256'))s+=15;else if(p1.length)s+=8;
+  if(p1.some(x=>x.includes('gcm')||x.includes('chacha')))s+=5;
+  if(C('pfsOn'))s+=15;
+  const tunnels=getTunnels();
+  const port=parseInt(tunnels[0]?.port)||0;if(port>0&&port!==10428)s+=10;else if(port===10428)s+=3;
+  if(C('dpdOn'))s+=5;if(C('natTrav'))s+=5;if(C('childless'))s+=5;
+  const p2=CV('.p2p');if(p2.includes('aes256-sha256')||p2.some(x=>x.includes('gcm')))s+=10;else if(p2.length)s+=5;
+  s=Math.min(s,100);
+  $('scoreVal').textContent=s;
+  const c=$('scoreRing'),circ=2*Math.PI*16;
+  c.style.strokeDashoffset=circ-(s/100)*circ;
+  c.style.stroke=s>=80?'#22c55e':s>=50?'#eab308':'#ef4444'
+}
+
+// ===== TAB SWITCH =====
+function tab(t){
+  curTab=t;
+  ['cli','gui','az','xml'].forEach(k=>{
+    $('o-'+k).classList.toggle('hidden',k!==t);
+    const btn=$('t-'+k);
+    if(k===t){
+      btn.classList.add('active','border-fg-500','text-fg-600','dark:text-fg-400');
+      btn.classList.remove('border-transparent','text-srf-400');
+    }else{
+      btn.classList.remove('active','border-fg-500','text-fg-600','dark:text-fg-400');
+      btn.classList.add('border-transparent','text-srf-400');
+    }
+  })
+}
+
+// ===== ESCAPE =====
+function esc(s){return (s||'').replace(/\\/g,'\\\\').replace(/"/g,'\\"')}
+
+// ===== GENERATE ALL =====
+function gen(){genCLI();genGUI();genAZ();genXML()}
+
+function D(id,fb){return V(id)||fb}
+
+function genCLI(){
+  // Get all tunnels
+  const tunnels=getTunnels();
+  const firstTunnel=tunnels[0];
+  const tn=firstTunnel.name||'{tunnel-name}',fq=firstTunnel.fqdn||'{fqdn}',pt=firstTunnel.port||'10428';
+
+  // Shared settings across all tunnels
+  const p1p=CV('.p1p').join(' ')||'aes256-sha256',dh=CV('.p1d').join(' ')||'19 20 21',
+  kl1=D('p1kl','86400'),nat=C('natTrav'),dpd=C('dpdOn'),di=D('dpdInt','5'),dr=D('dpdRet','3'),
+  p2p=CV('.p2p').join(' ')||'aes256-sha256',pfs=C('pfsOn'),pfdh=V('pfsDh'),kl2=D('p2kl','43200'),
+  sip=D('startIp','{start-ip}'),eip=D('endIp','{end-ip}'),dm=V('dnsMode'),d1=V('dns1'),d2=V('dns2'),
+  sm=V('splitMode'),sn=V('splitNets').split('\n').map(l=>l.trim()).filter(Boolean),sgn=V('splitGrpName'),
+  sName=D('samlName','{saml-server}'),eL=D('eLoginUrl','{login-url}'),eE=D('eEntityId','{entity-id}'),
+  eO=D('eLogoutUrl','{logout-url}'),iCrt=D('idpCert','{idp-cert}'),sCrt=D('srvCert','Fortinet_Factory'),
+  userGrps=getUserGroups(),gn=(userGrps[0]?.name||'SAML-Entra-VPN-Users'),gid=(userGrps[0]?.objId||'{group-object-id}'),gP1=C('grpP1'),
+  an=C('autoNeg'),ka=C('keepAlive'),cl=C('childless'),sp=C('savePw'),bn=V('banner'),
+  psk=V('psk'),now=new Date().toISOString().replace('T',' ').slice(0,19);
+
+  let o=`# ========================================
+# FortiClient IPSEC VPN Configuration
+# with Entra ID SAML Authentication
+# FortiOS 7.4.11+
+# Generated: ${now}
+# ========================================
+
+# ========================================
+# PREREQUISITES - COMPLETE THESE FIRST
+# ========================================
+#
+# 1. Import Entra ID SAML Certificate:
+#    GUI: System > Certificates > Import > Remote Certificate
+#    - Upload the Base64 certificate downloaded from Azure
+#    - Certificate name on FortiGate: "${iCrt}"
+#
+# 2. Ensure FortiGate server certificate exists:
+#    GUI: System > Certificates > Local Certificates
+#    - Verify certificate "${sCrt}" exists
+#    - For production: use a cert matching ${fq}
+#
+# 3. Obtain Azure Group Object ID:
+#    Azure Portal > Microsoft Entra ID > Groups > [Your Group]
+#    - Object ID: ${gid}
+#
+# ========================================
+
+# === Global SAML Port Configuration ===
+config system global
+    set auth-ike-saml-port ${pt}
+end
+
+# === SAML Server Configuration ===
+config user saml
+    edit "${sName}"
+        set cert "${sCrt}"
+        set entity-id "https://${fq}:${pt}/remote/saml/metadata"
+        set single-sign-on-url "https://${fq}:${pt}/remote/saml/login"
+        set single-logout-url "https://${fq}:${pt}/remote/saml/logout"
+        set idp-entity-id "${esc(eE)}"
+        set idp-single-sign-on-url "${esc(eL)}"
+        set idp-single-logout-url "${esc(eO)}"
+        set idp-cert "${iCrt}"
+        set user-name "username"
+        set group-name "group"
+    next
+end
+
+# === User Authentication Settings ===
+config user setting
+    set auth-cert "${sCrt}"
+end
+
+# === Interface SAML Server Binding ===
+${[...new Set(tunnels.map(t => t.wanIf))].map(wanIf => `config system interface
+    edit "${wanIf}"
+        set ike-saml-server "${sName}"
+    next
+end`).join('\n\n')}
+
+# === User Group Configuration ===
+${getUserGroups().map((grp, idx) => `config user group
+    edit "${grp.name}"
+        set member "${sName}"
+        config match
+            edit 1
+                set server-name "${sName}"
+                set group-name "${grp.objId}"
+            next
+        end
+    next
+end`).join('\n\n')}
+`;
+
+  // === Split Tunnel Address Objects & Groups (BEFORE Phase 1) ===
+  if(sm==='enabled'){
+    // Determine group name logic (Option A)
+    const customGrpName = sgn ? sgn.trim() : '';
+    const hasSubnets = sn.length > 0;
+
+    if(customGrpName && hasSubnets){
+      // Option A.1: Custom name + subnets = Create new group with custom name
+      o+=`
+# === Split Tunnel Address Objects ===
+config firewall address`;
+      sn.forEach((s,i)=>{o+=`
+    edit "${customGrpName}_subnet_${i+1}"
+        set subnet ${s}
+    next`});
+      o+=`
+end
+
+# === Split Tunnel Address Group ===
+config firewall addrgrp
+    edit "${customGrpName}"
+        set member ${sn.map((_,i)=>'"'+customGrpName+'_subnet_'+(i+1)+'"').join(' ')}
+        set comment "Split tunnel protected networks"
+    next
+end
+`;
+    } else if(customGrpName && !hasSubnets){
+      // Option A.2: Custom name + no subnets = Reference existing group (no creation)
+      o+=`
+# === Split Tunneling ===
+# Referencing existing address group: "${customGrpName}"
+# (Group must already exist in FortiGate configuration)
+
+`;
+    } else if(!customGrpName && hasSubnets){
+      // Option A.3: No custom name = Create per-tunnel groups (original behavior)
+      o+=`
+# === Split Tunnel Address Objects ===`;
+      tunnels.forEach((tunnel, tIdx) => {
+        const tName = tunnel.name || 'tunnel' + tIdx;
+        o += `
+config firewall address`;
+        sn.forEach((s,i)=>{o+=`
+    edit "${tName}_subnet_${i+1}"
+        set subnet ${s}
+    next`});
+        o+=`
+end
+
+# === Split Tunnel Address Group for ${tName} ===
+config firewall addrgrp
+    edit "${tName}-split"
+        set member ${sn.map((_,i)=>'"'+tName+'_subnet_'+(i+1)+'"').join(' ')}
+        set comment "Split tunnel for ${tName}"
+    next
+end
+`;
+      });
+    }
+  }
+
+  o+=`# === Phase 1 Configuration (Multiple Tunnels) ===
+${tunnels.map(tunnel => {
+  const tName = tunnel.name || '{tunnel-name}';
+  const tComments = tunnel.comments || '';
+  const tWan = tunnel.wanIf || 'wan1';
+  const tFqdn = tunnel.fqdn || '{fqdn}';
+  const tPort = tunnel.port || '10428';
+
+  // Determine which group name to reference in Phase 1
+  const splitGrpRef = sgn ? sgn.trim() : (tName + '-split');
+
+  return `config vpn ipsec phase1-interface
+    edit "${tName}"
+        # Basic Settings
+        set type dynamic
+        set interface "${tWan}"${tComments ? '\n        set comments "' + esc(tComments) + '"' : ''}
+        set ike-version 2
+        set peertype any
+
+        # Encryption & Authentication
+        set proposal ${p1p}
+        set dhgrp ${dh}
+        set keylife ${kl1}
+
+        # Mode Config (IP Assignment)
+        set net-device disable
+        set mode-cfg enable
+        set ipv4-start-ip ${sip}
+        set ipv4-end-ip ${eip}
+        set dns-mode ${dm}${dm === 'manual' && d1 ? '\n        set ipv4-dns-server1 ' + d1 : ''}${dm === 'manual' && d2 ? '\n        set ipv4-dns-server2 ' + d2 : ''}${sm === 'enabled' ? '\n        set ipv4-split-include "' + splitGrpRef + '"' : ''}
+
+        # SAML Authentication
+        set eap enable
+        set eap-identity send-request${gP1 ? '\n        set authusrgrp "' + getUserGroups().map(g => g.name).filter(n => n).join('" "') + '"' : '\n        # NOTE: authusrgrp not set - apply user groups in firewall policies'}
+        set childless-ike ${cl ? 'enable' : 'disable'}
+
+        # Network & Advanced
+        set nattraversal ${nat ? 'enable' : 'disable'}${dpd ? '\n        set dpd on-idle\n        set dpd-retrycount ' + dr + '\n        set dpd-retryinterval ' + di : '\n        set dpd disable'}${an ? '\n        set client-auto-negotiate enable' : ''}${ka ? '\n        set client-keep-alive enable' : ''}${sp ? '\n        set save-password enable' : ''}${bn ? '\n        set banner "' + esc(bn) + '"' : ''}
+        set psksecret ${psk ? esc(psk) : 'ENC [auto-generated-placeholder]'}
+    next
+end`;
+}).join('\n\n')}
+
+# === Phase 2 Configuration (Multiple Tunnels) ===
+${tunnels.map(tunnel => {
+  const tName = tunnel.name || '{tunnel-name}';
+
+  return `config vpn ipsec phase2-interface
+    edit "${tName}"
+        set phase1name "${tName}"
+        set proposal ${p2p}${pfs ? '\n        set pfs enable\n        set dhgrp ' + pfdh : '\n        set pfs disable'}
+        set keylifeseconds ${kl2}
+    next
+end`;
+}).join('\n\n')}
+
+# === Firewall Address for VPN Pool ===
+config firewall address
+    edit "VPN_Pool_Range"
+        set type iprange
+        set start-ip ${sip}
+        set end-ip ${eip}
+        set comment "Shared VPN IP pool for all tunnels"
+    next
+end`;
+
+  o+=`\n
+# ========================================
+# FIREWALL POLICIES
+# ========================================
+
+# === Policy 1: VPN to WAN (Internet Access) ===
+config firewall policy
+    edit 0
+        set name "VPN-to-WAN"
+        set srcintf ${tunnels.map(t => '"' + (t.name || '{tunnel-name}') + '"').join(' ')}
+        set dstintf "wan1"
+        set srcaddr "VPN_Pool_Range"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"${gP1?'\n        # User groups enforced at tunnel level (Phase 1)':'\n        set groups "'+getUserGroups().map(g=>g.name).filter(n=>n).join('" "')+'"'}
+        set nat enable
+        set utm-status enable
+        set ips-sensor "default"
+        set ssl-ssh-profile "certificate-inspection"
+        set av-profile "default"
+        set webfilter-profile "default"
+        set application-list "default"
+        set logtraffic all
+    next
+end
+
+# === Policy 2: VPN to LAN (Internal Access) ===
+config firewall policy
+    edit 0
+        set name "VPN-to-LAN"
+        set srcintf ${tunnels.map(t => '"' + (t.name || '{tunnel-name}') + '"').join(' ')}
+        set dstintf "internal"
+        set srcaddr "VPN_Pool_Range"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"${gP1?'\n        # User groups enforced at tunnel level (Phase 1)':'\n        set groups "'+getUserGroups().map(g=>g.name).filter(n=>n).join('" "')+'"'}
+        set nat disable
+        set utm-status enable
+        set ips-sensor "default"
+        set ssl-ssh-profile "certificate-inspection"
+        set av-profile "default"
+        set webfilter-profile "default"
+        set application-list "default"
+        set logtraffic all
+    next
+end
+
+# NOTE: Customize 'dstintf', 'dstaddr', and security profiles as needed
+# Ensure security profiles exist: System > Security Profiles
+# If using multiple WAN interfaces, adjust dstintf in Policy 1 accordingly
+`;
+  $('o-cli').textContent=o
+}
+
+function genGUI(){
+  const tunnels=getTunnels();
+  const firstTunnel=tunnels[0];
+  const fq=firstTunnel.fqdn||'{fqdn}',pt=firstTunnel.port||'10428';
+  const sName=D('samlName','{saml-server}'),eL=D('eLoginUrl','{login-url}'),eE=D('eEntityId','{entity-id}'),
+  eO=D('eLogoutUrl','{logout-url}'),iCrt=D('idpCert','{idp-cert}'),sCrt=D('srvCert','Fortinet_Factory'),
+  userGrps=getUserGroups(),
+  p1p=CV('.p1p').join(', ')||'aes256-sha256',dhg=CV('.p1d').join(', ')||'19, 20, 21',
+  kl1=D('p1kl','86400'),p2p=CV('.p2p').join(', ')||'aes256-sha256',pfs=C('pfsOn'),pfdh=V('pfsDh'),
+  kl2=D('p2kl','43200'),sip=D('startIp','{start-ip}'),eip=D('endIp','{end-ip}'),
+  dm=V('dnsMode'),d1=V('dns1'),d2=V('dns2'),nat=C('natTrav'),dpd=C('dpdOn'),
+  sm=V('splitMode'),sn=V('splitNets').split('\n').map(l=>l.trim()).filter(Boolean),gP1=C('grpP1');
+  let step=0,o=`========================================
+STEP-BY-STEP GUI CONFIGURATION
+FortiGate IPSEC VPN + Entra ID SAML
+FortiOS 7.4.11+
+========================================
+`;
+  o+=`
+Step ${++step}: Import Entra ID Certificate
+  1. Navigate to: System > Certificates
+  2. Click: Import > Remote Certificate
+  3. Upload the Base64 .cer file from Azure
+  4. Note the certificate name: "${iCrt}"
+
+Step ${++step}: Verify Server Certificate
+  1. Navigate to: System > Certificates > Local Certificates
+  2. Verify "${sCrt}" exists
+  3. For production: use a cert matching ${fq}
+
+Step ${++step}: Configure Global SAML Port (CLI)
+  config system global
+      set auth-ike-saml-port ${pt}
+  end
+
+Step ${++step}: Bind SAML Server to WAN Interfaces (CLI)
+${[...new Set(tunnels.map(t => t.wanIf))].map(wanIf => `  config system interface
+      edit "${wanIf}"
+          set ike-saml-server "${sName}"
+      next
+  end`).join('\n\n')}
+
+Step ${++step}: Configure SAML Server
+  1. Navigate to: User & Authentication > Single Sign-On
+  2. Click: Create New
+  3. Configure:
+     Name: ${sName}
+     SP Certificate: ${sCrt}
+
+     Service Provider URLs:
+       Entity ID:  https://${fq}:${pt}/remote/saml/metadata
+       ACS URL:    https://${fq}:${pt}/remote/saml/login
+       SLO URL:    https://${fq}:${pt}/remote/saml/logout
+
+     Identity Provider:
+       Type: Custom
+       Login URL:   ${eL}
+       Entity ID:   ${eE}
+       Logout URL:  ${eO}
+       Certificate: ${iCrt}
+
+     SAML Attributes:
+       username: username
+       group: group
+  4. Click: OK
+
+Step ${++step}: Configure User Groups
+${getUserGroups().map((grp, idx) => `  ${idx + 1}. Navigate to: User & Authentication > User Groups
+     Click: Create New
+     Configure:
+       Name: ${grp.name}
+       Type: Firewall
+       Remote Groups > Add:
+         Server: ${sName}
+         Groups: ${grp.objId}
+     Click: OK`).join('\n\n')}
+
+Step ${++step}: Configure Phase 1 Tunnels
+${tunnels.map((tunnel, idx) => {
+  const tName = tunnel.name || '{tunnel-name}';
+  const tWan = tunnel.wanIf || 'wan1';
+  const tComments = tunnel.comments || '';
+  return `  ${tunnels.length > 1 ? 'Tunnel ' + (idx + 1) + ': ' + tName : ''}
+  1. Navigate to: VPN > IPsec Wizard > Custom
+  2. Configure:
+     Name: ${tName}${tComments ? '\n     Comments: ' + tComments : ''}
+     Remote Gateway: Dialup User
+     Interface: ${tWan}
+     IKE Version: 2
+     NAT Traversal: ${nat?'Enable':'Disable'}
+     DPD: ${dpd?'On Idle':'Disable'}
+
+     Phase 1 Proposal:
+       Encryption/Auth: ${p1p}
+       DH Groups: ${dhg}
+       Key Lifetime: ${kl1} seconds
+
+     Apply via CLI after wizard:
+       set eap enable
+       set eap-identity send-request
+       set childless-ike enable${gP1?'\n       set authusrgrp "'+userGrps.map(g=>g.name).filter(n=>n).join('" "')+'"':''}`;
+}).join('\n\n')}
+
+Step ${++step}: Configure Phase 2 for Each Tunnel
+  Phase 2 Proposal: ${p2p}
+  PFS: ${pfs?'Enable (DH '+pfdh+')':'Disable'}
+  Key Lifetime: ${kl2} seconds
+  (Apply same settings to all tunnels)
+
+Step ${++step}: Configure IP Address Pool
+  1. Edit first tunnel: VPN > IPsec Tunnels > ${firstTunnel.name || '{tunnel-name}'}
+  2. Mode Config: Enable
+     Start IP: ${sip}
+     End IP: ${eip}
+     DNS Mode: ${dm}${dm==='manual'?'\n     Primary DNS: '+(d1||'N/A')+(d2?'\n     Secondary DNS: '+d2:''):''}
+  3. Click: OK
+  (NOTE: IP pool is shared across all tunnels)`;
+
+  if(sm==='enabled'){
+    const customGrpName = sgn ? sgn.trim() : '';
+    const hasSubnets = sn.length > 0;
+
+    if(customGrpName && hasSubnets){
+      // Custom name with subnets - create new group
+      o+=`
+
+Step ${++step}: Configure Split Tunnel (Custom Address Group: ${customGrpName})
+  1. Navigate to: Policy & Objects > Addresses
+  2. Create address objects for each subnet:
+${sn.map((s,i)=>`     Name: ${customGrpName}_subnet_${i+1}
+     Type: Subnet
+     IP/Network Mask: ${s}`).join('\n')}
+  3. Navigate to: Policy & Objects > Address Groups
+  4. Create address group:
+     Name: ${customGrpName}
+     Members: ${sn.map((_,i)=>customGrpName+'_subnet_'+(i+1)).join(', ')}
+  5. In each tunnel config via CLI:
+     set ipv4-split-include "${customGrpName}"`;
+    } else if(customGrpName && !hasSubnets){
+      // Reference existing group
+      o+=`
+
+Step ${++step}: Configure Split Tunnel (Reference Existing Group)
+  1. Ensure address group "${customGrpName}" exists in FortiGate
+  2. In each tunnel config via CLI:
+     set ipv4-split-include "${customGrpName}"`;
+    } else if(!customGrpName && hasSubnets){
+      // Per-tunnel groups (original behavior)
+      tunnels.forEach((tunnel, tIdx) => {
+        const tName = tunnel.name || 'tunnel' + tIdx;
+        o+=`
+
+Step ${++step}: Configure Split Tunnel for ${tName}
+  1. Create address objects:
+${sn.map((s,i)=>`     ${tName}_subnet_${i+1}: ${s}`).join('\n')}
+  2. Create address group: ${tName}-split
+  3. In tunnel config: set ipv4-split-include "${tName}-split"`;
+      });
+    }
+  }
+
+  o+=`
+
+Step ${++step}: Create Firewall Policy
+  1. Policy & Objects > Firewall Policy > Create New
+     Name: VPN-to-LAN
+     Incoming: ${tunnels.map(t => t.name || '{tunnel-name}').join(', ')}
+     Outgoing: internal
+     Source: VPN_Pool_Range
+     Destination: [Your LAN networks]
+     Action: ACCEPT
+     Service: ALL${gP1?'\n     (User groups enforced at tunnel level)':'\n     User Groups: '+getUserGroups().map(g=>g.name).filter(n=>n).join(', ')}
+
+Step ${++step}: Verify
+  1. Dashboard > VPN: Confirm all tunnels are up
+  2. Test with FortiClient using Entra ID credentials
+`;
+  $('o-gui').textContent=o
+}
+
+function genAZ(){
+  const tunnels=getTunnels();
+  const firstTunnel=tunnels[0];
+  const fq=firstTunnel.fqdn||'{fqdn}',pt=firstTunnel.port||'10428';
+  const eL=D('eLoginUrl','{login-url}'),eE=D('eEntityId','{entity-id}'),eO=D('eLogoutUrl','{logout-url}'),
+  userGrps=getUserGroups(),gid=(userGrps[0]?.objId||'{group-id}');
+  $('o-az').textContent=`========================================
+AZURE ENTERPRISE APPLICATION SETUP
+for FortiGate IPSEC VPN + SAML
+========================================
+
+NOTE: STREAMLINED SETUP FOR EXISTING GROUPS
+  If your organization already has security groups for VPN users
+  (most enterprises do), you can SKIP Steps 1-2 and start at Step 3.
+  Just use your existing group's Object ID in the FortiGate config.
+
+========================================
+
+Step 1: Create Security Group for VPN Users (Skip if group exists)
+  1. Microsoft Entra ID > Groups > New group
+  2. Configure:
+     Group type: Security
+     Group name: VPN Users
+     Membership type: Assigned
+  3. Create, then COPY the Object ID: ${gid}
+
+Step 2: Assign Users to the Group (Skip if using existing group)
+  Open group > Members > Add members > Select users
+
+Step 3: Create Enterprise Application
+  1. Enterprise applications > New application
+  2. Create your own application
+  3. Name: FortiGate IPsec VPN
+  4. Non-gallery > Create
+
+Step 4: Configure Basic SAML
+  1. Single sign-on > SAML
+  2. Edit "Basic SAML Configuration":
+
+     Identifier (Entity ID):
+       https://${fq}:${pt}/remote/saml/metadata
+
+     Reply URL (ACS):
+       https://${fq}:${pt}/remote/saml/login
+
+     Sign on URL:
+       https://${fq}:${pt}/remote/saml/login
+
+     Logout URL:
+       https://${fq}:${pt}/remote/saml/logout
+
+  3. Save
+
+Step 5: Configure User Attributes & Claims
+  Edit "User Attributes & Claims":
+
+  Claim: username
+    Add new claim > Name: username
+    Source attribute: user.userprincipalname > Save
+
+  Claim: group
+    Add a group claim
+    Groups assigned to the application
+    Source attribute: Group ID
+    Customize name: group > Save
+
+Step 6: Configure SAML Signing
+  Edit "SAML Signing Certificate":
+    Signing Option: Sign SAML response and assertion
+    Signing Algorithm: SHA-256 > Save
+
+Step 7: Download Certificate
+  Under "SAML Signing Certificate":
+  Download: Certificate (Base64)
+
+  >>> IMPORT this cert to FortiGate BEFORE
+      applying CLI configuration <<<
+
+Step 8: Assign Users/Groups
+  Users and groups > Add user/group
+  Select your VPN Users group > Assign
+
+Step 9: Copy URLs for FortiGate
+  From "Set up FortiGate IPsec VPN":
+
+  Login URL:
+    ${eL}
+
+  Microsoft Entra Identifier:
+    ${eE}
+
+  Logout URL:
+    ${eO}
+
+========================================
+VERIFICATION CHECKLIST
+========================================
+${getUserGroups().map((grp, idx) => `[ ] Group ${idx + 1} Object ID: ${grp.objId}`).join('\n')}
+[ ] Certificate downloaded and imported
+[ ] All URLs match FortiGate config
+[ ] At least one user assigned to each group
+[ ] SAML claims configured (username + group)
+`}
+
+function genXML(){
+  const tunnels=getTunnels();
+  const psk=V('psk'),
+  sm=V('splitMode'),sn=V('splitNets').split('\n').map(l=>l.trim()).filter(Boolean),
+  nat=C('natTrav'),dpd=C('dpdOn'),di=D('dpdInt','5'),dr=D('dpdRet','3'),cl=C('childless'),sp=C('savePw'),
+  ka=C('keepAlive'),
+  p1p=CV('.p1p')||['aes256-sha256'],
+  dh=CV('.p1d').join(';')||'19;20;21',
+  kl1=D('p1kl','86400'),
+  p2p=CV('.p2p')||['aes256-sha256'],
+  pfs=C('pfsOn'),pfdh=V('pfsDh')||'19',
+  kl2=D('p2kl','43200'),
+  dm=V('dnsMode'),d1=V('dns1'),d2=V('dns2');
+
+  // Convert proposal format from "aes256-sha256" to "AES256|SHA256" for FortiClient
+  const convertProposal = p => {
+    const parts = p.split('-');
+    if(parts.length === 2) {
+      const enc = parts[0].toUpperCase().replace(/GCM|PRFSHA\d+/g,'');
+      const hash = parts[1].toUpperCase().replace('SHA','SHA');
+      return `${enc}|${hash}`;
+    }
+    return p.toUpperCase();
+  };
+
+  // Phase 1 proposals
+  const p1Proposals = p1p.map(p => `            <proposal>${convertProposal(p)}</proposal>`).join('\n');
+
+  // Phase 2 proposals
+  const p2Proposals = p2p.map(p => `            <proposal>${convertProposal(p)}</proposal>`).join('\n');
+
+  // Build remote networks for split tunneling
+  let remoteNetworks = '';
+  if(sm==='enabled'&&sn.length){
+    remoteNetworks = sn.map(cidr=>{
+      const [ip,mask]=cidr.split('/');
+      const bits=parseInt(mask);
+      const subnet=~(0xffffffff>>>bits)>>>0;
+      const netmask=[(subnet>>>24)&255,(subnet>>>16)&255,(subnet>>>8)&255,subnet&255].join('.');
+      return `            <network>
+                <addr>${ip}</addr>
+                <mask>${netmask}</mask>
+            </network>`;
+    }).join('\n');
+  } else {
+    // Full tunnel - all traffic (0.0.0.0/0)
+    remoteNetworks = `            <network>
+                <addr>0.0.0.0</addr>
+                <mask>0.0.0.0</mask>
+            </network>`;
+  }
+
+  // DNS servers
+  const dnsServer = dm==='manual'&&d1 ? d1 : '0.0.0.0';
+
+  // Current date
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+
+  // Generate connection blocks for each tunnel
+  const connections = tunnels.map(tunnel => {
+    const tName = tunnel.name || 'Corporate-VPN';
+    const tComments = tunnel.comments || '';
+    const tFqdn = tunnel.fqdn || 'vpn.company.com';
+    const tPort = tunnel.port || '10428';
+
+    return `                <connection>
+                    <name>${tName}</name>
+                    <type>manual</type>
+                    <ui>
+                        <show_passcode>0</show_passcode>
+                        <show_remember_password>${sp?'1':'0'}</show_remember_password>
+                        <show_alwaysup>${ka?'1':'0'}</show_alwaysup>
+                        <show_autoconnect>0</show_autoconnect>
+                        <save_username>0</save_username>
+                    </ui>
+                    <ike_settings>
+                        <version>2</version>
+                        <prompt_certificate>0</prompt_certificate>
+                        <description>${tComments}</description>
+                        <server>${tFqdn}</server>
+                        <authentication_method>Preshared Key</authentication_method>
+                        <auth_data>
+                            <preshared_key>${psk||'[ENTER_PSK_HERE]'}</preshared_key>
+                        </auth_data>
+                        <mode>aggressive</mode>
+                        <dhgroup>${dh};</dhgroup>
+                        <key_life>${kl1}</key_life>
+                        <nat_traversal>${nat?'1':'0'}</nat_traversal>
+                        <mode_config>1</mode_config>
+                        <childless_mode>${cl?'1':'0'}</childless_mode>
+                        <dpd>${dpd?'1':'0'}</dpd>
+                        <dpd_retry_count>${dr}</dpd_retry_count>
+                        <dpd_retry_interval>${di}</dpd_retry_interval>
+                        <sso_enabled>1</sso_enabled>
+                        <ike_saml_port>${tPort}</ike_saml_port>
+                        <use_external_browser>0</use_external_browser>
+                        <xauth>
+                            <enabled>1</enabled>
+                            <prompt_username>1</prompt_username>
+                            <username />
+                            <password />
+                        </xauth>
+                        <proposals>
+${p1Proposals}
+                        </proposals>
+                    </ike_settings>
+                    <ipsec_settings>
+                        <remote_networks>
+${remoteNetworks}
+                        </remote_networks>
+                        <dhgroup>${pfdh}</dhgroup>
+                        <key_life_type>seconds</key_life_type>
+                        <key_life_seconds>${kl2}</key_life_seconds>
+                        <pfs>${pfs?'1':'0'}</pfs>
+                        <use_vip>1</use_vip>
+                        <virtualip>
+                            <type>modeconfig</type>
+                            <ip>0.0.0.0</ip>
+                            <mask>0.0.0.0</mask>
+                            <dnsserver>${dnsServer}</dnsserver>
+                            <winserver>0.0.0.0</winserver>
+                        </virtualip>
+                        <proposals>
+${p2Proposals}
+                        </proposals>
+                    </ipsec_settings>
+                </connection>`;
+  }).join('\n');
+
+  let o=`<?xml version="1.0" encoding="UTF-8" ?>
+<forticlient_configuration>
+    <forticlient_version>7.4.3</forticlient_version>
+    <version>7.4.3</version>
+    <date>${dateStr}</date>
+    <partial_configuration>0</partial_configuration>
+    <os_version>windows</os_version>
+    <vpn>
+        <options>
+            <on_os_start_connect />
+            <autoconnect_tunnel />
+            <keep_running_max_tries>0</keep_running_max_tries>
+            <keep_running_delay>0</keep_running_delay>
+            <allow_personal_vpns>1</allow_personal_vpns>
+            <show_vpn_before_logon>0</show_vpn_before_logon>
+        </options>
+        <ipsecvpn>
+            <options>
+                <enabled>1</enabled>
+                <usewincert>1</usewincert>
+                <block_ipv6>1</block_ipv6>
+            </options>
+            <connections>
+${connections}
+            </connections>
+        </ipsecvpn>
+    </vpn>
+</forticlient_configuration>`;
+
+  // Show warning if no PSK entered
+  if(!psk){
+    o=`<!-- ⚠️  WARNING: No Pre-Shared Key (PSK) entered!
+
+     Enter your PSK in the "Advanced Options" section (Section 7)
+     to generate a complete FortiClient configuration.
+
+     Without the PSK, this file will contain a placeholder
+     that must be manually replaced before importing.
+-->\n\n`+o;
+  }
+
+  $('o-xml').textContent=o
+}
+
+// ===== COPY / DOWNLOAD =====
+function copyOut(){const t=$('o-'+curTab).textContent;navigator.clipboard.writeText(t).then(()=>{$('cpTxt').textContent='Copied!';setTimeout(()=>$('cpTxt').textContent='Copy',2e3);toast('Copied to clipboard')})}
+
+function dlOut(){const t=$('o-'+curTab).textContent;const tunnels=getTunnels();const tn=tunnels[0]?.name||'fortigate-vpn';const ts=new Date().toISOString().slice(0,10),sfx={cli:'cli-config',gui:'gui-steps',az:'azure-setup',xml:'forticlient'},ext=curTab==='xml'?'.conf':'.txt',mime=curTab==='xml'?'application/xml':'text/plain',fn=`fortigate-vpn-${sfx[curTab]}-${tn}-${ts}${ext}`;const b=new Blob([t],{type:mime}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=fn;a.click();URL.revokeObjectURL(a.href);toast('Downloaded: '+fn)}
+
+// ===== SAVE / LOAD =====
+function getAll(){return{tunnels:getTunnels(),p1p:CV('.p1p'),p1d:CV('.p1d'),p1kl:V('p1kl'),natTrav:C('natTrav'),dpdOn:C('dpdOn'),dpdInt:V('dpdInt'),dpdRet:V('dpdRet'),p2p:CV('.p2p'),pfsOn:C('pfsOn'),pfsDh:V('pfsDh'),p2kl:V('p2kl'),startIp:V('startIp'),endIp:V('endIp'),dnsMode:V('dnsMode'),dns1:V('dns1'),dns2:V('dns2'),splitMode:V('splitMode'),splitNets:V('splitNets'),samlName:V('samlName'),eLoginUrl:V('eLoginUrl'),eEntityId:V('eEntityId'),eLogoutUrl:V('eLogoutUrl'),idpCert:V('idpCert'),srvCert:V('srvCert'),userGroups:getUserGroups(),grpP1:C('grpP1'),autoNeg:C('autoNeg'),keepAlive:C('keepAlive'),childless:C('childless'),savePw:C('savePw'),banner:V('banner'),psk:V('psk')}}
+
+function saveCfg(){const d=getAll();const tunnels=getTunnels();const tn=tunnels[0]?.name||'draft';const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`fg-vpn-${tn}-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href);toast('Configuration saved')}
+
+function loadCfg(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);
+// Load tunnels
+if(d.tunnels){$('tunnelsContainer').innerHTML='';tunnelCounter=0;d.tunnels.forEach(t=>addTunnel(t.name,t.comments,t.wanIf,t.fqdn,t.port))}
+// Legacy support for old single-tunnel format
+else if(d.tunnelName||d.fqdn||d.wanIf){$('tunnelsContainer').innerHTML='';tunnelCounter=0;addTunnel(d.tunnelName||'',d.comments||'',d.wanIf||'',d.fqdn||'',d.samlPort||'')}
+// Load shared settings
+['p1kl','dpdInt','dpdRet','p2kl','startIp','endIp','dns1','dns2','splitGrpName','splitNets','samlName','eLoginUrl','eEntityId','eLogoutUrl','idpCert','srvCert','banner','psk'].forEach(k=>{if($(k)&&d[k]!==undefined)$(k).value=d[k]});
+if(d.pfsDh)$('pfsDh').value=d.pfsDh;
+if(d.dnsMode){$('dnsMode').value=d.dnsMode;togDns()}if(d.splitMode){$('splitMode').value=d.splitMode;togSplit()};
+['natTrav','dpdOn','pfsOn','grpP1','autoNeg','keepAlive','childless','savePw'].forEach(k=>{if($(k)&&d[k]!==undefined)$(k).checked=d[k]});
+if(d.p1p)$$('.p1p').forEach(c=>c.checked=d.p1p.includes(c.value));
+if(d.p1d)$$('.p1d').forEach(c=>c.checked=d.p1d.includes(c.value));
+if(d.p2p)$$('.p2p').forEach(c=>c.checked=d.p2p.includes(c.value));
+// Load user groups
+if(d.userGroups){$('userGroupsContainer').innerHTML='';userGroupCounter=0;d.userGroups.forEach(g=>addUserGroup(g.name,g.objId))}
+// Legacy support for old single-group format
+else if(d.grpName||d.azGrpId){$('userGroupsContainer').innerHTML='';userGroupCounter=0;addUserGroup(d.grpName||'',d.azGrpId||'')}
+togDpd();togPfs();syncFqdn();v();gen();toast('Configuration loaded')}catch{toast('Invalid JSON file',false)}};r.readAsText(f);e.target.value=''}
+
+// ===== BEST PRACTICES =====
+function bestPractices(){
+  $$('.p1p').forEach(c=>c.checked=['aes256-sha256','aes128-sha256'].includes(c.value));
+  $$('.p1d').forEach(c=>c.checked=['19','20','21'].includes(c.value));
+  $('p1kl').value='86400';$('samlPort').value='10428';
+  $$('.p2p').forEach(c=>c.checked=['aes256-sha256','aes128-sha256'].includes(c.value));
+  $('pfsOn').checked=true;$('pfsDh').value='19';$('p2kl').value='43200';
+  $('natTrav').checked=true;$('dpdOn').checked=true;$('dpdInt').value='5';$('dpdRet').value='3';
+  $('autoNeg').checked=true;$('keepAlive').checked=true;$('childless').checked=true;$('savePw').checked=true;$('grpP1').checked=false;
+  togDpd();togPfs();syncFqdn();v();gen();toast('Best practices applied')
+}
+
+// ===== RESET =====
+function resetAll(){if(!confirm('Reset all fields to defaults?'))return;
+  // Reset tunnels
+  $('tunnelsContainer').innerHTML='';tunnelCounter=0;addTunnel();
+  // Reset shared settings
+  ['startIp','endIp','dns1','dns2','splitGrpName','splitNets','samlName','eLoginUrl','eEntityId','eLogoutUrl','idpCert','banner','psk'].forEach(k=>{if($(k))$(k).value=''});
+  $('p1kl').value='86400';$('dpdInt').value='5';$('dpdRet').value='3';$('p2kl').value='43200';$('srvCert').value='Fortinet_Factory';$('pfsDh').value='19';$('dnsMode').value='auto';$('splitMode').value='disabled';
+  $$('.p1p').forEach(c=>c.checked=['aes256-sha256','aes128-sha256'].includes(c.value));
+  $$('.p1d').forEach(c=>c.checked=['19','20','21'].includes(c.value));
+  $$('.p2p').forEach(c=>c.checked=['aes256-sha256','aes128-sha256'].includes(c.value));
+  $('natTrav').checked=true;$('dpdOn').checked=true;$('pfsOn').checked=true;$('grpP1').checked=false;$('autoNeg').checked=true;$('keepAlive').checked=true;$('childless').checked=true;$('savePw').checked=true;
+  // Reset user groups
+  $('userGroupsContainer').innerHTML='';userGroupCounter=0;addUserGroup();
+  togDpd();togPfs();togDns();togSplit();syncFqdn();
+  $$('.field-err,.field-ok').forEach(el=>{el.classList.remove('field-err','field-ok')});
+  v();gen();toast('All fields reset')
+}
+
+// ===== IPSEC TUNNELS (DYNAMIC) =====
+let tunnelCounter = 0;
+
+function createTunnelHTML(index, name = '', comments = '', wanIf = '', fqdn = '', port = '') {
+  const isFirst = index === 0;
+  const tunnelName = name || (isFirst ? 'Corporate-VPN-SAML' : '');
+  const wan = wanIf || 'wan1';
+  const samlPort = port || '10428';
+
+  return `
+    <div class="tunnel-item relative rounded-xl border-2 border-srf-200 dark:border-srf-700 p-4 space-y-4 bg-srf-50/30 dark:bg-srf-800/30 transition-all hover:border-fg-400/50 dark:hover:border-fg-600/50" data-tunnel-index="${index}">
+      ${!isFirst ? `
+      <button type="button" onclick="removeTunnel(${index})" class="absolute top-3 right-3 w-7 h-7 rounded-lg bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 flex items-center justify-center transition-all group" title="Remove this tunnel">
+        <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      ` : ''}
+      <div class="flex items-center gap-2 ${!isFirst ? 'pr-10' : ''}">
+        <div class="flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-fg-500 to-fg-600 text-white text-xs font-bold shadow-sm">
+          ${index + 1}
+        </div>
+        <span class="text-xs font-bold text-srf-700 dark:text-srf-300">IPSEC Tunnel #${index + 1}</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="lbl" for="tunnelName${index}">VPN Tunnel Name</label>
+          <input id="tunnelName${index}" type="text" value="${tunnelName}" pattern="[A-Za-z0-9-]+" placeholder="Corporate-VPN-SAML" class="inp" oninput="v();gen()">
+          <p class="help">Use alphanumeric characters and hyphens only.</p>
+        </div>
+        <div>
+          <label class="lbl" for="comments${index}">Description / Comments</label>
+          <input id="comments${index}" type="text" value="${comments}" placeholder="Optional description" class="inp" oninput="gen()">
+          <p class="help">Optional descriptive text for this tunnel.</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label class="lbl" for="wanIf${index}">WAN Interface</label>
+          <select id="wanIf${index}" class="inp" onchange="gen()">
+            <option ${wan==='wan1'?'selected':''}>wan1</option>
+            <option ${wan==='wan2'?'selected':''}>wan2</option>
+            <option ${wan==='port1'?'selected':''}>port1</option>
+            <option ${wan==='port2'?'selected':''}>port2</option>
+            <option ${wan==='port3'?'selected':''}>port3</option>
+            <option ${wan==='port4'?'selected':''}>port4</option>
+          </select>
+          <p class="help">WAN interface for this tunnel.</p>
+        </div>
+        <div class="tip">
+          <span class="tip-t">Enter your FortiGate's public FQDN (e.g. vpn.company.com) or static public IPv4 address for this interface.</span>
+          <label class="lbl" for="fqdn${index}">FortiGate Public FQDN/IP</label>
+          <input id="fqdn${index}" type="text" value="${fqdn}" placeholder="vpn.company.com" class="inp" oninput="v();gen()">
+          <p class="help">How clients reach this VPN endpoint.</p>
+        </div>
+        <div class="tip">
+          <span class="tip-t">Security best practice: Use a custom port. Recommended: 10428</span>
+          <label class="lbl" for="samlPort${index}">IKE-SAML Port</label>
+          <input id="samlPort${index}" type="number" value="${samlPort}" min="1" max="65535" class="inp" oninput="v();gen()">
+          <p class="help">Custom SAML authentication port.</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function addTunnel(name = '', comments = '', wanIf = '', fqdn = '', port = '') {
+  const container = $('tunnelsContainer');
+  if (!container) {
+    console.error('tunnelsContainer not found');
+    return;
+  }
+  const div = document.createElement('div');
+  div.innerHTML = createTunnelHTML(tunnelCounter, name, comments, wanIf, fqdn, port);
+  container.appendChild(div.firstElementChild);
+  tunnelCounter++;
+  setTimeout(() => {
+    v();
+    gen();
+  }, 0);
+}
+
+function removeTunnel(index) {
+  const item = $$('.tunnel-item').find(el => el.dataset.tunnelIndex == index);
+  if (item) {
+    item.style.opacity = '0';
+    item.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      item.remove();
+      v();
+      gen();
+    }, 200);
+  }
+}
+
+function getTunnels() {
+  try {
+    const tunnels = [];
+    const items = $$('.tunnel-item');
+    if (!items || items.length === 0) {
+      return [{ name: 'Corporate-VPN-SAML', comments: '', wanIf: 'wan1', fqdn: '', port: '10428' }];
+    }
+    items.forEach((item) => {
+      const index = item.dataset.tunnelIndex;
+      const nameEl = $('tunnelName' + index);
+      const commentsEl = $('comments' + index);
+      const wanIfEl = $('wanIf' + index);
+      const fqdnEl = $('fqdn' + index);
+      const portEl = $('samlPort' + index);
+
+      const name = nameEl ? nameEl.value.trim() : '';
+      const comments = commentsEl ? commentsEl.value.trim() : '';
+      const wanIf = wanIfEl ? wanIfEl.value : 'wan1';
+      const fqdn = fqdnEl ? fqdnEl.value.trim() : '';
+      const port = portEl ? portEl.value : '10428';
+
+      tunnels.push({ name, comments, wanIf, fqdn, port });
+    });
+    return tunnels.length > 0 ? tunnels : [{ name: 'Corporate-VPN-SAML', comments: '', wanIf: 'wan1', fqdn: '', port: '10428' }];
+  } catch (e) {
+    console.error('getTunnels error:', e);
+    return [{ name: 'Corporate-VPN-SAML', comments: '', wanIf: 'wan1', fqdn: '', port: '10428' }];
+  }
+}
+
+function initTunnels() {
+  addTunnel();
+}
+
+// ===== USER GROUPS (DYNAMIC) =====
+let userGroupCounter = 0;
+
+function createUserGroupHTML(index, name = '', objId = '') {
+  const isFirst = index === 0;
+  const groupName = name || (isFirst ? 'SAML-Entra-VPN-Users' : '');
+
+  return `
+    <div class="user-group-item relative rounded-xl border-2 border-srf-200 dark:border-srf-700 p-4 space-y-3 bg-srf-50/30 dark:bg-srf-800/30 transition-all hover:border-fg-400/50 dark:hover:border-fg-600/50" data-group-index="${index}">
+      ${!isFirst ? `
+      <button type="button" onclick="removeUserGroup(${index})" class="absolute top-3 right-3 w-7 h-7 rounded-lg bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 flex items-center justify-center transition-all group" title="Remove this group">
+        <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      ` : ''}
+      <div class="flex items-center gap-2 ${!isFirst ? 'pr-10' : ''}">
+        <div class="flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-fg-500 to-fg-600 text-white text-xs font-bold shadow-sm">
+          ${index + 1}
+        </div>
+        <span class="text-xs font-bold text-srf-700 dark:text-srf-300">User Group #${index + 1}</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="lbl" for="grpName${index}">User Group Name</label>
+          <input id="grpName${index}" type="text" value="${groupName}" pattern="[A-Za-z0-9_-]+" placeholder="SAML-Entra-VPN-Users" class="inp" oninput="v();gen()">
+          <p class="help">Choose a descriptive name that won't conflict with existing groups.</p>
+        </div>
+        <div>
+          <label class="lbl" for="azGrpId${index}">Azure Group Object ID</label>
+          <input id="azGrpId${index}" type="text" value="${objId}" placeholder="a1b2c3d4-e5f6-7890-abcd-ef1234567890" class="inp mono text-sm" oninput="v();gen()">
+          <p class="help">The unique Object ID (UUID format: 8-4-4-4-12) from Entra ID.</p>
+          <div id="uuidErr${index}" class="hidden text-xs text-red-500 font-semibold mt-1"></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function addUserGroup(name = '', objId = '') {
+  const container = $('userGroupsContainer');
+  if (!container) {
+    console.error('userGroupsContainer not found');
+    return;
+  }
+  const div = document.createElement('div');
+  div.innerHTML = createUserGroupHTML(userGroupCounter, name, objId);
+  container.appendChild(div.firstElementChild);
+  userGroupCounter++;
+  // Use setTimeout to ensure DOM is updated before validation/generation
+  setTimeout(() => {
+    v();
+    gen();
+  }, 0);
+}
+
+function removeUserGroup(index) {
+  const item = $$('.user-group-item').find(el => el.dataset.groupIndex == index);
+  if (item) {
+    item.style.opacity = '0';
+    item.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      item.remove();
+      v();
+      gen();
+    }, 200);
+  }
+}
+
+function getUserGroups() {
+  try {
+    const groups = [];
+    const items = $$('.user-group-item');
+    if (!items || items.length === 0) {
+      // Return default group if no items found
+      return [{ name: 'SAML-Entra-VPN-Users', objId: '' }];
+    }
+    items.forEach((item) => {
+      const index = item.dataset.groupIndex;
+      const nameEl = $('grpName' + index);
+      const objIdEl = $('azGrpId' + index);
+      const name = nameEl ? nameEl.value.trim() : '';
+      const objId = objIdEl ? objIdEl.value.trim() : '';
+      groups.push({ name: name || '', objId: objId || '' });
+    });
+    return groups.length > 0 ? groups : [{ name: 'SAML-Entra-VPN-Users', objId: '' }];
+  } catch (e) {
+    console.error('getUserGroups error:', e);
+    return [{ name: 'SAML-Entra-VPN-Users', objId: '' }];
+  }
+}
+
+// Initialize with first user group
+function initUserGroups() {
+  addUserGroup();
+}
+
+// ===== KEYBOARD SHORTCUTS =====
+document.addEventListener('keydown',e=>{const m=e.ctrlKey||e.metaKey;
+  if(m&&e.key==='s'){e.preventDefault();saveCfg()}
+  if(m&&e.key==='b'){e.preventDefault();bestPractices()}
+  if(m&&e.key==='c'){const el=document.activeElement;if(el&&(el.closest('#o-cli')||el.closest('#o-gui')||el.closest('#o-az'))){e.preventDefault();copyOut()}}
+});
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  initTunnels();
+  initUserGroups();
+  // Give DOM time to update, then run validation and generation
+  setTimeout(() => {
+    v();
+    gen();
+  }, 10);
+});
+</script>
+</body>
+</html>

@@ -32,7 +32,7 @@ const Dashboard: React.FC = () => {
               </div>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 bg-[#0f172a] text-white rounded-lg hover:bg-[#1e293b] transition-colors font-medium"
+                className="px-4 py-2 bg-[#171717] text-white rounded-lg hover:bg-[#262626] transition-colors font-medium"
               >
                 Logout
               </button>
@@ -45,7 +45,7 @@ const Dashboard: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Configuration Card */}
-          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
+          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-red-400">New VPN Configuration</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">🔒</span>
@@ -62,7 +62,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Library Card */}
-          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
+          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-red-400">My Configurations</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">📚</span>
@@ -72,14 +72,14 @@ const Dashboard: React.FC = () => {
             </p>
             <button
               onClick={() => navigate('/dashboard/library')}
-              className="w-full py-2 px-4 bg-[#334155] text-white font-bold rounded-lg hover:bg-[#475569] transition-colors"
+              className="w-full py-2 px-4 bg-[#404040] text-white font-bold rounded-lg hover:bg-[#525252] transition-colors"
             >
               View Library
             </button>
           </div>
 
           {/* Templates Card */}
-          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
+          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-red-400">Templates</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">📋</span>
@@ -87,7 +87,7 @@ const Dashboard: React.FC = () => {
             <p className="text-gray-400 text-sm mb-4">
               Browse and use pre-built configuration templates
             </p>
-            <button className="w-full py-2 px-4 bg-[#334155] text-white font-bold rounded-lg hover:bg-[#475569] transition-colors">
+            <button className="w-full py-2 px-4 bg-[#404040] text-white font-bold rounded-lg hover:bg-[#525252] transition-colors">
               Browse Templates
             </button>
           </div>
@@ -95,7 +95,7 @@ const Dashboard: React.FC = () => {
 
         {/* Quick Stats */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6">
+          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Total Configurations</p>
@@ -105,7 +105,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6">
+          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Templates Created</p>
@@ -115,7 +115,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6">
+          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Last Activity</p>

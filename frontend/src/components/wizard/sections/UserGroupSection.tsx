@@ -11,7 +11,7 @@ interface UserGroupSectionProps {
 
 function getBorderClass(value: string, validate: (v: string) => { isValid: boolean; error?: string }): string {
   if (!value || value.trim() === '') {
-    return 'border-slate-300 dark:border-slate-600';
+    return 'border-neutral-300 dark:border-neutral-600';
   }
   const result = validate(value);
   return result.isValid ? 'border-green-500' : 'border-red-500';
@@ -32,7 +32,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
         return (
           <div
             key={index}
-            className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4 shadow-sm"
+            className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-4 shadow-sm"
           >
             {/* Card Header */}
             <div className="flex items-center justify-between mb-3">
@@ -55,7 +55,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* Group Name */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                   User Group Name
                 </label>
                 <input
@@ -63,7 +63,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
                   value={group.name}
                   onChange={(e) => updateUserGroup(index, 'name', e.target.value)}
                   placeholder="SAML-Entra-VPN-Users"
-                  className={`w-full px-3 py-2 bg-white dark:bg-slate-900 border-2 ${getBorderClass(group.name, validateGroupName)} rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/40 transition-colors`}
+                  className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 border-2 ${getBorderClass(group.name, validateGroupName)} rounded-lg text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-500/40 transition-colors`}
                 />
                 {group.name.trim() !== '' && !nameValidation.isValid && nameValidation.error && (
                   <p className="text-xs text-red-500 mt-1">{nameValidation.error}</p>
@@ -72,7 +72,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
 
               {/* Azure Group Object ID */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
                   Azure Group Object ID
                 </label>
                 <input
@@ -80,7 +80,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
                   value={group.objId}
                   onChange={(e) => updateUserGroup(index, 'objId', e.target.value)}
                   placeholder="a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-                  className={`w-full px-3 py-2 bg-white dark:bg-slate-900 border-2 ${getBorderClass(group.objId, validateUUID)} rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/40 transition-colors`}
+                  className={`w-full px-3 py-2 bg-white dark:bg-neutral-900 border-2 ${getBorderClass(group.objId, validateUUID)} rounded-lg text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-500/40 transition-colors`}
                 />
                 {group.objId.trim() !== '' && !uuidValidation.isValid && uuidValidation.error && (
                   <p className="text-xs text-red-500 mt-1">{uuidValidation.error}</p>

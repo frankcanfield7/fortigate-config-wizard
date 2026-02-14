@@ -27,12 +27,12 @@ const WAN_OPTIONS = [
  * Returns neutral border for empty values, green for valid, red for invalid.
  */
 function borderClass(value: string, validate: (v: string) => { isValid: boolean }): string {
-  if (!value || value.trim() === '') return 'border-slate-300 dark:border-slate-600';
+  if (!value || value.trim() === '') return 'border-neutral-300 dark:border-neutral-600';
   return validate(value).isValid ? 'border-green-500' : 'border-red-500';
 }
 
 const INPUT_BASE =
-  'w-full rounded-lg border bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-600 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors';
+  'w-full rounded-lg border bg-white dark:bg-neutral-900 px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-600 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 transition-colors';
 
 const TunnelSection: React.FC<TunnelSectionProps> = ({
   tunnels,
@@ -64,7 +64,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
     value: string,
     validate: (v: string) => { isValid: boolean },
   ): string => {
-    if (!isTouched(index, field)) return 'border-slate-300 dark:border-slate-600';
+    if (!isTouched(index, field)) return 'border-neutral-300 dark:border-neutral-600';
     return borderClass(value, validate);
   };
 
@@ -73,7 +73,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
       {tunnels.map((tunnel, index) => (
         <div
           key={index}
-          className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4 shadow-sm transition-all duration-300 relative"
+          className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-4 shadow-sm transition-all duration-300 relative"
         >
           {/* Tunnel number badge */}
           <div className="flex items-center justify-between mb-3">
@@ -109,7 +109,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* VPN Tunnel Name */}
             <div>
-              <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300 mb-1">
                 VPN Tunnel Name
               </label>
               <input
@@ -134,7 +134,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
 
             {/* Description / Comments */}
             <div>
-              <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300 mb-1">
                 Description / Comments
               </label>
               <input
@@ -142,19 +142,19 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
                 value={tunnel.comments}
                 placeholder="Optional"
                 onChange={(e) => updateTunnel(index, 'comments', e.target.value)}
-                className={`${INPUT_BASE} border-slate-300 dark:border-slate-600`}
+                className={`${INPUT_BASE} border-neutral-300 dark:border-neutral-600`}
               />
             </div>
 
             {/* WAN Interface */}
             <div>
-              <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300 mb-1">
                 WAN Interface
               </label>
               <select
                 value={tunnel.wanIf}
                 onChange={(e) => updateTunnel(index, 'wanIf', e.target.value)}
-                className={`${INPUT_BASE} border-slate-300 dark:border-slate-600`}
+                className={`${INPUT_BASE} border-neutral-300 dark:border-neutral-600`}
               >
                 {WAN_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -166,7 +166,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
 
             {/* FortiGate Public FQDN / IP */}
             <div>
-              <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300 mb-1">
                 FortiGate Public FQDN / IP
               </label>
               <input
@@ -191,7 +191,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
 
             {/* IKE-SAML Port */}
             <div>
-              <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-neutral-600 dark:text-neutral-300 mb-1">
                 IKE-SAML Port
               </label>
               <input

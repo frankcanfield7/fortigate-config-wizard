@@ -133,7 +133,7 @@ const ConfigWizard: React.FC = () => {
   const isSaving = createConfigMutation.isPending || updateConfigMutation.isPending;
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-neutral-950">
       {/* Header */}
       <header className="bg-gradient-to-r from-red-950 to-red-900 shadow-lg">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -160,7 +160,7 @@ const ConfigWizard: React.FC = () => {
               <button
                 onClick={handleSave}
                 disabled={isSaving || isLoadingConfig}
-                className="px-5 py-2.5 bg-white text-slate-900 rounded-lg hover:bg-slate-100 transition-colors text-sm font-bold disabled:opacity-50"
+                className="px-5 py-2.5 bg-white text-neutral-900 rounded-lg hover:bg-neutral-100 transition-colors text-sm font-bold disabled:opacity-50"
               >
                 {isSaving ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update' : 'Save')}
               </button>
@@ -172,7 +172,7 @@ const ConfigWizard: React.FC = () => {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Loading State */}
         {isEditMode && isLoadingConfig && (
-          <div className="bg-slate-800 border border-slate-700 rounded-xl p-12 mb-6 text-center">
+          <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-12 mb-6 text-center">
             <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-red-600 mb-4" />
             <p className="text-red-400 font-bold">Loading configuration...</p>
           </div>
@@ -183,10 +183,10 @@ const ConfigWizard: React.FC = () => {
             {/* Left Column: Form (3/5 width) */}
             <div className="xl:col-span-3 space-y-6">
               {/* Configuration Name/Description */}
-              <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
+              <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                    <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-1">
                       Configuration Name *
                     </label>
                     <input
@@ -194,11 +194,11 @@ const ConfigWizard: React.FC = () => {
                       value={configName}
                       onChange={e => setConfigName(e.target.value)}
                       placeholder="e.g., HQ Remote Access VPN"
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 text-sm"
+                      className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white placeholder-neutral-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 text-sm"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                    <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-1">
                       Description (Optional)
                     </label>
                     <input
@@ -206,7 +206,7 @@ const ConfigWizard: React.FC = () => {
                       value={configDescription}
                       onChange={e => setConfigDescription(e.target.value)}
                       placeholder="Brief description of this configuration..."
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 text-sm"
+                      className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white placeholder-neutral-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 text-sm"
                     />
                   </div>
                 </div>

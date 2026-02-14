@@ -74,24 +74,24 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ config }) => {
   };
 
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-xl shadow-lg overflow-hidden">
+    <div className="bg-neutral-800 border border-neutral-700 rounded-xl shadow-lg overflow-hidden">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-slate-700 bg-slate-900/50">
+      <div className="px-4 py-3 border-b border-neutral-700 bg-neutral-900/50">
         <h2 className="text-sm font-bold text-red-400 uppercase tracking-wide">
           Configuration Output
         </h2>
       </div>
 
       {/* Tab Bar */}
-      <div className="flex border-b border-slate-700">
+      <div className="flex border-b border-neutral-700">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex-1 px-3 py-2.5 text-xs font-bold transition-colors ${
               activeTab === tab.id
-                ? 'text-red-400 border-b-2 border-red-600 bg-slate-800'
-                : 'text-slate-500 border-b-2 border-transparent hover:text-slate-300'
+                ? 'text-red-400 border-b-2 border-red-600 bg-neutral-800'
+                : 'text-neutral-500 border-b-2 border-transparent hover:text-neutral-300'
             }`}
           >
             {tab.label}
@@ -100,7 +100,7 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ config }) => {
       </div>
 
       {/* Actions Bar */}
-      <div className="flex items-center justify-end gap-2 px-4 py-2 border-b border-slate-700">
+      <div className="flex items-center justify-end gap-2 px-4 py-2 border-b border-neutral-700">
         <button
           onClick={handleCopy}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-red-800 hover:bg-red-700 text-white transition-colors"
@@ -124,7 +124,7 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ config }) => {
         </button>
         <button
           onClick={handleDownload}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white transition-colors"
         >
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M8 2v9" />
@@ -137,7 +137,7 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ config }) => {
 
       {/* Output Display */}
       <div className="p-3">
-        <pre className="font-mono text-xs leading-relaxed whitespace-pre-wrap bg-slate-950 text-slate-300 p-3 rounded-lg overflow-auto max-h-[calc(100vh-320px)] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-900 [&::-webkit-scrollbar-thumb]:bg-red-800 [&::-webkit-scrollbar-thumb]:rounded-full">
+        <pre className="font-mono text-xs leading-relaxed whitespace-pre-wrap bg-neutral-950 text-neutral-300 p-3 rounded-lg overflow-auto max-h-[calc(100vh-320px)] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-neutral-900 [&::-webkit-scrollbar-thumb]:bg-red-800 [&::-webkit-scrollbar-thumb]:rounded-full">
           {outputs[activeTab]}
         </pre>
       </div>

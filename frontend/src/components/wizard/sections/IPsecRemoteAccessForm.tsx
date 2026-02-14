@@ -53,7 +53,7 @@ const PFS_DH_OPTIONS = [
 ];
 
 const ChevronIcon = () => (
-  <svg className="w-5 h-5 text-slate-400 group-hover:text-red-500 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+  <svg className="w-5 h-5 text-neutral-400 group-hover:text-red-500 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
   </svg>
 );
@@ -146,13 +146,13 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
     <button
       type="button"
       onClick={() => toggleSection(sectionId)}
-      className="w-full flex items-center justify-between px-5 py-4 text-left group hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors"
+      className="w-full flex items-center justify-between px-5 py-4 text-left group hover:bg-neutral-50/50 dark:hover:bg-neutral-700/30 transition-colors"
     >
       <div className="flex items-center gap-3">
         <span className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold bg-red-800/10 text-red-700 dark:text-red-300">
           {num}
         </span>
-        <span className="font-bold text-sm text-slate-800 dark:text-slate-200">{title}</span>
+        <span className="font-bold text-sm text-neutral-800 dark:text-neutral-200">{title}</span>
         {badge}
       </div>
       <div className={`transition-transform duration-300 ${expandedSections.has(sectionId) ? 'rotate-0' : '-rotate-90'}`}>
@@ -161,10 +161,10 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
     </button>
   );
 
-  const inputClass = "w-full rounded-lg border bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 px-3 py-2 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 transition-colors";
-  const labelClass = "block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1";
-  const helpClass = "text-[11px] text-slate-400 dark:text-slate-500 mt-1 leading-relaxed";
-  const sectionClass = "bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-200/50 dark:border-slate-700/50 overflow-hidden";
+  const inputClass = "w-full rounded-lg border bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-600 px-3 py-2 text-sm text-neutral-800 dark:text-neutral-200 placeholder-neutral-400 dark:placeholder-neutral-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 transition-colors";
+  const labelClass = "block text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wide mb-1";
+  const helpClass = "text-[11px] text-neutral-400 dark:text-neutral-500 mt-1 leading-relaxed";
+  const sectionClass = "bg-white dark:bg-neutral-800 rounded-xl shadow-md border border-neutral-200/50 dark:border-neutral-700/50 overflow-hidden";
   const panelClass = "px-5 pb-5 space-y-4";
 
   return (
@@ -209,7 +209,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
           <div className={panelClass}>
             {/* Encryption/Hash Proposals */}
             <div>
-              <p className="text-[11px] text-slate-400 dark:text-slate-500 mb-2">
+              <p className="text-[11px] text-neutral-400 dark:text-neutral-500 mb-2">
                 Select one or more encryption proposals. AES256-SHA256 provides strong security with broad compatibility.
               </p>
               <label className={labelClass}>Encryption/Hash Proposals</label>
@@ -222,7 +222,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                       checked={config.p1p.includes(p.value)}
                       onChange={() => toggleArrayValue('p1p', p.value)}
                     />
-                    <span className="text-slate-700 dark:text-slate-300">{p.label}</span>
+                    <span className="text-neutral-700 dark:text-neutral-300">{p.label}</span>
                   </label>
                 ))}
               </div>
@@ -230,7 +230,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
 
             {/* DH Groups */}
             <div>
-              <p className="text-[11px] text-slate-400 dark:text-slate-500 mb-2">
+              <p className="text-[11px] text-neutral-400 dark:text-neutral-500 mb-2">
                 DH Groups 19-21 (Elliptic Curve) provide the strongest key exchange. Groups below 15 are considered weak.
               </p>
               <label className={labelClass}>DH Groups</label>
@@ -243,7 +243,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                       checked={config.p1d.includes(g.value)}
                       onChange={() => toggleArrayValue('p1d', g.value)}
                     />
-                    <span className={`${g.strength === 'legacy' ? 'text-red-500' : g.strength === 'strong' ? 'text-slate-700 dark:text-slate-300' : 'text-slate-700 dark:text-slate-300'}`}>
+                    <span className={`${g.strength === 'legacy' ? 'text-red-500' : g.strength === 'strong' ? 'text-neutral-700 dark:text-neutral-300' : 'text-neutral-700 dark:text-neutral-300'}`}>
                       {g.label}
                     </span>
                   </label>
@@ -276,13 +276,13 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                     checked={config.natTrav}
                     onChange={e => updateField('natTrav', e.target.checked)}
                   />
-                  <span className="text-slate-700 dark:text-slate-300">NAT Traversal</span>
+                  <span className="text-neutral-700 dark:text-neutral-300">NAT Traversal</span>
                 </label>
               </div>
             </div>
 
             {/* DPD */}
-            <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
+            <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4">
               <label className="flex items-center gap-2 text-xs font-semibold mb-3 cursor-pointer hover:text-red-500 transition-colors">
                 <input
                   type="checkbox"
@@ -290,7 +290,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                   checked={config.dpdOn}
                   onChange={e => updateField('dpdOn', e.target.checked)}
                 />
-                <span className="text-slate-700 dark:text-slate-300">Dead Peer Detection (DPD)</span>
+                <span className="text-neutral-700 dark:text-neutral-300">Dead Peer Detection (DPD)</span>
               </label>
               {config.dpdOn && (
                 <div className="grid grid-cols-2 gap-4">
@@ -339,7 +339,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                       checked={config.p2p.includes(p.value)}
                       onChange={() => toggleArrayValue('p2p', p.value)}
                     />
-                    <span className="text-slate-700 dark:text-slate-300">{p.label}</span>
+                    <span className="text-neutral-700 dark:text-neutral-300">{p.label}</span>
                   </label>
                 ))}
               </div>
@@ -353,7 +353,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                     checked={config.pfsOn}
                     onChange={e => updateField('pfsOn', e.target.checked)}
                   />
-                  <span className="text-slate-700 dark:text-slate-300">Enable PFS</span>
+                  <span className="text-neutral-700 dark:text-neutral-300">Enable PFS</span>
                 </label>
               </div>
               {config.pfsOn && (
@@ -546,7 +546,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                 <input
                   type="text"
                   readOnly
-                  className={`${inputClass} bg-slate-100 dark:bg-slate-900 text-slate-500 cursor-not-allowed`}
+                  className={`${inputClass} bg-neutral-100 dark:bg-neutral-900 text-neutral-500 cursor-not-allowed`}
                   value={config.tunnels[0]?.fqdn || ''}
                 />
                 <p className={helpClass}>Automatically populated from tunnel configuration.</p>
@@ -554,25 +554,25 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
             </div>
 
             {/* Auto-generated SAML URLs */}
-            <div className="rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 border border-slate-200/50 dark:border-slate-700/50 p-4 space-y-2.5 shadow-inner">
-              <p className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+            <div className="rounded-xl bg-gradient-to-br from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800 border border-neutral-200/50 dark:border-neutral-700/50 p-4 space-y-2.5 shadow-inner">
+              <p className="text-[11px] font-extrabold text-neutral-500 uppercase tracking-wider flex items-center gap-2">
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" /></svg>
                 Auto-Generated SAML URLs
               </p>
               <div>
-                <span className="text-[11px] text-slate-400 font-semibold">Entity ID:</span>
+                <span className="text-[11px] text-neutral-400 font-semibold">Entity ID:</span>
                 <p className="text-xs font-mono text-red-600 dark:text-red-400 break-all mt-0.5">
                   {samlUrls?.entityId || '\u2014'}
                 </p>
               </div>
               <div>
-                <span className="text-[11px] text-slate-400 font-semibold">ACS URL:</span>
+                <span className="text-[11px] text-neutral-400 font-semibold">ACS URL:</span>
                 <p className="text-xs font-mono text-red-600 dark:text-red-400 break-all mt-0.5">
                   {samlUrls?.acsUrl || '\u2014'}
                 </p>
               </div>
               <div>
-                <span className="text-[11px] text-slate-400 font-semibold">SLO URL:</span>
+                <span className="text-[11px] text-neutral-400 font-semibold">SLO URL:</span>
                 <p className="text-xs font-mono text-red-600 dark:text-red-400 break-all mt-0.5">
                   {samlUrls?.sloUrl || '\u2014'}
                 </p>
@@ -644,7 +644,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                 <p className={helpClass}>The name you assigned when importing the Entra ID remote certificate to FortiGate.</p>
               </div>
               <div>
-                <p className="text-[11px] text-slate-400 dark:text-slate-500 mb-1">
+                <p className="text-[11px] text-neutral-400 dark:text-neutral-500 mb-1">
                   For testing: Use &apos;Fortinet_Factory&apos;. For production: use a cert matching your FQDN.
                 </p>
                 <label className={labelClass} htmlFor="srvCert">FortiGate Server Certificate</label>
@@ -661,8 +661,8 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
             </div>
 
             {/* User Groups */}
-            <div className="border-t border-slate-200 dark:border-slate-700 pt-5 space-y-4">
-              <p className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">User Group Configuration</p>
+            <div className="border-t border-neutral-200 dark:border-neutral-700 pt-5 space-y-4">
+              <p className="text-[11px] font-extrabold text-neutral-500 uppercase tracking-wider">User Group Configuration</p>
               <UserGroupSection
                 userGroups={config.userGroups}
                 addUserGroup={addUserGroup}
@@ -671,8 +671,8 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
               />
 
               {/* Object ID help */}
-              <div className="rounded-xl bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/30 dark:to-slate-700/20 border border-slate-200 dark:border-slate-600/50 p-3.5 shadow-sm">
-                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+              <div className="rounded-xl bg-gradient-to-r from-neutral-50 to-neutral-100 dark:from-neutral-800/30 dark:to-neutral-700/20 border border-neutral-200 dark:border-neutral-600/50 p-3.5 shadow-sm">
+                <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
                   <strong className="font-bold">Finding the Object ID:</strong> Azure Portal &rarr; Microsoft Entra ID &rarr; Groups &rarr; Select group &rarr; Copy Object ID from Overview page
                 </p>
               </div>
@@ -686,7 +686,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                     checked={config.grpP1}
                     onChange={e => updateField('grpP1', e.target.checked)}
                   />
-                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">Apply user groups in Phase 1 tunnel configuration</span>
+                  <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-300">Apply user groups in Phase 1 tunnel configuration</span>
                 </label>
                 <p className={`${helpClass} ml-6 mt-1`}>
                   <strong>Unchecked (Recommended):</strong> Apply user group authorization in firewall policies for maximum flexibility.
@@ -718,7 +718,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                     checked={config[toggle.field] as boolean}
                     onChange={e => updateField(toggle.field, e.target.checked)}
                   />
-                  <span className="text-slate-700 dark:text-slate-300">{toggle.label}</span>
+                  <span className="text-neutral-700 dark:text-neutral-300">{toggle.label}</span>
                 </label>
               ))}
             </div>
@@ -740,10 +740,10 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowPsk(!showPsk)}
-                  className="px-3 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all text-xs font-bold"
+                  className="px-3 py-2.5 rounded-lg border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-all text-xs font-bold"
                   title="Show/Hide PSK"
                 >
-                  <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     {showPsk ? (
                       <>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />

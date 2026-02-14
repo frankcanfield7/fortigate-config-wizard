@@ -93,7 +93,7 @@ const ConfigLibrary: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
+    <div className="min-h-screen bg-[#171717]">
       {/* Header */}
       <header className="bg-gradient-to-r from-red-900 to-red-800 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -101,7 +101,7 @@ const ConfigLibrary: React.FC = () => {
             <div>
               <button
                 onClick={() => navigate('/dashboard')}
-                className="text-white hover:text-[#1e293b] transition-colors mb-2 flex items-center gap-2"
+                className="text-white hover:text-[#262626] transition-colors mb-2 flex items-center gap-2"
               >
                 <span>←</span> Back to Dashboard
               </button>
@@ -124,13 +124,13 @@ const ConfigLibrary: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search Bar */}
-        <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-4 mb-6">
+        <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-4 mb-6">
           <input
             type="text"
             placeholder="Search configurations by name, type, or description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white placeholder-gray-500 focus:border-red-700 focus:outline-none"
+            className="w-full px-4 py-3 bg-[#171717] border-2 border-[#404040] rounded-lg text-white placeholder-gray-500 focus:border-red-700 focus:outline-none"
           />
         </div>
 
@@ -151,7 +151,7 @@ const ConfigLibrary: React.FC = () => {
 
         {/* Empty State */}
         {!isLoading && !error && filteredConfigs?.length === 0 && (
-          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-12 text-center">
+          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-12 text-center">
             <div className="text-6xl mb-4">📭</div>
             <h2 className="text-2xl font-bold text-red-400 mb-2">
               {searchTerm ? 'No matching configurations' : 'No configurations yet'}
@@ -174,10 +174,10 @@ const ConfigLibrary: React.FC = () => {
 
         {/* Configurations Table */}
         {!isLoading && !error && filteredConfigs && filteredConfigs.length > 0 && (
-          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl overflow-hidden">
+          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-[#0f172a] border-b-2 border-[#334155]">
+                <thead className="bg-[#171717] border-b-2 border-[#404040]">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Name</th>
                     <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Type</th>
@@ -186,11 +186,11 @@ const ConfigLibrary: React.FC = () => {
                     <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#334155]">
+                <tbody className="divide-y divide-[#404040]">
                   {filteredConfigs.map((config) => {
                     const typeInfo = getConfigTypeInfo(config.config_type);
                     return (
-                      <tr key={config.id} className="hover:bg-[#0f172a]/50 transition-colors">
+                      <tr key={config.id} className="hover:bg-[#171717]/50 transition-colors">
                         <td className="px-6 py-4">
                           <div className="font-medium text-white">{config.name}</div>
                           {config.is_template && (
@@ -262,7 +262,7 @@ const ConfigLibrary: React.FC = () => {
 
             {/* Pagination */}
             {data && data.total > 20 && (
-              <div className="bg-[#0f172a] border-t-2 border-[#334155] px-6 py-4 flex items-center justify-between">
+              <div className="bg-[#171717] border-t-2 border-[#404040] px-6 py-4 flex items-center justify-between">
                 <div className="text-sm text-gray-400">
                   Showing {(page - 1) * 20 + 1} to {Math.min(page * 20, data.total)} of {data.total} configurations
                 </div>
@@ -270,14 +270,14 @@ const ConfigLibrary: React.FC = () => {
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="px-4 py-2 bg-[#1e293b] border border-[#334155] rounded text-white hover:bg-[#334155] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 bg-[#262626] border border-[#404040] rounded text-white hover:bg-[#404040] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => setPage((p) => p + 1)}
                     disabled={page * 20 >= data.total}
-                    className="px-4 py-2 bg-[#1e293b] border border-[#334155] rounded text-white hover:bg-[#334155] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 bg-[#262626] border border-[#404040] rounded text-white hover:bg-[#404040] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
@@ -290,7 +290,7 @@ const ConfigLibrary: React.FC = () => {
         {/* Delete Confirmation Modal */}
         {deleteConfirmId !== null && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-            <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 max-w-md w-full mx-4">
+            <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 max-w-md w-full mx-4">
               <h2 className="text-2xl font-bold text-red-400 mb-4">Confirm Delete</h2>
               <p className="text-gray-300 mb-6">
                 Are you sure you want to delete this configuration? This action cannot be undone.
@@ -298,7 +298,7 @@ const ConfigLibrary: React.FC = () => {
               <div className="flex gap-3">
                 <button
                   onClick={() => setDeleteConfirmId(null)}
-                  className="flex-1 px-4 py-2 bg-[#334155] text-white rounded-lg hover:bg-[#475569] transition-colors"
+                  className="flex-1 px-4 py-2 bg-[#404040] text-white rounded-lg hover:bg-[#525252] transition-colors"
                 >
                   Cancel
                 </button>
@@ -317,27 +317,27 @@ const ConfigLibrary: React.FC = () => {
         {/* Export Modal */}
         {exportingId !== null && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-            <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 max-w-md w-full mx-4">
+            <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 max-w-md w-full mx-4">
               <h2 className="text-2xl font-bold text-red-400 mb-4">Export Configuration</h2>
               <p className="text-gray-300 mb-6">Choose an export format:</p>
               <div className="space-y-3">
                 <button
                   onClick={() => handleExport(exportingId, 'cli')}
-                  className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white hover:border-red-700 transition-colors text-left"
+                  className="w-full px-4 py-3 bg-[#171717] border-2 border-[#404040] rounded-lg text-white hover:border-red-700 transition-colors text-left"
                 >
                   <div className="font-bold">CLI Script</div>
                   <div className="text-sm text-gray-400">FortiGate command-line script</div>
                 </button>
                 <button
                   onClick={() => handleExport(exportingId, 'json')}
-                  className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white hover:border-red-700 transition-colors text-left"
+                  className="w-full px-4 py-3 bg-[#171717] border-2 border-[#404040] rounded-lg text-white hover:border-red-700 transition-colors text-left"
                 >
                   <div className="font-bold">JSON</div>
                   <div className="text-sm text-gray-400">Structured data format</div>
                 </button>
                 <button
                   onClick={() => handleExport(exportingId, 'yaml')}
-                  className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white hover:border-red-700 transition-colors text-left"
+                  className="w-full px-4 py-3 bg-[#171717] border-2 border-[#404040] rounded-lg text-white hover:border-red-700 transition-colors text-left"
                 >
                   <div className="font-bold">YAML</div>
                   <div className="text-sm text-gray-400">Human-readable format</div>
@@ -345,7 +345,7 @@ const ConfigLibrary: React.FC = () => {
               </div>
               <button
                 onClick={() => setExportingId(null)}
-                className="w-full mt-4 px-4 py-2 bg-[#334155] text-white rounded-lg hover:bg-[#475569] transition-colors"
+                className="w-full mt-4 px-4 py-2 bg-[#404040] text-white rounded-lg hover:bg-[#525252] transition-colors"
               >
                 Cancel
               </button>
