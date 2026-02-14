@@ -45,49 +45,49 @@ const Dashboard: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Configuration Card */}
-          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
+          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-red-400">New VPN Configuration</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">🔒</span>
             </div>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-gray-400 text-sm mb-4 flex-1">
               Create an IPSEC Remote Access VPN with Entra ID SAML authentication
             </p>
             <button
               onClick={() => navigate('/dashboard/wizard')}
-              className="w-full py-2 px-4 bg-gradient-to-r from-red-900 to-red-800 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all"
+              className="w-full py-2 px-4 bg-gradient-to-r from-red-900 to-red-800 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all mt-auto"
             >
               Start Wizard
             </button>
           </div>
 
           {/* Library Card */}
-          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
+          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-red-400">My Configurations</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">📚</span>
             </div>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-gray-400 text-sm mb-4 flex-1">
               View and manage your saved configurations
             </p>
             <button
               onClick={() => navigate('/dashboard/library')}
-              className="w-full py-2 px-4 bg-[#404040] text-white font-bold rounded-lg hover:bg-[#525252] transition-colors"
+              className="w-full py-2 px-4 bg-[#404040] text-white font-bold rounded-lg hover:bg-[#525252] transition-colors mt-auto"
             >
               View Library
             </button>
           </div>
 
           {/* Templates Card */}
-          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
+          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-red-400">Templates</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">📋</span>
             </div>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-gray-400 text-sm mb-4 flex-1">
               Browse and use pre-built configuration templates
             </p>
-            <button className="w-full py-2 px-4 bg-[#404040] text-white font-bold rounded-lg hover:bg-[#525252] transition-colors">
+            <button className="w-full py-2 px-4 bg-[#404040] text-white font-bold rounded-lg hover:bg-[#525252] transition-colors mt-auto">
               Browse Templates
             </button>
           </div>
