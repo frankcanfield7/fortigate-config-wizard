@@ -32,12 +32,12 @@ const TemplateLibrary: React.FC = () => {
   };
 
   const getConfigTypeInfo = (type: string) => {
-    const types: Record<string, { icon: string; label: string; color: string }> = {
-      ipsec: { icon: '🔒', label: 'IPSEC Remote Access', color: 'bg-red-700/10 text-red-400 border-red-700/30' },
-      sdwan: { icon: '🌐', label: 'SD-WAN', color: 'bg-blue-500/10 text-blue-400 border-blue-500/30' },
-      firewall: { icon: '🛡️', label: 'Firewall', color: 'bg-red-500/10 text-red-400 border-red-500/30' },
+    const types: Record<string, { label: string; color: string }> = {
+      ipsec: { label: 'IPSEC Remote Access', color: 'bg-red-700/10 text-red-400 border-red-700/30' },
+      sdwan: { label: 'SD-WAN', color: 'bg-blue-500/10 text-blue-400 border-blue-500/30' },
+      firewall: { label: 'Firewall', color: 'bg-red-500/10 text-red-400 border-red-500/30' },
     };
-    return types[type] || { icon: '⚙️', label: type, color: 'bg-gray-500/10 text-gray-400 border-gray-500/30' };
+    return types[type] || { label: type, color: 'bg-gray-500/10 text-gray-400 border-gray-500/30' };
   };
 
   return (
@@ -54,7 +54,7 @@ const TemplateLibrary: React.FC = () => {
                 <span>←</span> Back to Dashboard
               </button>
               <h1 className="text-3xl font-semibold text-white">
-                Template Library 📋
+                Template Library
               </h1>
               <p className="text-white/70 text-sm mt-1">
                 Pre-built configurations to get started quickly
@@ -83,7 +83,7 @@ const TemplateLibrary: React.FC = () => {
         {/* Empty State */}
         {!isLoading && !error && (!templates || templates.length === 0) && (
           <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-12 text-center">
-            <div className="text-6xl mb-4">📋</div>
+            <div className="text-2xl text-gray-500 mb-4">No items</div>
             <h2 className="text-2xl font-medium text-red-400 mb-2">No Templates Yet</h2>
             <p className="text-gray-400 mb-6">
               Save a configuration as a template from the Configuration Library to see it here.
@@ -108,9 +108,8 @@ const TemplateLibrary: React.FC = () => {
                   className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all flex flex-col"
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs ${typeInfo.color}`}>
-                      <span>{typeInfo.icon}</span>
-                      <span>{typeInfo.label}</span>
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg border text-xs ${typeInfo.color}`}>
+                      {typeInfo.label}
                     </span>
                   </div>
 

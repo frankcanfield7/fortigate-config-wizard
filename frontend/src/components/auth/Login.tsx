@@ -78,7 +78,7 @@ const Login: React.FC = () => {
               FortiGate Spartan Wizard
             </span>
           </h1>
-          <p className="text-gray-400 text-sm">🏛️⚔️ Precision. Excellence. No compromise.</p>
+          <p className="text-gray-400 text-sm">Precision. Excellence. No compromise.</p>
         </div>
 
         {/* Login Card */}

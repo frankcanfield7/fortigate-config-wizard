@@ -85,14 +85,14 @@ const ConfigLibrary: React.FC = () => {
 
   // Config type icons and labels
   const getConfigTypeInfo = (type: string) => {
-    const types: Record<string, { icon: string; label: string; color: string }> = {
-      ipsec: { icon: '🔒', label: 'IPSEC Remote Access', color: 'bg-red-700/10 text-red-400 border-red-700/30' },
-      sdwan: { icon: '🌐', label: 'SD-WAN', color: 'bg-blue-500/10 text-blue-400 border-blue-500/30' },
-      firewall: { icon: '🛡️', label: 'Firewall', color: 'bg-red-500/10 text-red-400 border-red-500/30' },
-      routing: { icon: '🗺️', label: 'Routing', color: 'bg-green-500/10 text-green-400 border-green-500/30' },
-      interfaces: { icon: '🔌', label: 'Interfaces', color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30' },
+    const types: Record<string, { label: string; color: string }> = {
+      ipsec: { label: 'IPSEC Remote Access', color: 'bg-red-700/10 text-red-400 border-red-700/30' },
+      sdwan: { label: 'SD-WAN', color: 'bg-blue-500/10 text-blue-400 border-blue-500/30' },
+      firewall: { label: 'Firewall', color: 'bg-red-500/10 text-red-400 border-red-500/30' },
+      routing: { label: 'Routing', color: 'bg-green-500/10 text-green-400 border-green-500/30' },
+      interfaces: { label: 'Interfaces', color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30' },
     };
-    return types[type] || { icon: '⚙️', label: type, color: 'bg-gray-500/10 text-gray-400 border-gray-500/30' };
+    return types[type] || { label: type, color: 'bg-gray-500/10 text-gray-400 border-gray-500/30' };
   };
 
   const formatDate = (dateString: string) => {
@@ -119,7 +119,7 @@ const ConfigLibrary: React.FC = () => {
                 <span>←</span> Back to Dashboard
               </button>
               <h1 className="text-3xl font-semibold text-white">
-                Configuration Library 📚
+                Configuration Library
               </h1>
               <p className="text-white/70 text-sm mt-1">
                 Manage your saved FortiGate configurations
@@ -165,7 +165,7 @@ const ConfigLibrary: React.FC = () => {
         {/* Empty State */}
         {!isLoading && !error && filteredConfigs?.length === 0 && (
           <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-12 text-center">
-            <div className="text-6xl mb-4">📭</div>
+            <div className="text-2xl text-gray-500 mb-4">No items</div>
             <h2 className="text-2xl font-medium text-red-400 mb-2">
               {searchTerm ? 'No matching configurations' : 'No configurations yet'}
             </h2>
@@ -213,9 +213,8 @@ const ConfigLibrary: React.FC = () => {
                           )}
                         </td>
                         <td className="px-6 py-4">
-                          <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-lg border ${typeInfo.color} text-sm`}>
-                            <span>{typeInfo.icon}</span>
-                            <span>{typeInfo.label}</span>
+                          <span className={`inline-flex items-center px-3 py-1 rounded-lg border ${typeInfo.color} text-sm`}>
+                            {typeInfo.label}
                           </span>
                         </td>
                         <td className="px-6 py-4">
@@ -228,62 +227,45 @@ const ConfigLibrary: React.FC = () => {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
-                            {/* Edit Button */}
                             <button
                               onClick={() => navigate(`/dashboard/wizard/${config.id}`)}
-                              className="p-2 text-red-400 hover:bg-red-400/10 rounded transition-colors"
-                              title="Edit"
+                              className="px-2 py-1 text-xs text-red-400 hover:bg-red-400/10 rounded transition-colors"
                             >
-                              ✏️
+                              Edit
                             </button>
-
-                            {/* History Button */}
                             <button
                               onClick={() => setHistoryConfig({ id: config.id, name: config.name })}
-                              className="p-2 text-red-400 hover:bg-red-400/10 rounded transition-colors"
-                              title="Version History"
+                              className="px-2 py-1 text-xs text-red-400 hover:bg-red-400/10 rounded transition-colors"
                             >
-                              🕑
+                              History
                             </button>
-
-                            {/* Export Button */}
                             <button
                               onClick={() => setExportingId(config.id)}
-                              className="p-2 text-red-400 hover:bg-red-400/10 rounded transition-colors"
-                              title="Export"
+                              className="px-2 py-1 text-xs text-red-400 hover:bg-red-400/10 rounded transition-colors"
                             >
-                              📥
+                              Export
                             </button>
-
-                            {/* Save as Template */}
                             {!config.is_template && (
                               <button
                                 onClick={() => templateMutation.mutate(config.id)}
                                 disabled={templateMutation.isPending}
-                                className="p-2 text-red-400 hover:bg-red-400/10 rounded transition-colors disabled:opacity-50"
-                                title="Save as Template"
+                                className="px-2 py-1 text-xs text-red-400 hover:bg-red-400/10 rounded transition-colors disabled:opacity-50"
                               >
-                                ⭐
+                                Template
                               </button>
                             )}
-
-                            {/* Duplicate Button */}
                             <button
                               onClick={() => duplicateMutation.mutate(config.id)}
                               disabled={duplicateMutation.isPending}
-                              className="p-2 text-red-400 hover:bg-red-400/10 rounded transition-colors disabled:opacity-50"
-                              title="Duplicate"
+                              className="px-2 py-1 text-xs text-red-400 hover:bg-red-400/10 rounded transition-colors disabled:opacity-50"
                             >
-                              📋
+                              Duplicate
                             </button>
-
-                            {/* Delete Button */}
                             <button
                               onClick={() => setDeleteConfirmId(config.id)}
-                              className="p-2 text-red-400 hover:bg-red-400/10 rounded transition-colors"
-                              title="Delete"
+                              className="px-2 py-1 text-xs text-red-400 hover:bg-red-400/10 rounded transition-colors"
                             >
-                              🗑️
+                              Delete
                             </button>
                           </div>
                         </td>

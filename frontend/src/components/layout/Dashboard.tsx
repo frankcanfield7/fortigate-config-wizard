@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-semibold text-white">
-                FortiGate Spartan Wizard 🏛️⚔️
+                FortiGate Spartan Wizard
               </h1>
               <p className="text-white/70 text-sm mt-1">
                 Precision. Excellence. No compromise.
@@ -46,10 +46,7 @@ const Dashboard: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Configuration Card */}
           <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-medium text-red-400">New VPN Configuration</h3>
-              <span className="text-3xl group-hover:scale-110 transition-transform">🔒</span>
-            </div>
+            <h3 className="text-xl font-medium text-red-400 mb-4">New VPN Configuration</h3>
             <p className="text-gray-400 text-sm mb-4 flex-1">
               Create an IPSEC Remote Access VPN with Entra ID SAML authentication
             </p>
@@ -63,10 +60,7 @@ const Dashboard: React.FC = () => {
 
           {/* Library Card */}
           <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-medium text-red-400">My Configurations</h3>
-              <span className="text-3xl group-hover:scale-110 transition-transform">📚</span>
-            </div>
+            <h3 className="text-xl font-medium text-red-400 mb-4">My Configurations</h3>
             <p className="text-gray-400 text-sm mb-4 flex-1">
               View and manage your saved configurations
             </p>
@@ -80,10 +74,7 @@ const Dashboard: React.FC = () => {
 
           {/* Templates Card */}
           <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-medium text-red-400">Templates</h3>
-              <span className="text-3xl group-hover:scale-110 transition-transform">📋</span>
-            </div>
+            <h3 className="text-xl font-medium text-red-400 mb-4">Templates</h3>
             <p className="text-gray-400 text-sm mb-4 flex-1">
               Browse and use pre-built configuration templates
             </p>
@@ -97,10 +88,7 @@ const Dashboard: React.FC = () => {
           {/* Audit Log Card (admin only) */}
           {user?.is_admin && (
             <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group flex flex-col">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-medium text-red-400">Audit Log</h3>
-                <span className="text-3xl group-hover:scale-110 transition-transform">🔍</span>
-              </div>
+              <h3 className="text-xl font-medium text-red-400 mb-4">Audit Log</h3>
               <p className="text-gray-400 text-sm mb-4 flex-1">
                 View all user actions and system events
               </p>
