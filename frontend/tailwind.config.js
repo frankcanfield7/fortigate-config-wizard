@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'Segoe UI', 'sans-serif'],
+        sans: ['Geist', 'Segoe UI', 'sans-serif'],
       },
     },
   },
