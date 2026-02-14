@@ -100,7 +100,7 @@ const Register: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-black mb-2">
-            <span className="bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-red-700 to-red-500 bg-clip-text text-transparent">
               FortiGate Spartan Wizard
             </span>
           </h1>
@@ -109,7 +109,7 @@ const Register: React.FC = () => {
 
         {/* Register Card */}
         <div className="bg-[#1e293b] border-2 border-[#334155] rounded-2xl p-8 shadow-2xl">
-          <h2 className="text-2xl font-bold text-[#22d3ee] mb-6">Create Account</h2>
+          <h2 className="text-2xl font-bold text-red-400 mb-6">Create Account</h2>
 
           {/* Error Alert */}
           {error && (
@@ -132,7 +132,7 @@ const Register: React.FC = () => {
                 onChange={handleChange}
                 className={`w-full px-4 py-3 bg-[#0f172a] border-2 ${
                   validationErrors.username ? 'border-red-500' : 'border-[#334155]'
-                } rounded-lg text-white placeholder-gray-500 focus:border-[#06b6d4] focus:outline-none transition-colors`}
+                } rounded-lg text-white placeholder-gray-500 focus:border-red-700 focus:outline-none transition-colors`}
                 placeholder="Choose a username"
                 disabled={isSubmitting}
               />
@@ -154,7 +154,7 @@ const Register: React.FC = () => {
                 onChange={handleChange}
                 className={`w-full px-4 py-3 bg-[#0f172a] border-2 ${
                   validationErrors.email ? 'border-red-500' : 'border-[#334155]'
-                } rounded-lg text-white placeholder-gray-500 focus:border-[#06b6d4] focus:outline-none transition-colors`}
+                } rounded-lg text-white placeholder-gray-500 focus:border-red-700 focus:outline-none transition-colors`}
                 placeholder="Enter your email"
                 disabled={isSubmitting}
               />
@@ -176,7 +176,7 @@ const Register: React.FC = () => {
                 onChange={handleChange}
                 className={`w-full px-4 py-3 bg-[#0f172a] border-2 ${
                   validationErrors.password ? 'border-red-500' : 'border-[#334155]'
-                } rounded-lg text-white placeholder-gray-500 focus:border-[#06b6d4] focus:outline-none transition-colors`}
+                } rounded-lg text-white placeholder-gray-500 focus:border-red-700 focus:outline-none transition-colors`}
                 placeholder="Create a password (min 8 characters)"
                 disabled={isSubmitting}
               />
@@ -201,7 +201,7 @@ const Register: React.FC = () => {
                 onChange={handleChange}
                 className={`w-full px-4 py-3 bg-[#0f172a] border-2 ${
                   validationErrors.confirmPassword ? 'border-red-500' : 'border-[#334155]'
-                } rounded-lg text-white placeholder-gray-500 focus:border-[#06b6d4] focus:outline-none transition-colors`}
+                } rounded-lg text-white placeholder-gray-500 focus:border-red-700 focus:outline-none transition-colors`}
                 placeholder="Confirm your password"
                 disabled={isSubmitting}
               />
@@ -214,7 +214,7 @@ const Register: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-4 bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] text-[#0f172a] font-bold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+              className="w-full py-3 px-4 bg-gradient-to-r from-red-800 to-red-700 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
             >
               {isSubmitting ? 'Creating account...' : 'Create Account'}
             </button>
@@ -226,7 +226,7 @@ const Register: React.FC = () => {
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="text-[#22d3ee] hover:text-[#06b6d4] font-medium transition-colors"
+                className="text-red-400 hover:text-red-300 font-medium transition-colors"
               >
                 Login here
               </Link>
@@ -237,7 +237,7 @@ const Register: React.FC = () => {
         {/* Footer */}
         <div className="mt-6 text-center text-gray-500 text-xs">
           <p>FortiGate Spartan Configuration Wizard</p>
-          <p>Built for Graphene Networks</p>
+          <p>Enterprise Configuration Management</p>
         </div>
       </div>
     </div>

@@ -36,7 +36,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
           >
             {/* Card Header */}
             <div className="flex items-center justify-between mb-3">
-              <span className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-cyan-600 text-white text-xs font-bold">
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-red-800 text-white text-xs font-bold">
                 #{index + 1}
               </span>
 
@@ -63,7 +63,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
                   value={group.name}
                   onChange={(e) => updateUserGroup(index, 'name', e.target.value)}
                   placeholder="SAML-Entra-VPN-Users"
-                  className={`w-full px-3 py-2 bg-white dark:bg-slate-900 border-2 ${getBorderClass(group.name, validateGroupName)} rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-colors`}
+                  className={`w-full px-3 py-2 bg-white dark:bg-slate-900 border-2 ${getBorderClass(group.name, validateGroupName)} rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/40 transition-colors`}
                 />
                 {group.name.trim() !== '' && !nameValidation.isValid && nameValidation.error && (
                   <p className="text-xs text-red-500 mt-1">{nameValidation.error}</p>
@@ -80,7 +80,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
                   value={group.objId}
                   onChange={(e) => updateUserGroup(index, 'objId', e.target.value)}
                   placeholder="a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-                  className={`w-full px-3 py-2 bg-white dark:bg-slate-900 border-2 ${getBorderClass(group.objId, validateUUID)} rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-colors`}
+                  className={`w-full px-3 py-2 bg-white dark:bg-slate-900 border-2 ${getBorderClass(group.objId, validateUUID)} rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/40 transition-colors`}
                 />
                 {group.objId.trim() !== '' && !uuidValidation.isValid && uuidValidation.error && (
                   <p className="text-xs text-red-500 mt-1">{uuidValidation.error}</p>
@@ -95,7 +95,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
       <button
         type="button"
         onClick={addUserGroup}
-        className="bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+        className="bg-red-800 hover:bg-red-900 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
       >
         + Add User Group
       </button>

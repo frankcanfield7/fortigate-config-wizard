@@ -53,7 +53,7 @@ const PFS_DH_OPTIONS = [
 ];
 
 const ChevronIcon = () => (
-  <svg className="w-5 h-5 text-slate-400 group-hover:text-cyan-500 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+  <svg className="w-5 h-5 text-slate-400 group-hover:text-red-500 transition-transform duration-300" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
   </svg>
 );
@@ -149,7 +149,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
       className="w-full flex items-center justify-between px-5 py-4 text-left group hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors"
     >
       <div className="flex items-center gap-3">
-        <span className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold bg-cyan-500/10 text-cyan-700 dark:text-cyan-300">
+        <span className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-extrabold bg-red-800/10 text-red-700 dark:text-red-300">
           {num}
         </span>
         <span className="font-bold text-sm text-slate-800 dark:text-slate-200">{title}</span>
@@ -161,7 +161,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
     </button>
   );
 
-  const inputClass = "w-full rounded-lg border bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 px-3 py-2 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500 transition-colors";
+  const inputClass = "w-full rounded-lg border bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 px-3 py-2 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 transition-colors";
   const labelClass = "block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1";
   const helpClass = "text-[11px] text-slate-400 dark:text-slate-500 mt-1 leading-relaxed";
   const sectionClass = "bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-200/50 dark:border-slate-700/50 overflow-hidden";
@@ -174,7 +174,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
         <button
           type="button"
           onClick={applyBestPractices}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all active:scale-[0.97]"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-red-800 to-red-700 hover:from-red-900 hover:to-red-800 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all active:scale-[0.97]"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
@@ -215,10 +215,10 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
               <label className={labelClass}>Encryption/Hash Proposals</label>
               <div className="flex flex-wrap gap-x-4 gap-y-2 mt-1">
                 {P1_PROPOSALS.map(p => (
-                  <label key={p.value} className="flex items-center gap-2 text-sm cursor-pointer hover:text-cyan-600 transition-colors">
+                  <label key={p.value} className="flex items-center gap-2 text-sm cursor-pointer hover:text-red-500 transition-colors">
                     <input
                       type="checkbox"
-                      className="rounded accent-cyan-600"
+                      className="rounded accent-red-700"
                       checked={config.p1p.includes(p.value)}
                       onChange={() => toggleArrayValue('p1p', p.value)}
                     />
@@ -236,10 +236,10 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
               <label className={labelClass}>DH Groups</label>
               <div className="flex flex-wrap gap-x-4 gap-y-2 mt-1">
                 {DH_GROUPS.map(g => (
-                  <label key={g.value} className="flex items-center gap-2 text-sm cursor-pointer hover:text-cyan-600 transition-colors">
+                  <label key={g.value} className="flex items-center gap-2 text-sm cursor-pointer hover:text-red-500 transition-colors">
                     <input
                       type="checkbox"
-                      className="rounded accent-cyan-600"
+                      className="rounded accent-red-700"
                       checked={config.p1d.includes(g.value)}
                       onChange={() => toggleArrayValue('p1d', g.value)}
                     />
@@ -269,10 +269,10 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                 />
               </div>
               <div className="flex items-center pt-5">
-                <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-cyan-600 transition-colors">
+                <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-red-500 transition-colors">
                   <input
                     type="checkbox"
-                    className="rounded accent-cyan-600"
+                    className="rounded accent-red-700"
                     checked={config.natTrav}
                     onChange={e => updateField('natTrav', e.target.checked)}
                   />
@@ -283,10 +283,10 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
 
             {/* DPD */}
             <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
-              <label className="flex items-center gap-2 text-xs font-semibold mb-3 cursor-pointer hover:text-cyan-600 transition-colors">
+              <label className="flex items-center gap-2 text-xs font-semibold mb-3 cursor-pointer hover:text-red-500 transition-colors">
                 <input
                   type="checkbox"
-                  className="rounded accent-cyan-600"
+                  className="rounded accent-red-700"
                   checked={config.dpdOn}
                   onChange={e => updateField('dpdOn', e.target.checked)}
                 />
@@ -332,10 +332,10 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
               <label className={labelClass}>Encryption/Hash Proposals</label>
               <div className="flex flex-wrap gap-x-4 gap-y-2 mt-1">
                 {P2_PROPOSALS.map(p => (
-                  <label key={p.value} className="flex items-center gap-2 text-sm cursor-pointer hover:text-cyan-600 transition-colors">
+                  <label key={p.value} className="flex items-center gap-2 text-sm cursor-pointer hover:text-red-500 transition-colors">
                     <input
                       type="checkbox"
-                      className="rounded accent-cyan-600"
+                      className="rounded accent-red-700"
                       checked={config.p2p.includes(p.value)}
                       onChange={() => toggleArrayValue('p2p', p.value)}
                     />
@@ -346,10 +346,10 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
               <div>
-                <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-cyan-600 transition-colors">
+                <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-red-500 transition-colors">
                   <input
                     type="checkbox"
-                    className="rounded accent-cyan-600"
+                    className="rounded accent-red-700"
                     checked={config.pfsOn}
                     onChange={e => updateField('pfsOn', e.target.checked)}
                   />
@@ -561,19 +561,19 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
               </p>
               <div>
                 <span className="text-[11px] text-slate-400 font-semibold">Entity ID:</span>
-                <p className="text-xs font-mono text-cyan-600 dark:text-cyan-400 break-all mt-0.5">
+                <p className="text-xs font-mono text-red-600 dark:text-red-400 break-all mt-0.5">
                   {samlUrls?.entityId || '\u2014'}
                 </p>
               </div>
               <div>
                 <span className="text-[11px] text-slate-400 font-semibold">ACS URL:</span>
-                <p className="text-xs font-mono text-cyan-600 dark:text-cyan-400 break-all mt-0.5">
+                <p className="text-xs font-mono text-red-600 dark:text-red-400 break-all mt-0.5">
                   {samlUrls?.acsUrl || '\u2014'}
                 </p>
               </div>
               <div>
                 <span className="text-[11px] text-slate-400 font-semibold">SLO URL:</span>
-                <p className="text-xs font-mono text-cyan-600 dark:text-cyan-400 break-all mt-0.5">
+                <p className="text-xs font-mono text-red-600 dark:text-red-400 break-all mt-0.5">
                   {samlUrls?.sloUrl || '\u2014'}
                 </p>
               </div>
@@ -671,18 +671,18 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
               />
 
               {/* Object ID help */}
-              <div className="rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border border-blue-200 dark:border-blue-800/50 p-3.5 shadow-sm">
-                <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+              <div className="rounded-xl bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/30 dark:to-slate-700/20 border border-slate-200 dark:border-slate-600/50 p-3.5 shadow-sm">
+                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                   <strong className="font-bold">Finding the Object ID:</strong> Azure Portal &rarr; Microsoft Entra ID &rarr; Groups &rarr; Select group &rarr; Copy Object ID from Overview page
                 </p>
               </div>
 
               {/* Group at Phase 1 checkbox */}
               <div>
-                <label className="flex items-center gap-2 text-sm cursor-pointer hover:text-cyan-600 transition-colors">
+                <label className="flex items-center gap-2 text-sm cursor-pointer hover:text-red-500 transition-colors">
                   <input
                     type="checkbox"
-                    className="rounded accent-cyan-600"
+                    className="rounded accent-red-700"
                     checked={config.grpP1}
                     onChange={e => updateField('grpP1', e.target.checked)}
                   />
@@ -711,10 +711,10 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                 { field: 'childless' as const, label: 'Childless IKE' },
                 { field: 'savePw' as const, label: 'Save Password' },
               ].map(toggle => (
-                <label key={toggle.field} className="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-cyan-600 transition-colors">
+                <label key={toggle.field} className="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-red-500 transition-colors">
                   <input
                     type="checkbox"
-                    className="rounded accent-cyan-600"
+                    className="rounded accent-red-700"
                     checked={config[toggle.field] as boolean}
                     onChange={e => updateField(toggle.field, e.target.checked)}
                   />

@@ -32,7 +32,7 @@ function borderClass(value: string, validate: (v: string) => { isValid: boolean 
 }
 
 const INPUT_BASE =
-  'w-full rounded-lg border bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors';
+  'w-full rounded-lg border bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-600 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors';
 
 const TunnelSection: React.FC<TunnelSectionProps> = ({
   tunnels,
@@ -77,7 +77,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
         >
           {/* Tunnel number badge */}
           <div className="flex items-center justify-between mb-3">
-            <span className="inline-flex items-center justify-center bg-cyan-600 text-white text-xs font-bold rounded px-2 py-0.5">
+            <span className="inline-flex items-center justify-center bg-red-800 text-white text-xs font-bold rounded px-2 py-0.5">
               #{index + 1}
             </span>
 
@@ -222,7 +222,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
       <button
         type="button"
         onClick={addTunnel}
-        className="bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg px-4 py-2 text-sm font-medium inline-flex items-center gap-1.5 transition-colors"
+        className="bg-red-800 hover:bg-red-900 text-white rounded-lg px-4 py-2 text-sm font-medium inline-flex items-center gap-1.5 transition-colors"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

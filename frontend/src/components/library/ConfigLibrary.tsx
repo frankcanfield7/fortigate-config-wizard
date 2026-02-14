@@ -73,7 +73,7 @@ const ConfigLibrary: React.FC = () => {
   // Config type icons and labels
   const getConfigTypeInfo = (type: string) => {
     const types: Record<string, { icon: string; label: string; color: string }> = {
-      ipsec: { icon: '🔒', label: 'IPSEC Remote Access', color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30' },
+      ipsec: { icon: '🔒', label: 'IPSEC Remote Access', color: 'bg-red-700/10 text-red-400 border-red-700/30' },
       sdwan: { icon: '🌐', label: 'SD-WAN', color: 'bg-blue-500/10 text-blue-400 border-blue-500/30' },
       firewall: { icon: '🛡️', label: 'Firewall', color: 'bg-red-500/10 text-red-400 border-red-500/30' },
       routing: { icon: '🗺️', label: 'Routing', color: 'bg-green-500/10 text-green-400 border-green-500/30' },
@@ -95,26 +95,26 @@ const ConfigLibrary: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#0f172a]">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] shadow-lg">
+      <header className="bg-gradient-to-r from-red-900 to-red-800 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
               <button
                 onClick={() => navigate('/dashboard')}
-                className="text-[#0f172a] hover:text-[#1e293b] transition-colors mb-2 flex items-center gap-2"
+                className="text-white hover:text-[#1e293b] transition-colors mb-2 flex items-center gap-2"
               >
                 <span>←</span> Back to Dashboard
               </button>
-              <h1 className="text-3xl font-black text-[#0f172a]">
+              <h1 className="text-3xl font-black text-white">
                 Configuration Library 📚
               </h1>
-              <p className="text-[#0f172a]/70 text-sm mt-1">
+              <p className="text-white/70 text-sm mt-1">
                 Manage your saved FortiGate configurations
               </p>
             </div>
             <button
               onClick={() => navigate('/dashboard/wizard')}
-              className="px-6 py-3 bg-white text-[#0f172a] rounded-lg hover:bg-gray-100 transition-colors font-bold"
+              className="px-6 py-3 bg-white text-white rounded-lg hover:bg-gray-100 transition-colors font-bold"
             >
               + New Configuration
             </button>
@@ -130,14 +130,14 @@ const ConfigLibrary: React.FC = () => {
             placeholder="Search configurations by name, type, or description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white placeholder-gray-500 focus:border-[#06b6d4] focus:outline-none"
+            className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white placeholder-gray-500 focus:border-red-700 focus:outline-none"
           />
         </div>
 
         {/* Loading State */}
         {isLoading && (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#06b6d4] border-t-transparent"></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-700 border-t-transparent"></div>
             <p className="mt-4 text-gray-400">Loading configurations...</p>
           </div>
         )}
@@ -153,7 +153,7 @@ const ConfigLibrary: React.FC = () => {
         {!isLoading && !error && filteredConfigs?.length === 0 && (
           <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-12 text-center">
             <div className="text-6xl mb-4">📭</div>
-            <h2 className="text-2xl font-bold text-[#22d3ee] mb-2">
+            <h2 className="text-2xl font-bold text-red-400 mb-2">
               {searchTerm ? 'No matching configurations' : 'No configurations yet'}
             </h2>
             <p className="text-gray-400 mb-6">
@@ -164,7 +164,7 @@ const ConfigLibrary: React.FC = () => {
             {!searchTerm && (
               <button
                 onClick={() => navigate('/dashboard/wizard')}
-                className="px-6 py-3 bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] text-[#0f172a] rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all font-bold"
+                className="px-6 py-3 bg-gradient-to-r from-red-900 to-red-800 text-white rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all font-bold"
               >
                 Create Configuration
               </button>
@@ -179,11 +179,11 @@ const ConfigLibrary: React.FC = () => {
               <table className="w-full">
                 <thead className="bg-[#0f172a] border-b-2 border-[#334155]">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-[#22d3ee]">Name</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-[#22d3ee]">Type</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-[#22d3ee]">Description</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-[#22d3ee]">Created</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-[#22d3ee]">Actions</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Name</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Type</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Description</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Created</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#334155]">
@@ -194,7 +194,7 @@ const ConfigLibrary: React.FC = () => {
                         <td className="px-6 py-4">
                           <div className="font-medium text-white">{config.name}</div>
                           {config.is_template && (
-                            <span className="inline-block mt-1 px-2 py-1 text-xs bg-[#06b6d4]/20 text-[#06b6d4] rounded border border-[#06b6d4]/30">
+                            <span className="inline-block mt-1 px-2 py-1 text-xs bg-red-700/20 text-red-400 rounded border border-red-700/30">
                               Template
                             </span>
                           )}
@@ -218,7 +218,7 @@ const ConfigLibrary: React.FC = () => {
                             {/* Edit Button */}
                             <button
                               onClick={() => navigate(`/dashboard/wizard/${config.id}`)}
-                              className="p-2 text-[#22d3ee] hover:bg-[#22d3ee]/10 rounded transition-colors"
+                              className="p-2 text-red-400 hover:bg-red-400/10 rounded transition-colors"
                               title="Edit"
                             >
                               ✏️
@@ -227,7 +227,7 @@ const ConfigLibrary: React.FC = () => {
                             {/* Export Button */}
                             <button
                               onClick={() => setExportingId(config.id)}
-                              className="p-2 text-[#22d3ee] hover:bg-[#22d3ee]/10 rounded transition-colors"
+                              className="p-2 text-red-400 hover:bg-red-400/10 rounded transition-colors"
                               title="Export"
                             >
                               📥
@@ -237,7 +237,7 @@ const ConfigLibrary: React.FC = () => {
                             <button
                               onClick={() => duplicateMutation.mutate(config.id)}
                               disabled={duplicateMutation.isPending}
-                              className="p-2 text-[#22d3ee] hover:bg-[#22d3ee]/10 rounded transition-colors disabled:opacity-50"
+                              className="p-2 text-red-400 hover:bg-red-400/10 rounded transition-colors disabled:opacity-50"
                               title="Duplicate"
                             >
                               📋
@@ -291,7 +291,7 @@ const ConfigLibrary: React.FC = () => {
         {deleteConfirmId !== null && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
             <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 max-w-md w-full mx-4">
-              <h2 className="text-2xl font-bold text-[#22d3ee] mb-4">Confirm Delete</h2>
+              <h2 className="text-2xl font-bold text-red-400 mb-4">Confirm Delete</h2>
               <p className="text-gray-300 mb-6">
                 Are you sure you want to delete this configuration? This action cannot be undone.
               </p>
@@ -318,26 +318,26 @@ const ConfigLibrary: React.FC = () => {
         {exportingId !== null && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
             <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 max-w-md w-full mx-4">
-              <h2 className="text-2xl font-bold text-[#22d3ee] mb-4">Export Configuration</h2>
+              <h2 className="text-2xl font-bold text-red-400 mb-4">Export Configuration</h2>
               <p className="text-gray-300 mb-6">Choose an export format:</p>
               <div className="space-y-3">
                 <button
                   onClick={() => handleExport(exportingId, 'cli')}
-                  className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white hover:border-[#06b6d4] transition-colors text-left"
+                  className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white hover:border-red-700 transition-colors text-left"
                 >
                   <div className="font-bold">CLI Script</div>
                   <div className="text-sm text-gray-400">FortiGate command-line script</div>
                 </button>
                 <button
                   onClick={() => handleExport(exportingId, 'json')}
-                  className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white hover:border-[#06b6d4] transition-colors text-left"
+                  className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white hover:border-red-700 transition-colors text-left"
                 >
                   <div className="font-bold">JSON</div>
                   <div className="text-sm text-gray-400">Structured data format</div>
                 </button>
                 <button
                   onClick={() => handleExport(exportingId, 'yaml')}
-                  className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white hover:border-[#06b6d4] transition-colors text-left"
+                  className="w-full px-4 py-3 bg-[#0f172a] border-2 border-[#334155] rounded-lg text-white hover:border-red-700 transition-colors text-left"
                 >
                   <div className="font-bold">YAML</div>
                   <div className="text-sm text-gray-400">Human-readable format</div>

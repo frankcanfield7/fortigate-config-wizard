@@ -153,7 +153,7 @@ const SecurityScore: React.FC<SecurityScoreProps> = ({ config }) => {
         </div>
         <div className="h-1.5 w-full rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
           <div
-            className="h-full rounded-full bg-cyan-500 transition-all duration-500 ease-in-out"
+            className="h-full rounded-full bg-red-700 transition-all duration-500 ease-in-out"
             style={{ width: `${Math.min(completeness, 100)}%` }}
           />
         </div>

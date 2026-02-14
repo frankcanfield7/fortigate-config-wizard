@@ -38,13 +38,13 @@
   }
 }
 
-/* Focus styles using cyan theme */
+/* Focus styles using red theme */
 @layer utilities {
   button:focus-visible,
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
-    outline: 2px solid #06b6d4;
+    outline: 2px solid #991b1b;
     outline-offset: 2px;
   }
 }

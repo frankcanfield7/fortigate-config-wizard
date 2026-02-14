@@ -16,7 +16,6 @@ const ConfigWizard: React.FC = () => {
   const [configName, setConfigName] = useState('');
   const [configDescription, setConfigDescription] = useState('');
   const [formData, setFormData] = useState<IPsecRemoteAccessConfig>(createDefaultIPsecRemoteAccessConfig());
-  const [showOutput, setShowOutput] = useState(false);
 
   // Fetch existing configuration if editing
   const { data: existingConfig, isLoading: isLoadingConfig } = useQuery({
@@ -136,110 +135,102 @@ const ConfigWizard: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-950">
       {/* Header */}
-      <header className="bg-gradient-to-r from-cyan-600 to-cyan-500 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <header className="bg-gradient-to-r from-red-950 to-red-900 shadow-lg">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
               <button
                 onClick={() => navigate('/dashboard')}
-                className="text-slate-900 hover:text-slate-700 transition-colors mb-1 flex items-center gap-1 text-sm font-medium"
+                className="text-red-300/70 hover:text-white transition-colors mb-1 flex items-center gap-1 text-sm font-medium"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                 </svg>
                 Dashboard
               </button>
-              <h1 className="text-2xl font-black text-slate-900">
+              <h1 className="text-2xl font-black text-white">
                 {isEditMode ? 'Edit VPN Configuration' : 'IPSEC Remote Access VPN'}
               </h1>
-              <p className="text-slate-900/60 text-xs mt-0.5">
+              <p className="text-red-300/50 text-xs mt-0.5">
                 FortiOS 7.4.11+ &bull; Entra ID SAML Authentication
               </p>
             </div>
             <div className="flex items-center gap-4">
               <SecurityScore config={formData} />
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setShowOutput(true)}
-                  className="px-5 py-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors text-sm font-bold"
-                >
-                  Generate Output
-                </button>
-                <button
-                  onClick={handleSave}
-                  disabled={isSaving || isLoadingConfig}
-                  className="px-5 py-2.5 bg-white text-slate-900 rounded-lg hover:bg-slate-100 transition-colors text-sm font-bold disabled:opacity-50"
-                >
-                  {isSaving ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update' : 'Save')}
-                </button>
-              </div>
+              <button
+                onClick={handleSave}
+                disabled={isSaving || isLoadingConfig}
+                className="px-5 py-2.5 bg-white text-slate-900 rounded-lg hover:bg-slate-100 transition-colors text-sm font-bold disabled:opacity-50"
+              >
+                {isSaving ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update' : 'Save')}
+              </button>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Loading State */}
         {isEditMode && isLoadingConfig && (
           <div className="bg-slate-800 border border-slate-700 rounded-xl p-12 mb-6 text-center">
-            <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-cyan-500 mb-4" />
-            <p className="text-cyan-400 font-bold">Loading configuration...</p>
+            <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-red-600 mb-4" />
+            <p className="text-red-400 font-bold">Loading configuration...</p>
           </div>
         )}
 
         {!isLoadingConfig && (
-          <div className="space-y-6">
-            {/* Configuration Name/Description */}
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
-                    Configuration Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={configName}
-                    onChange={e => setConfigName(e.target.value)}
-                    placeholder="e.g., HQ Remote Access VPN"
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500 text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
-                    Description (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={configDescription}
-                    onChange={e => setConfigDescription(e.target.value)}
-                    placeholder="Brief description of this configuration..."
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500 text-sm"
-                  />
+          <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
+            {/* Left Column: Form (3/5 width) */}
+            <div className="xl:col-span-3 space-y-6">
+              {/* Configuration Name/Description */}
+              <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                      Configuration Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={configName}
+                      onChange={e => setConfigName(e.target.value)}
+                      placeholder="e.g., HQ Remote Access VPN"
+                      className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                      Description (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={configDescription}
+                      onChange={e => setConfigDescription(e.target.value)}
+                      placeholder="Brief description of this configuration..."
+                      className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 text-sm"
+                    />
+                  </div>
                 </div>
               </div>
+
+              {/* Main Form */}
+              <IPsecRemoteAccessForm
+                config={formData}
+                updateField={updateField}
+                addTunnel={addTunnel}
+                removeTunnel={removeTunnel}
+                updateTunnel={updateTunnel}
+                addUserGroup={addUserGroup}
+                removeUserGroup={removeUserGroup}
+                updateUserGroup={updateUserGroup}
+              />
             </div>
 
-            {/* Main Form */}
-            <IPsecRemoteAccessForm
-              config={formData}
-              updateField={updateField}
-              addTunnel={addTunnel}
-              removeTunnel={removeTunnel}
-              updateTunnel={updateTunnel}
-              addUserGroup={addUserGroup}
-              removeUserGroup={removeUserGroup}
-              updateUserGroup={updateUserGroup}
-            />
-          </div>
-        )}
-
-        {/* Output Panel */}
-        {showOutput && (
-          <div className="mt-6">
-            <OutputPanel
-              config={formData}
-              onClose={() => setShowOutput(false)}
-            />
+            {/* Right Column: Output Panel (2/5 width, sticky) */}
+            <div className="xl:col-span-2">
+              <div className="xl:sticky xl:top-6">
+                <OutputPanel config={formData} />
+              </div>
+            </div>
           </div>
         )}
       </div>

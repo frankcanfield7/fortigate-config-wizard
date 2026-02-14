@@ -14,21 +14,21 @@ const Dashboard: React.FC = () => {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] shadow-lg">
+      <header className="bg-gradient-to-r from-red-900 to-red-800 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-black text-[#0f172a]">
+              <h1 className="text-3xl font-black text-white">
                 FortiGate Spartan Wizard 🏛️⚔️
               </h1>
-              <p className="text-[#0f172a]/70 text-sm mt-1">
+              <p className="text-white/70 text-sm mt-1">
                 Precision. Excellence. No compromise.
               </p>
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-[#0f172a]">{user?.username}</p>
-                <p className="text-xs text-[#0f172a]/70">{user?.email}</p>
+                <p className="text-sm font-medium text-white">{user?.username}</p>
+                <p className="text-xs text-white/70">{user?.email}</p>
               </div>
               <button
                 onClick={handleLogout}
@@ -45,9 +45,9 @@ const Dashboard: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Configuration Card */}
-          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 hover:border-[#06b6d4] transition-all cursor-pointer group">
+          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-[#22d3ee]">New VPN Configuration</h3>
+              <h3 className="text-xl font-bold text-red-400">New VPN Configuration</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">🔒</span>
             </div>
             <p className="text-gray-400 text-sm mb-4">
@@ -55,16 +55,16 @@ const Dashboard: React.FC = () => {
             </p>
             <button
               onClick={() => navigate('/dashboard/wizard')}
-              className="w-full py-2 px-4 bg-gradient-to-r from-[#06b6d4] to-[#22d3ee] text-[#0f172a] font-bold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all"
+              className="w-full py-2 px-4 bg-gradient-to-r from-red-900 to-red-800 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all"
             >
               Start Wizard
             </button>
           </div>
 
           {/* Library Card */}
-          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 hover:border-[#06b6d4] transition-all cursor-pointer group">
+          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-[#22d3ee]">My Configurations</h3>
+              <h3 className="text-xl font-bold text-red-400">My Configurations</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">📚</span>
             </div>
             <p className="text-gray-400 text-sm mb-4">
@@ -79,9 +79,9 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Templates Card */}
-          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 hover:border-[#06b6d4] transition-all cursor-pointer group">
+          <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-[#22d3ee]">Templates</h3>
+              <h3 className="text-xl font-bold text-red-400">Templates</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">📋</span>
             </div>
             <p className="text-gray-400 text-sm mb-4">
@@ -99,7 +99,7 @@ const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Total Configurations</p>
-                <p className="text-3xl font-bold text-[#22d3ee] mt-1">0</p>
+                <p className="text-3xl font-bold text-red-400 mt-1">0</p>
               </div>
               <div className="text-4xl">📊</div>
             </div>
@@ -109,7 +109,7 @@ const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Templates Created</p>
-                <p className="text-3xl font-bold text-[#22d3ee] mt-1">0</p>
+                <p className="text-3xl font-bold text-red-400 mt-1">0</p>
               </div>
               <div className="text-4xl">🎯</div>
             </div>
@@ -119,7 +119,7 @@ const Dashboard: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Last Activity</p>
-                <p className="text-lg font-bold text-[#22d3ee] mt-1">Just now</p>
+                <p className="text-lg font-bold text-red-400 mt-1">Just now</p>
               </div>
               <div className="text-4xl">⏰</div>
             </div>
@@ -127,8 +127,8 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Welcome Message */}
-        <div className="mt-8 bg-gradient-to-r from-[#06b6d4]/10 to-[#22d3ee]/10 border-2 border-[#06b6d4]/30 rounded-xl p-8">
-          <h2 className="text-2xl font-bold text-[#22d3ee] mb-4">
+        <div className="mt-8 bg-gradient-to-r from-red-900/10 to-red-800/10 border-2 border-red-700/30 rounded-xl p-8">
+          <h2 className="text-2xl font-bold text-red-400 mb-4">
             Welcome to FortiGate Spartan Wizard! 🏛️⚔️
           </h2>
           <p className="text-gray-300 mb-4">
