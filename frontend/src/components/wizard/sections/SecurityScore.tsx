@@ -100,7 +100,7 @@ const SecurityScore: React.FC<SecurityScoreProps> = ({ config }) => {
               r={RADIUS}
               fill="none"
               strokeWidth="4"
-              className="stroke-neutral-200 dark:stroke-neutral-700"
+              className="stroke-neutral-700"
             />
             {/* Foreground circle (score arc) */}
             <circle
@@ -127,7 +127,7 @@ const SecurityScore: React.FC<SecurityScoreProps> = ({ config }) => {
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
+          <span className="text-xs font-medium text-neutral-500">
             Security
           </span>
           {dhBadge && (
@@ -139,19 +139,19 @@ const SecurityScore: React.FC<SecurityScoreProps> = ({ config }) => {
       </div>
 
       {/* Divider */}
-      <div className="w-px h-8 bg-neutral-300 dark:bg-neutral-600" />
+      <div className="w-px h-8 bg-neutral-600" />
 
       {/* Completeness Bar */}
       <div className="flex flex-col gap-1 min-w-[100px]">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-neutral-400 dark:text-neutral-500">
+          <span className="text-xs font-medium text-neutral-500">
             Completeness
           </span>
-          <span className="text-xs font-bold text-neutral-600 dark:text-neutral-300">
+          <span className="text-xs font-bold text-neutral-300">
             {completeness}%
           </span>
         </div>
-        <div className="h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden">
+        <div className="h-1.5 w-full rounded-full bg-neutral-700 overflow-hidden">
           <div
             className="h-full rounded-full bg-red-700 transition-all duration-500 ease-in-out"
             style={{ width: `${Math.min(completeness, 100)}%` }}

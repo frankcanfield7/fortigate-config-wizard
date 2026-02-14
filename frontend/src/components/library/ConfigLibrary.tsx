@@ -114,7 +114,7 @@ const ConfigLibrary: React.FC = () => {
             </div>
             <button
               onClick={() => navigate('/dashboard/wizard')}
-              className="px-6 py-3 bg-white text-white rounded-lg hover:bg-gray-100 transition-colors font-bold"
+              className="px-6 py-3 bg-neutral-200 text-neutral-900 rounded-lg hover:bg-neutral-300 transition-colors font-bold"
             >
               + New Configuration
             </button>

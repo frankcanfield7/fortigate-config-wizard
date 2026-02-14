@@ -160,7 +160,7 @@ const ConfigWizard: React.FC = () => {
               <button
                 onClick={handleSave}
                 disabled={isSaving || isLoadingConfig}
-                className="px-5 py-2.5 bg-white text-neutral-900 rounded-lg hover:bg-neutral-100 transition-colors text-sm font-bold disabled:opacity-50"
+                className="px-5 py-2.5 bg-neutral-200 text-neutral-900 rounded-lg hover:bg-neutral-300 transition-colors text-sm font-bold disabled:opacity-50"
               >
                 {isSaving ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update' : 'Save')}
               </button>
