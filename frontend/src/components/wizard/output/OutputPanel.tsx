@@ -6,18 +6,20 @@ import {
   generateRemoteAccessAzure,
   generateRemoteAccessXML,
 } from '../../../utils/generators/remoteAccess';
+import { generateDocumentation } from '../../../utils/generators/documentation';
 
 interface OutputPanelProps {
   config: IPsecRemoteAccessConfig;
 }
 
-type TabId = 'cli' | 'gui' | 'az' | 'xml';
+type TabId = 'cli' | 'gui' | 'az' | 'xml' | 'docs';
 
 const tabs: { id: TabId; label: string }[] = [
   { id: 'cli', label: 'CLI' },
   { id: 'gui', label: 'GUI' },
   { id: 'az', label: 'Azure' },
   { id: 'xml', label: 'XML' },
+  { id: 'docs', label: 'Docs' },
 ];
 
 const OutputPanel: React.FC<OutputPanelProps> = ({ config }) => {
@@ -30,6 +32,7 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ config }) => {
       gui: generateRemoteAccessGUI(config),
       az: generateRemoteAccessAzure(config),
       xml: generateRemoteAccessXML(config),
+      docs: generateDocumentation(config),
     }),
     [config]
   );
@@ -53,12 +56,14 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ config }) => {
       gui: 'txt',
       az: 'txt',
       xml: 'conf',
+      docs: 'md',
     };
     const prefixMap: Record<TabId, string> = {
       cli: 'fortigate-vpn-cli',
       gui: 'fortigate-vpn-gui',
       az: 'fortigate-vpn-azure',
       xml: 'fortigate-vpn-forticlient',
+      docs: 'fortigate-vpn-documentation',
     };
 
     const filename = `${prefixMap[activeTab]}-${tunnelName}-${dateSuffix}.${extensionMap[activeTab]}`;

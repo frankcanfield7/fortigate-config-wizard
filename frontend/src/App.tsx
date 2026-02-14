@@ -6,6 +6,8 @@ import Register from './components/auth/Register';
 import Dashboard from './components/layout/Dashboard';
 import ConfigWizard from './components/wizard/ConfigWizard';
 import ConfigLibrary from './components/library/ConfigLibrary';
+import TemplateLibrary from './components/templates/TemplateLibrary';
+import AuditLogViewer from './components/admin/AuditLogViewer';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
 // Create a React Query client
@@ -59,6 +61,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ConfigLibrary />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/templates"
+              element={
+                <ProtectedRoute>
+                  <TemplateLibrary />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/audit-log"
+              element={
+                <ProtectedRoute>
+                  <AuditLogViewer />
                 </ProtectedRoute>
               }
             />

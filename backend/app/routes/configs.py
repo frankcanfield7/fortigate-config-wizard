@@ -1,7 +1,8 @@
 """
 Configuration management API routes.
 """
-from flask import Blueprint, request
+import json
+from flask import Blueprint, request, Response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import or_, and_
 from app import db
@@ -17,6 +18,12 @@ from app.utils import (
     validate_tags,
     get_request_info
 )
+
+try:
+    import yaml
+    HAS_YAML = True
+except ImportError:
+    HAS_YAML = False
 
 bp = Blueprint('configs', __name__, url_prefix='/api/configs')
 
@@ -430,3 +437,204 @@ def get_configuration_version(config_id, version_number):
         return not_found_response('Version')
 
     return success_response(data=version.to_dict())
+
+
+@bp.route('/<int:config_id>/duplicate', methods=['POST'])
+@jwt_required()
+def duplicate_configuration(config_id):
+    """
+    Duplicate a configuration.
+
+    Args:
+        config_id (int): Configuration ID to duplicate
+
+    Returns:
+        201: Duplicated configuration
+        404: Configuration not found
+        403: Permission denied
+    """
+    user_id = int(get_jwt_identity())
+
+    config = db.session.get(Configuration, config_id)
+
+    if not config:
+        return not_found_response('Configuration')
+
+    if config.user_id != user_id:
+        return forbidden_response('You do not have permission to duplicate this configuration')
+
+    # Create duplicate
+    new_config = Configuration(
+        user_id=user_id,
+        config_type=config.config_type,
+        name=f'{config.name} (Copy)',
+        description=config.description,
+        is_template=False
+    )
+    new_config.set_data(config.get_data())
+
+    if config.tags:
+        new_config.tags = config.tags
+
+    db.session.add(new_config)
+    db.session.flush()
+
+    # Create initial version for the duplicate
+    version = ConfigurationVersion(
+        config_id=new_config.id,
+        version=1,
+        change_description=f'Duplicated from "{config.name}"',
+        created_by=user_id
+    )
+    version.set_data(config.get_data())
+    db.session.add(version)
+
+    db.session.commit()
+
+    # Log the duplication
+    request_info = get_request_info()
+    AuditLog.log(
+        user_id=user_id,
+        action='duplicate',
+        resource_type='configuration',
+        resource_id=new_config.id,
+        details={'source_id': config_id, 'source_name': config.name, 'new_name': new_config.name},
+        **request_info
+    )
+
+    return success_response(
+        data=new_config.to_dict(),
+        message='Configuration duplicated successfully',
+        status_code=201
+    )
+
+
+@bp.route('/<int:config_id>/export', methods=['GET'])
+@jwt_required()
+def export_configuration(config_id):
+    """
+    Export a configuration in the specified format.
+
+    Args:
+        config_id (int): Configuration ID
+
+    Query Parameters:
+        format (str): Export format - 'json' or 'yaml'
+
+    Returns:
+        200: File download
+        400: Invalid format
+        404: Configuration not found
+        403: Permission denied
+    """
+    user_id = int(get_jwt_identity())
+    export_format = request.args.get('format', 'json').lower()
+
+    config = db.session.get(Configuration, config_id)
+
+    if not config:
+        return not_found_response('Configuration')
+
+    if config.user_id != user_id:
+        return forbidden_response('You do not have permission to export this configuration')
+
+    config_data = config.get_data()
+    safe_name = config.name.replace(' ', '-').lower()[:50]
+
+    if export_format == 'json':
+        content = json.dumps(config_data, indent=2)
+        filename = f'{safe_name}.json'
+        mimetype = 'application/json'
+    elif export_format == 'yaml':
+        if not HAS_YAML:
+            return error_response('YAML export is not available (PyYAML not installed)', status_code=500)
+        content = yaml.dump(config_data, default_flow_style=False, sort_keys=False)
+        filename = f'{safe_name}.yaml'
+        mimetype = 'text/yaml'
+    else:
+        return error_response(f'Unsupported format: {export_format}. Use json or yaml.', status_code=400)
+
+    # Log the export
+    request_info = get_request_info()
+    AuditLog.log(
+        user_id=user_id,
+        action='export',
+        resource_type='configuration',
+        resource_id=config_id,
+        details={'name': config.name, 'format': export_format},
+        **request_info
+    )
+
+    return success_response(
+        data={'data': content, 'filename': filename},
+        message='Configuration exported successfully'
+    )
+
+
+@bp.route('/<int:config_id>/restore/<int:version_id>', methods=['POST'])
+@jwt_required()
+def restore_configuration_version(config_id, version_id):
+    """
+    Restore a configuration to a previous version.
+
+    Args:
+        config_id (int): Configuration ID
+        version_id (int): Version ID to restore
+
+    Returns:
+        200: Configuration restored successfully
+        404: Configuration or version not found
+        403: Permission denied
+    """
+    user_id = int(get_jwt_identity())
+
+    config = db.session.get(Configuration, config_id)
+
+    if not config:
+        return not_found_response('Configuration')
+
+    if config.user_id != user_id:
+        return forbidden_response('You do not have permission to modify this configuration')
+
+    # Find the version to restore
+    version_to_restore = db.session.get(ConfigurationVersion, version_id)
+
+    if not version_to_restore or version_to_restore.config_id != config_id:
+        return not_found_response('Version')
+
+    # Restore the configuration data
+    restored_data = version_to_restore.get_data()
+    config.set_data(restored_data)
+
+    # Create a new version entry recording the restore
+    next_version = ConfigurationVersion.get_next_version_number(config_id)
+    new_version = ConfigurationVersion(
+        config_id=config_id,
+        version=next_version,
+        change_description=f'Restored from version {version_to_restore.version}',
+        created_by=user_id
+    )
+    new_version.set_data(restored_data)
+    db.session.add(new_version)
+
+    db.session.commit()
+
+    # Log the restore
+    request_info = get_request_info()
+    AuditLog.log(
+        user_id=user_id,
+        action='restore',
+        resource_type='configuration',
+        resource_id=config_id,
+        details={
+            'name': config.name,
+            'restored_from_version': version_to_restore.version,
+            'new_version': next_version
+        },
+        **request_info
+    )
+
+    return success_response(
+        data=config.to_dict(),
+        message=f'Configuration restored to version {version_to_restore.version}'
+    )

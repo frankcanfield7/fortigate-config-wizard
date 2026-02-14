@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { configApi } from '../../utils/api';
+import VersionHistory from './VersionHistory';
 
 const ConfigLibrary: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const ConfigLibrary: React.FC = () => {
   const [page, setPage] = useState(1);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
   const [exportingId, setExportingId] = useState<number | null>(null);
+  const [historyConfig, setHistoryConfig] = useState<{ id: number; name: string } | null>(null);
 
   // Fetch configurations
   const { data, isLoading, error } = useQuery({
@@ -37,6 +39,17 @@ const ConfigLibrary: React.FC = () => {
     },
     onError: (error: any) => {
       alert(error.response?.data?.error || 'Failed to duplicate configuration');
+    },
+  });
+
+  // Save as template mutation
+  const templateMutation = useMutation({
+    mutationFn: (id: number) => configApi.makeTemplate(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['configurations'] });
+    },
+    onError: (error: any) => {
+      alert(error.response?.data?.error || 'Failed to save as template');
     },
   });
 
@@ -224,6 +237,15 @@ const ConfigLibrary: React.FC = () => {
                               ✏️
                             </button>
 
+                            {/* History Button */}
+                            <button
+                              onClick={() => setHistoryConfig({ id: config.id, name: config.name })}
+                              className="p-2 text-red-400 hover:bg-red-400/10 rounded transition-colors"
+                              title="Version History"
+                            >
+                              🕑
+                            </button>
+
                             {/* Export Button */}
                             <button
                               onClick={() => setExportingId(config.id)}
@@ -232,6 +254,18 @@ const ConfigLibrary: React.FC = () => {
                             >
                               📥
                             </button>
+
+                            {/* Save as Template */}
+                            {!config.is_template && (
+                              <button
+                                onClick={() => templateMutation.mutate(config.id)}
+                                disabled={templateMutation.isPending}
+                                className="p-2 text-red-400 hover:bg-red-400/10 rounded transition-colors disabled:opacity-50"
+                                title="Save as Template"
+                              >
+                                ⭐
+                              </button>
+                            )}
 
                             {/* Duplicate Button */}
                             <button
@@ -312,6 +346,15 @@ const ConfigLibrary: React.FC = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Version History Modal */}
+        {historyConfig && (
+          <VersionHistory
+            configId={historyConfig.id}
+            configName={historyConfig.name}
+            onClose={() => setHistoryConfig(null)}
+          />
         )}
 
         {/* Export Modal */}

@@ -8,6 +8,7 @@ import type {
   Configuration,
   ConfigurationCreate,
   ConfigurationUpdate,
+  ConfigurationVersion,
   ApiError,
   PaginatedResponse,
 } from '../types';
@@ -171,6 +172,35 @@ export const configApi = {
     );
     return response.data.data;
   },
+
+  getVersions: async (id: number): Promise<{ versions: ConfigurationVersion[] }> => {
+    const response = await api.get<ApiResponse<{ versions: ConfigurationVersion[] }>>(
+      `/api/configs/${id}/versions`
+    );
+    return response.data.data;
+  },
+
+  getVersion: async (id: number, versionNumber: number): Promise<ConfigurationVersion> => {
+    const response = await api.get<ApiResponse<ConfigurationVersion>>(
+      `/api/configs/${id}/versions/${versionNumber}`
+    );
+    return response.data.data;
+  },
+
+  restoreVersion: async (id: number, versionId: number): Promise<Configuration> => {
+    const response = await api.post<ApiResponse<Configuration>>(
+      `/api/configs/${id}/restore/${versionId}`
+    );
+    return response.data.data;
+  },
+
+  makeTemplate: async (id: number): Promise<Configuration> => {
+    const response = await api.put<ApiResponse<Configuration>>(
+      `/api/configs/${id}`,
+      { is_template: true }
+    );
+    return response.data.data;
+  },
 };
 
 // Template API
@@ -185,6 +215,53 @@ export const templateApi = {
       name,
     });
     return response.data.data;
+  },
+};
+
+// Audit log entry type
+export interface AuditLogEntry {
+  id: number;
+  user_id: number;
+  username: string | null;
+  action: string;
+  resource_type: string;
+  resource_id: number | null;
+  details: Record<string, any>;
+  ip_address: string | null;
+  user_agent: string | null;
+  created_at: string;
+}
+
+// Admin API
+export const adminApi = {
+  getAuditLogs: async (
+    page = 1,
+    perPage = 50,
+    filters?: { action?: string; user_id?: number; resource_type?: string }
+  ): Promise<PaginatedResponse<AuditLogEntry>> => {
+    const params = new URLSearchParams({ page: String(page), per_page: String(perPage) });
+    if (filters?.action) params.set('action', filters.action);
+    if (filters?.user_id) params.set('user_id', String(filters.user_id));
+    if (filters?.resource_type) params.set('resource_type', filters.resource_type);
+
+    const response = await api.get<ApiResponse<PaginatedResponse<AuditLogEntry>>>(
+      `/api/admin/audit-logs?${params.toString()}`
+    );
+    return response.data.data;
+  },
+
+  exportAuditLogs: async (
+    filters?: { action?: string; user_id?: number; resource_type?: string }
+  ): Promise<Blob> => {
+    const params = new URLSearchParams();
+    if (filters?.action) params.set('action', filters.action);
+    if (filters?.user_id) params.set('user_id', String(filters.user_id));
+    if (filters?.resource_type) params.set('resource_type', filters.resource_type);
+
+    const response = await api.get(`/api/admin/audit-logs/export?${params.toString()}`, {
+      responseType: 'blob',
+    });
+    return response.data;
   },
 };
 

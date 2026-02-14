@@ -84,10 +84,12 @@ def configure_logging(app):
 
 def register_blueprints(app):
     """Register Flask blueprints."""
-    from app.routes import auth, configs
+    from app.routes import auth, configs, templates, admin
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(configs.bp)
+    app.register_blueprint(templates.bp)
+    app.register_blueprint(admin.bp)
 
     # Health check endpoint
     @app.route('/health')
