@@ -148,7 +148,7 @@ const ConfigWizard: React.FC = () => {
                 </svg>
                 Dashboard
               </button>
-              <h1 className="text-2xl font-black text-white">
+              <h1 className="text-2xl font-medium text-white">
                 {isEditMode ? 'Edit VPN Configuration' : 'IPSEC Remote Access VPN'}
               </h1>
               <p className="text-red-300/50 text-xs mt-0.5">
@@ -160,7 +160,7 @@ const ConfigWizard: React.FC = () => {
               <button
                 onClick={handleSave}
                 disabled={isSaving || isLoadingConfig}
-                className="px-5 py-2.5 bg-neutral-200 text-neutral-900 rounded-lg hover:bg-neutral-300 transition-colors text-sm font-bold disabled:opacity-50"
+                className="px-5 py-2.5 bg-neutral-200 text-neutral-900 rounded-lg hover:bg-neutral-300 transition-colors text-sm font-medium disabled:opacity-50"
               >
                 {isSaving ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update' : 'Save')}
               </button>
@@ -174,7 +174,7 @@ const ConfigWizard: React.FC = () => {
         {isEditMode && isLoadingConfig && (
           <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-12 mb-6 text-center">
             <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-red-600 mb-4" />
-            <p className="text-red-400 font-bold">Loading configuration...</p>
+            <p className="text-red-400 font-medium">Loading configuration...</p>
           </div>
         )}
 
@@ -186,7 +186,7 @@ const ConfigWizard: React.FC = () => {
               <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-1.5">
+                    <label className="block text-xs font-medium text-neutral-400 uppercase tracking-wide mb-1.5">
                       Configuration Name *
                     </label>
                     <input
@@ -199,7 +199,7 @@ const ConfigWizard: React.FC = () => {
                     <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">A descriptive name to identify this config in the library.</p>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-1.5">
+                    <label className="block text-xs font-medium text-neutral-400 uppercase tracking-wide mb-1.5">
                       Description (Optional)
                     </label>
                     <input

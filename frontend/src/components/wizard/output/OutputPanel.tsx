@@ -77,7 +77,7 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ config }) => {
     <div className="bg-neutral-800 border border-neutral-700 rounded-xl shadow-lg overflow-hidden">
       {/* Header */}
       <div className="px-4 py-3 border-b border-neutral-700 bg-neutral-900/50">
-        <h2 className="text-sm font-bold text-red-400 uppercase tracking-wide">
+        <h2 className="text-sm font-medium text-red-400 uppercase tracking-wide">
           Configuration Output
         </h2>
       </div>
@@ -88,7 +88,7 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ config }) => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 px-3 py-2.5 text-xs font-bold transition-colors ${
+            className={`flex-1 px-3 py-2.5 text-xs font-medium transition-colors ${
               activeTab === tab.id
                 ? 'text-red-400 border-b-2 border-red-600 bg-neutral-800'
                 : 'text-neutral-500 border-b-2 border-transparent hover:text-neutral-300'
@@ -103,7 +103,7 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ config }) => {
       <div className="flex items-center justify-end gap-2 px-4 py-2 border-b border-neutral-700">
         <button
           onClick={handleCopy}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-red-800 hover:bg-red-700 text-white transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-red-800 hover:bg-red-700 text-white transition-colors"
         >
           {copyFeedback ? (
             <>
@@ -124,7 +124,7 @@ const OutputPanel: React.FC<OutputPanelProps> = ({ config }) => {
         </button>
         <button
           onClick={handleDownload}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white transition-colors"
         >
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M8 2v9" />

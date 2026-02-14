@@ -120,7 +120,7 @@ const SecurityScore: React.FC<SecurityScoreProps> = ({ config }) => {
           </svg>
           {/* Score number in center */}
           <span
-            className="absolute inset-0 flex items-center justify-center text-xs font-bold"
+            className="absolute inset-0 flex items-center justify-center text-xs font-medium"
             style={{ color: scoreColor }}
           >
             {score}
@@ -131,7 +131,7 @@ const SecurityScore: React.FC<SecurityScoreProps> = ({ config }) => {
             Security
           </span>
           {dhBadge && (
-            <span className={`text-[10px] font-bold ${dhBadge.color}`}>
+            <span className={`text-[10px] font-medium ${dhBadge.color}`}>
               DH: {dhBadge.label}
             </span>
           )}
@@ -147,7 +147,7 @@ const SecurityScore: React.FC<SecurityScoreProps> = ({ config }) => {
           <span className="text-xs font-medium text-neutral-500">
             Completeness
           </span>
-          <span className="text-xs font-bold text-neutral-300">
+          <span className="text-xs font-medium text-neutral-300">
             {completeness}%
           </span>
         </div>

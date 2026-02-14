@@ -73,7 +73,7 @@ const Login: React.FC = () => {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-black mb-2">
+          <h1 className="text-4xl font-semibold mb-2">
             <span className="bg-gradient-to-r from-red-700 to-red-500 bg-clip-text text-transparent">
               FortiGate Spartan Wizard
             </span>
@@ -83,7 +83,7 @@ const Login: React.FC = () => {
 
         {/* Login Card */}
         <div className="bg-[#262626] border-2 border-[#404040] rounded-2xl p-8 shadow-2xl">
-          <h2 className="text-2xl font-bold text-red-400 mb-6">Login</h2>
+          <h2 className="text-2xl font-medium text-red-400 mb-6">Login</h2>
 
           {/* Error Alert */}
           {error && (
@@ -141,7 +141,7 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-4 bg-gradient-to-r from-red-800 to-red-700 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+              className="w-full py-3 px-4 bg-gradient-to-r from-red-800 to-red-700 text-white font-medium rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
             >
               {isSubmitting ? 'Logging in...' : 'Login'}
             </button>

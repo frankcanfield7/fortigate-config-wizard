@@ -18,7 +18,7 @@ const Dashboard: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-black text-white">
+              <h1 className="text-3xl font-semibold text-white">
                 FortiGate Spartan Wizard 🏛️⚔️
               </h1>
               <p className="text-white/70 text-sm mt-1">
@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
           {/* Configuration Card */}
           <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-red-400">New VPN Configuration</h3>
+              <h3 className="text-xl font-medium text-red-400">New VPN Configuration</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">🔒</span>
             </div>
             <p className="text-gray-400 text-sm mb-4 flex-1">
@@ -55,7 +55,7 @@ const Dashboard: React.FC = () => {
             </p>
             <button
               onClick={() => navigate('/dashboard/wizard')}
-              className="w-full py-2 px-4 bg-gradient-to-r from-red-900 to-red-800 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all mt-auto"
+              className="w-full py-2 px-4 bg-gradient-to-r from-red-900 to-red-800 text-white font-medium rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all mt-auto"
             >
               Start Wizard
             </button>
@@ -64,7 +64,7 @@ const Dashboard: React.FC = () => {
           {/* Library Card */}
           <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-red-400">My Configurations</h3>
+              <h3 className="text-xl font-medium text-red-400">My Configurations</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">📚</span>
             </div>
             <p className="text-gray-400 text-sm mb-4 flex-1">
@@ -72,7 +72,7 @@ const Dashboard: React.FC = () => {
             </p>
             <button
               onClick={() => navigate('/dashboard/library')}
-              className="w-full py-2 px-4 bg-[#404040] text-white font-bold rounded-lg hover:bg-[#525252] transition-colors mt-auto"
+              className="w-full py-2 px-4 bg-[#404040] text-white font-medium rounded-lg hover:bg-[#525252] transition-colors mt-auto"
             >
               View Library
             </button>
@@ -81,13 +81,13 @@ const Dashboard: React.FC = () => {
           {/* Templates Card */}
           <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all cursor-pointer group flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-red-400">Templates</h3>
+              <h3 className="text-xl font-medium text-red-400">Templates</h3>
               <span className="text-3xl group-hover:scale-110 transition-transform">📋</span>
             </div>
             <p className="text-gray-400 text-sm mb-4 flex-1">
               Browse and use pre-built configuration templates
             </p>
-            <button className="w-full py-2 px-4 bg-[#404040] text-white font-bold rounded-lg hover:bg-[#525252] transition-colors mt-auto">
+            <button className="w-full py-2 px-4 bg-[#404040] text-white font-medium rounded-lg hover:bg-[#525252] transition-colors mt-auto">
               Browse Templates
             </button>
           </div>

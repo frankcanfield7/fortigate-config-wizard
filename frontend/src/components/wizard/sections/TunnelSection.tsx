@@ -79,7 +79,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
         >
           {/* Tunnel number badge */}
           <div className="flex items-center justify-between mb-3">
-            <span className="inline-flex items-center justify-center bg-red-800 text-white text-xs font-bold rounded px-2 py-0.5">
+            <span className="inline-flex items-center justify-center bg-red-800 text-white text-xs font-medium rounded px-2 py-0.5">
               #{index + 1}
             </span>
 
@@ -88,7 +88,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
               <button
                 type="button"
                 onClick={() => removeTunnel(index)}
-                className="absolute top-3 right-3 inline-flex items-center justify-center w-7 h-7 rounded-full bg-red-500 hover:bg-red-600 text-white text-sm font-bold transition-colors"
+                className="absolute top-3 right-3 inline-flex items-center justify-center w-7 h-7 rounded-full bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors"
                 aria-label={`Remove tunnel #${index + 1}`}
               >
                 <svg

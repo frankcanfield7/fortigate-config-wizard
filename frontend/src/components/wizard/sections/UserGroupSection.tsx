@@ -36,7 +36,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
           >
             {/* Card Header */}
             <div className="flex items-center justify-between mb-3">
-              <span className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-red-800 text-white text-xs font-bold">
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-md bg-red-800 text-white text-xs font-medium">
                 #{index + 1}
               </span>
 
@@ -55,7 +55,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* Group Name */}
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-1">
+                <label className="block text-sm font-normal text-neutral-300 mb-1">
                   User Group Name
                 </label>
                 <input
@@ -73,7 +73,7 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
 
               {/* Azure Group Object ID */}
               <div>
-                <label className="block text-sm font-medium text-neutral-300 mb-1">
+                <label className="block text-sm font-normal text-neutral-300 mb-1">
                   Azure Group Object ID
                 </label>
                 <input

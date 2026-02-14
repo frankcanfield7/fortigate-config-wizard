@@ -105,7 +105,7 @@ const ConfigLibrary: React.FC = () => {
               >
                 <span>←</span> Back to Dashboard
               </button>
-              <h1 className="text-3xl font-black text-white">
+              <h1 className="text-3xl font-semibold text-white">
                 Configuration Library 📚
               </h1>
               <p className="text-white/70 text-sm mt-1">
@@ -114,7 +114,7 @@ const ConfigLibrary: React.FC = () => {
             </div>
             <button
               onClick={() => navigate('/dashboard/wizard')}
-              className="px-6 py-3 bg-neutral-200 text-neutral-900 rounded-lg hover:bg-neutral-300 transition-colors font-bold"
+              className="px-6 py-3 bg-neutral-200 text-neutral-900 rounded-lg hover:bg-neutral-300 transition-colors font-medium"
             >
               + New Configuration
             </button>
@@ -153,7 +153,7 @@ const ConfigLibrary: React.FC = () => {
         {!isLoading && !error && filteredConfigs?.length === 0 && (
           <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-12 text-center">
             <div className="text-6xl mb-4">📭</div>
-            <h2 className="text-2xl font-bold text-red-400 mb-2">
+            <h2 className="text-2xl font-medium text-red-400 mb-2">
               {searchTerm ? 'No matching configurations' : 'No configurations yet'}
             </h2>
             <p className="text-gray-400 mb-6">
@@ -164,7 +164,7 @@ const ConfigLibrary: React.FC = () => {
             {!searchTerm && (
               <button
                 onClick={() => navigate('/dashboard/wizard')}
-                className="px-6 py-3 bg-gradient-to-r from-red-900 to-red-800 text-white rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all font-bold"
+                className="px-6 py-3 bg-gradient-to-r from-red-900 to-red-800 text-white rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all font-medium"
               >
                 Create Configuration
               </button>
@@ -179,11 +179,11 @@ const ConfigLibrary: React.FC = () => {
               <table className="w-full">
                 <thead className="bg-[#171717] border-b-2 border-[#404040]">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Name</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Type</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Description</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Created</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-red-400">Actions</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-red-400">Name</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-red-400">Type</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-red-400">Description</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-red-400">Created</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-red-400">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#404040]">
@@ -291,7 +291,7 @@ const ConfigLibrary: React.FC = () => {
         {deleteConfirmId !== null && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
             <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 max-w-md w-full mx-4">
-              <h2 className="text-2xl font-bold text-red-400 mb-4">Confirm Delete</h2>
+              <h2 className="text-2xl font-medium text-red-400 mb-4">Confirm Delete</h2>
               <p className="text-gray-300 mb-6">
                 Are you sure you want to delete this configuration? This action cannot be undone.
               </p>
@@ -318,28 +318,28 @@ const ConfigLibrary: React.FC = () => {
         {exportingId !== null && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
             <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 max-w-md w-full mx-4">
-              <h2 className="text-2xl font-bold text-red-400 mb-4">Export Configuration</h2>
+              <h2 className="text-2xl font-medium text-red-400 mb-4">Export Configuration</h2>
               <p className="text-gray-300 mb-6">Choose an export format:</p>
               <div className="space-y-3">
                 <button
                   onClick={() => handleExport(exportingId, 'cli')}
                   className="w-full px-4 py-3 bg-[#171717] border-2 border-[#404040] rounded-lg text-white hover:border-red-700 transition-colors text-left"
                 >
-                  <div className="font-bold">CLI Script</div>
+                  <div className="font-medium">CLI Script</div>
                   <div className="text-sm text-gray-400">FortiGate command-line script</div>
                 </button>
                 <button
                   onClick={() => handleExport(exportingId, 'json')}
                   className="w-full px-4 py-3 bg-[#171717] border-2 border-[#404040] rounded-lg text-white hover:border-red-700 transition-colors text-left"
                 >
-                  <div className="font-bold">JSON</div>
+                  <div className="font-medium">JSON</div>
                   <div className="text-sm text-gray-400">Structured data format</div>
                 </button>
                 <button
                   onClick={() => handleExport(exportingId, 'yaml')}
                   className="w-full px-4 py-3 bg-[#171717] border-2 border-[#404040] rounded-lg text-white hover:border-red-700 transition-colors text-left"
                 >
-                  <div className="font-bold">YAML</div>
+                  <div className="font-medium">YAML</div>
                   <div className="text-sm text-gray-400">Human-readable format</div>
                 </button>
               </div>
