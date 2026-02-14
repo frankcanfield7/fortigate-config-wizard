@@ -32,7 +32,9 @@ function borderClass(value: string, validate: (v: string) => { isValid: boolean 
 }
 
 const INPUT_BASE =
-  'w-full rounded-lg border bg-neutral-900 px-3 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-600 text-white placeholder-neutral-500 transition-colors';
+  'w-full rounded-lg border bg-neutral-900 px-3 py-2.5 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-600 hover:border-neutral-400 hover:bg-neutral-800/80 hover:shadow-[0_0_12px_rgba(120,120,120,0.06)] text-white placeholder-neutral-500 transition-all duration-200';
+
+const HELP_CLASS = 'text-xs text-neutral-400 mt-1.5 leading-relaxed';
 
 const TunnelSection: React.FC<TunnelSectionProps> = ({
   tunnels,
@@ -130,6 +132,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
                     {validateTunnelName(tunnel.name).error}
                   </p>
                 )}
+              <p className={HELP_CLASS}>Unique name for this VPN tunnel. Alphanumeric and hyphens only.</p>
             </div>
 
             {/* Description / Comments */}
@@ -144,6 +147,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
                 onChange={(e) => updateTunnel(index, 'comments', e.target.value)}
                 className={`${INPUT_BASE} border-neutral-600`}
               />
+              <p className={HELP_CLASS}>Optional note for identifying this tunnel's purpose.</p>
             </div>
 
             {/* WAN Interface */}
@@ -162,6 +166,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
                   </option>
                 ))}
               </select>
+              <p className={HELP_CLASS}>The physical interface accepting inbound VPN connections.</p>
             </div>
 
             {/* FortiGate Public FQDN / IP */}
@@ -187,6 +192,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
                     {validateFQDN(tunnel.fqdn).error}
                   </p>
                 )}
+              <p className={HELP_CLASS}>Public-facing hostname or IP. Used to build SAML URLs automatically.</p>
             </div>
 
             {/* IKE-SAML Port */}
@@ -213,6 +219,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
                     {validateSAMLPort(tunnel.port).error}
                   </p>
                 )}
+              <p className={HELP_CLASS}>TCP port for SAML browser redirect. Default 10428. Use a non-standard port for added security.</p>
             </div>
           </div>
         </div>

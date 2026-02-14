@@ -161,9 +161,9 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
     </button>
   );
 
-  const inputClass = "w-full rounded-lg border bg-neutral-900 border-neutral-600 px-3 py-2 text-sm text-neutral-200 placeholder-neutral-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 transition-colors";
-  const labelClass = "block text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-1";
-  const helpClass = "text-[11px] text-neutral-500 mt-1 leading-relaxed";
+  const inputClass = "w-full rounded-lg border bg-neutral-900 border-neutral-600 px-3 py-2.5 text-sm text-neutral-200 placeholder-neutral-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 hover:border-neutral-400 hover:bg-neutral-800/80 hover:shadow-[0_0_12px_rgba(120,120,120,0.06)] transition-all duration-200";
+  const labelClass = "block text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-1.5";
+  const helpClass = "text-xs text-neutral-400 mt-1.5 leading-relaxed";
   const sectionClass = "bg-neutral-800 rounded-xl shadow-md border border-neutral-700/50 overflow-hidden";
   const panelClass = "px-5 pb-5 space-y-4";
 
@@ -209,7 +209,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
           <div className={panelClass}>
             {/* Encryption/Hash Proposals */}
             <div>
-              <p className="text-[11px] text-neutral-500 mb-2">
+              <p className="text-xs text-neutral-400 mb-2">
                 Select one or more encryption proposals. AES256-SHA256 provides strong security with broad compatibility.
               </p>
               <label className={labelClass}>Encryption/Hash Proposals</label>
@@ -230,7 +230,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
 
             {/* DH Groups */}
             <div>
-              <p className="text-[11px] text-neutral-500 mb-2">
+              <p className="text-xs text-neutral-400 mb-2">
                 DH Groups 19-21 (Elliptic Curve) provide the strongest key exchange. Groups below 15 are considered weak.
               </p>
               <label className={labelClass}>DH Groups</label>
@@ -267,8 +267,9 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                   value={config.p1kl}
                   onChange={e => updateField('p1kl', e.target.value)}
                 />
+                <p className={helpClass}>How long before Phase 1 keys are renegotiated. Default 86400 (24 hours).</p>
               </div>
-              <div className="flex items-center pt-5">
+              <div className="flex flex-col justify-center pt-2">
                 <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-red-500 transition-colors">
                   <input
                     type="checkbox"
@@ -278,12 +279,13 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                   />
                   <span className="text-neutral-300">NAT Traversal</span>
                 </label>
+                <p className={`${helpClass} ml-6`}>Required when clients are behind NAT. Encapsulates IPsec in UDP 4500.</p>
               </div>
             </div>
 
             {/* DPD */}
             <div className="border-t border-neutral-700 pt-4">
-              <label className="flex items-center gap-2 text-xs font-semibold mb-3 cursor-pointer hover:text-red-500 transition-colors">
+              <label className="flex items-center gap-2 text-xs font-semibold mb-1 cursor-pointer hover:text-red-500 transition-colors">
                 <input
                   type="checkbox"
                   className="rounded accent-red-700"
@@ -292,6 +294,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                 />
                 <span className="text-neutral-300">Dead Peer Detection (DPD)</span>
               </label>
+              <p className={`${helpClass} ml-6 mb-3`}>Detects unresponsive peers and tears down stale tunnels to free resources.</p>
               {config.dpdOn && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -304,6 +307,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                       value={config.dpdInt}
                       onChange={e => updateField('dpdInt', e.target.value)}
                     />
+                    <p className={helpClass}>Seconds between keepalive probes. Default 10.</p>
                   </div>
                   <div>
                     <label className={labelClass} htmlFor="dpdRet">DPD Retry Count</label>
@@ -315,6 +319,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                       value={config.dpdRet}
                       onChange={e => updateField('dpdRet', e.target.value)}
                     />
+                    <p className={helpClass}>Failed probes before tunnel is declared dead. Default 3.</p>
                   </div>
                 </div>
               )}
@@ -329,6 +334,9 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
         {expandedSections.has('phase2') && (
           <div className={panelClass}>
             <div>
+              <p className="text-xs text-neutral-400 mb-2">
+                Phase 2 proposals protect the actual data traffic. Should match or exceed Phase 1 strength.
+              </p>
               <label className={labelClass}>Encryption/Hash Proposals</label>
               <div className="flex flex-wrap gap-x-4 gap-y-2 mt-1">
                 {P2_PROPOSALS.map(p => (
@@ -344,7 +352,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                 ))}
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
               <div>
                 <label className="flex items-center gap-2 text-xs font-semibold cursor-pointer hover:text-red-500 transition-colors">
                   <input
@@ -355,6 +363,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                   />
                   <span className="text-neutral-300">Enable PFS</span>
                 </label>
+                <p className={`${helpClass} ml-6`}>Perfect Forward Secrecy generates fresh keys for each session, preventing bulk decryption if a key is compromised.</p>
               </div>
               {config.pfsOn && (
                 <div>
@@ -369,6 +378,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                       <option key={o.value} value={o.value}>{o.label}</option>
                     ))}
                   </select>
+                  <p className={helpClass}>DH group used for PFS key exchange. Use 19+ for strongest protection.</p>
                 </div>
               )}
               <div>
@@ -382,6 +392,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                   value={config.p2kl}
                   onChange={e => updateField('p2kl', e.target.value)}
                 />
+                <p className={helpClass}>Phase 2 rekey interval. Default 43200 (12 hours). Shorter = more secure.</p>
               </div>
             </div>
           </div>
@@ -393,6 +404,9 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
         {renderSectionHeader('ipDns', 4, 'IP Addressing & DNS')}
         {expandedSections.has('ipDns') && (
           <div className={panelClass}>
+            <p className="text-xs text-neutral-400 -mt-1 mb-1">
+              Define the IP pool assigned to VPN clients and DNS settings for name resolution while connected.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={labelClass} htmlFor="startIp">IPv4 Start IP</label>
@@ -404,6 +418,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                   value={config.startIp}
                   onChange={e => updateField('startIp', e.target.value)}
                 />
+                <p className={helpClass}>First address in the VPN client pool. Use a dedicated /24 that doesn't overlap with LAN subnets.</p>
               </div>
               <div>
                 <label className={labelClass} htmlFor="endIp">IPv4 End IP</label>
@@ -415,6 +430,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                   value={config.endIp}
                   onChange={e => updateField('endIp', e.target.value)}
                 />
+                <p className={helpClass}>Last address in the pool. The range determines max concurrent VPN users.</p>
               </div>
             </div>
             {ipRangeError && (
@@ -432,6 +448,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                   <option value="auto">auto</option>
                   <option value="manual">manual</option>
                 </select>
+                <p className={helpClass}>Auto uses the FortiGate's configured DNS. Manual lets you specify servers below.</p>
               </div>
               {config.dnsMode === 'manual' && (
                 <>
@@ -445,6 +462,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                       value={config.dns1}
                       onChange={e => updateField('dns1', e.target.value)}
                     />
+                    <p className={helpClass}>DNS server pushed to VPN clients for name resolution.</p>
                   </div>
                   <div>
                     <label className={labelClass} htmlFor="dns2">Secondary DNS</label>
@@ -456,6 +474,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                       value={config.dns2}
                       onChange={e => updateField('dns2', e.target.value)}
                     />
+                    <p className={helpClass}>Fallback DNS if primary is unreachable.</p>
                   </div>
                 </>
               )}
@@ -560,19 +579,19 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                 Auto-Generated SAML URLs
               </p>
               <div>
-                <span className="text-[11px] text-neutral-400 font-semibold">Entity ID:</span>
+                <span className="text-xs text-neutral-400 font-semibold">Entity ID:</span>
                 <p className="text-xs font-mono text-red-400 break-all mt-0.5">
                   {samlUrls?.entityId || '\u2014'}
                 </p>
               </div>
               <div>
-                <span className="text-[11px] text-neutral-400 font-semibold">ACS URL:</span>
+                <span className="text-xs text-neutral-400 font-semibold">ACS URL:</span>
                 <p className="text-xs font-mono text-red-400 break-all mt-0.5">
                   {samlUrls?.acsUrl || '\u2014'}
                 </p>
               </div>
               <div>
-                <span className="text-[11px] text-neutral-400 font-semibold">SLO URL:</span>
+                <span className="text-xs text-neutral-400 font-semibold">SLO URL:</span>
                 <p className="text-xs font-mono text-red-400 break-all mt-0.5">
                   {samlUrls?.sloUrl || '\u2014'}
                 </p>
@@ -581,6 +600,9 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
 
             {/* Entra URLs */}
             <div className="space-y-4">
+              <p className="text-xs text-neutral-400">
+                Copy these URLs from your Azure Enterprise Application's SAML configuration page (Single sign-on section).
+              </p>
               <div>
                 <label className={labelClass} htmlFor="eLoginUrl">Entra ID Login URL</label>
                 <input
@@ -591,6 +613,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                   value={config.eLoginUrl}
                   onChange={e => updateField('eLoginUrl', e.target.value)}
                 />
+                <p className={helpClass}>The SAML 2.0 endpoint where FortiGate redirects users for authentication.</p>
               </div>
               <div>
                 <label className={labelClass} htmlFor="eEntityId">Entra ID Entity ID / Identifier</label>
@@ -602,6 +625,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                   value={config.eEntityId}
                   onChange={e => updateField('eEntityId', e.target.value)}
                 />
+                <p className={helpClass}>Azure AD's unique identifier for SAML assertions. Also called the Issuer URL.</p>
               </div>
               <div>
                 <label className={labelClass} htmlFor="eLogoutUrl">Entra ID Logout URL</label>
@@ -613,6 +637,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                   value={config.eLogoutUrl}
                   onChange={e => updateField('eLogoutUrl', e.target.value)}
                 />
+                <p className={helpClass}>Where users are redirected when they disconnect from the VPN to end their SSO session.</p>
               </div>
             </div>
 
@@ -644,7 +669,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                 <p className={helpClass}>The name you assigned when importing the Entra ID remote certificate to FortiGate.</p>
               </div>
               <div>
-                <p className="text-[11px] text-neutral-500 mb-1">
+                <p className="text-xs text-neutral-400 mb-1">
                   For testing: Use &apos;Fortinet_Factory&apos;. For production: use a cert matching your FQDN.
                 </p>
                 <label className={labelClass} htmlFor="srvCert">FortiGate Server Certificate</label>
@@ -771,6 +796,7 @@ const IPsecRemoteAccessForm: React.FC<IPsecRemoteAccessFormProps> = ({
                 value={config.banner}
                 onChange={e => updateField('banner', e.target.value)}
               />
+              <p className={helpClass}>Displayed to users after successful VPN connection. Use for AUP notices or welcome messages.</p>
             </div>
           </div>
         )}

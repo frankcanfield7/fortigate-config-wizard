@@ -63,11 +63,12 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
                   value={group.name}
                   onChange={(e) => updateUserGroup(index, 'name', e.target.value)}
                   placeholder="SAML-Entra-VPN-Users"
-                  className={`w-full px-3 py-2 bg-neutral-900 border-2 ${getBorderClass(group.name, validateGroupName)} rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-500/40 transition-colors`}
+                  className={`w-full px-3 py-2.5 bg-neutral-900 border-2 ${getBorderClass(group.name, validateGroupName)} rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-500/40 hover:border-neutral-400 hover:bg-neutral-800/80 hover:shadow-[0_0_12px_rgba(120,120,120,0.06)] transition-all duration-200`}
                 />
                 {group.name.trim() !== '' && !nameValidation.isValid && nameValidation.error && (
                   <p className="text-xs text-red-500 mt-1">{nameValidation.error}</p>
                 )}
+                <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">Name of the user group object on FortiGate. Must match the SAML group mapping.</p>
               </div>
 
               {/* Azure Group Object ID */}
@@ -80,11 +81,12 @@ const UserGroupSection: React.FC<UserGroupSectionProps> = ({
                   value={group.objId}
                   onChange={(e) => updateUserGroup(index, 'objId', e.target.value)}
                   placeholder="a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-                  className={`w-full px-3 py-2 bg-neutral-900 border-2 ${getBorderClass(group.objId, validateUUID)} rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-500/40 transition-colors`}
+                  className={`w-full px-3 py-2.5 bg-neutral-900 border-2 ${getBorderClass(group.objId, validateUUID)} rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-500/40 hover:border-neutral-400 hover:bg-neutral-800/80 hover:shadow-[0_0_12px_rgba(120,120,120,0.06)] transition-all duration-200`}
                 />
                 {group.objId.trim() !== '' && !uuidValidation.isValid && uuidValidation.error && (
                   <p className="text-xs text-red-500 mt-1">{uuidValidation.error}</p>
                 )}
+                <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">UUID from Entra ID. Used to match VPN users to their Azure security group.</p>
               </div>
             </div>
           </div>

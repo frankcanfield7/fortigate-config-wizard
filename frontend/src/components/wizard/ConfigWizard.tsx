@@ -186,7 +186,7 @@ const ConfigWizard: React.FC = () => {
               <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-1">
+                    <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-1.5">
                       Configuration Name *
                     </label>
                     <input
@@ -194,11 +194,12 @@ const ConfigWizard: React.FC = () => {
                       value={configName}
                       onChange={e => setConfigName(e.target.value)}
                       placeholder="e.g., HQ Remote Access VPN"
-                      className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white placeholder-neutral-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 text-sm"
+                      className="w-full px-3 py-2.5 bg-neutral-900 border border-neutral-600 rounded-lg text-white placeholder-neutral-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 hover:border-neutral-400 hover:bg-neutral-800/80 hover:shadow-[0_0_12px_rgba(120,120,120,0.06)] transition-all duration-200 text-sm"
                     />
+                    <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">A descriptive name to identify this config in the library.</p>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-1">
+                    <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-1.5">
                       Description (Optional)
                     </label>
                     <input
@@ -206,8 +207,9 @@ const ConfigWizard: React.FC = () => {
                       value={configDescription}
                       onChange={e => setConfigDescription(e.target.value)}
                       placeholder="Brief description of this configuration..."
-                      className="w-full px-3 py-2 bg-neutral-900 border border-neutral-600 rounded-lg text-white placeholder-neutral-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 text-sm"
+                      className="w-full px-3 py-2.5 bg-neutral-900 border border-neutral-600 rounded-lg text-white placeholder-neutral-500 focus:ring-2 focus:ring-red-500/40 focus:border-red-600 hover:border-neutral-400 hover:bg-neutral-800/80 hover:shadow-[0_0_12px_rgba(120,120,120,0.06)] transition-all duration-200 text-sm"
                     />
+                    <p className="text-xs text-neutral-400 mt-1.5 leading-relaxed">Notes about this configuration's purpose, site, or client.</p>
                   </div>
                 </div>
               </div>
