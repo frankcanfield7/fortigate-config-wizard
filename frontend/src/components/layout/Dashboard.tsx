@@ -47,11 +47,11 @@ const Dashboard: React.FC = () => {
           {/* Configuration Card */}
           <div className="bg-[#1e293b] border-2 border-[#334155] rounded-xl p-6 hover:border-[#06b6d4] transition-all cursor-pointer group">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-[#22d3ee]">New Configuration</h3>
-              <span className="text-3xl group-hover:scale-110 transition-transform">⚙️</span>
+              <h3 className="text-xl font-bold text-[#22d3ee]">New VPN Configuration</h3>
+              <span className="text-3xl group-hover:scale-110 transition-transform">🔒</span>
             </div>
             <p className="text-gray-400 text-sm mb-4">
-              Create a new FortiGate configuration using the wizard
+              Create an IPSEC Remote Access VPN with Entra ID SAML authentication
             </p>
             <button
               onClick={() => navigate('/dashboard/wizard')}

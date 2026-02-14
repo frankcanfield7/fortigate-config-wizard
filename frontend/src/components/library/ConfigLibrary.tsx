@@ -73,7 +73,7 @@ const ConfigLibrary: React.FC = () => {
   // Config type icons and labels
   const getConfigTypeInfo = (type: string) => {
     const types: Record<string, { icon: string; label: string; color: string }> = {
-      ipsec: { icon: '🔒', label: 'IPsec VPN', color: 'bg-purple-500/10 text-purple-400 border-purple-500/30' },
+      ipsec: { icon: '🔒', label: 'IPSEC Remote Access', color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30' },
       sdwan: { icon: '🌐', label: 'SD-WAN', color: 'bg-blue-500/10 text-blue-400 border-blue-500/30' },
       firewall: { icon: '🛡️', label: 'Firewall', color: 'bg-red-500/10 text-red-400 border-red-500/30' },
       routing: { icon: '🗺️', label: 'Routing', color: 'bg-green-500/10 text-green-400 border-green-500/30' },
