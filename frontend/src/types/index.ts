@@ -1,9 +1,8 @@
 // User types
 export interface User {
-  id: number;
+  id: string;  // UUID from Supabase
   username: string;
   email: string;
-  is_active: boolean;
   is_admin: boolean;
   created_at: string;
   updated_at: string;
@@ -29,12 +28,11 @@ export interface AuthResponse {
 // Configuration types
 export interface Configuration {
   id: number;
-  user_id: number;
+  user_id: string;  // UUID from Supabase
   config_type: string;
   name: string;
-  description?: string;
-  data_json: string;
-  tags?: string;
+  description?: string | null;
+  data_json: Record<string, any>;  // JSONB auto-parsed by Supabase
   is_template: boolean;
   created_at: string;
   updated_at: string;
@@ -61,12 +59,11 @@ export interface ConfigurationUpdate {
 // Version types
 export interface ConfigurationVersion {
   id: number;
-  config_id: number;
-  version: number;
-  data_json: string;
-  change_description?: string;
+  configuration_id: number;  // Renamed from config_id
+  version_number: number;    // Renamed from version
+  data_json: Record<string, any>;  // JSONB auto-parsed
+  change_description?: string | null;
   created_at: string;
-  created_by: number;
 }
 
 // IPSEC Remote Access VPN Configuration types

@@ -70,7 +70,7 @@ const AuditLogViewer: React.FC = () => {
     );
   };
 
-  const formatDetails = (details: Record<string, any>) => {
+  const formatDetails = (details: Record<string, unknown> | null) => {
     if (!details || Object.keys(details).length === 0) return '—';
     return Object.entries(details)
       .map(([k, v]) => `${k}: ${v}`)

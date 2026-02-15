@@ -12,81 +12,83 @@ The FortiGate Spartan Wizard is an enterprise-grade web application for generati
 
 ### Key Features
 
-- 🔐 **IPsec VPN** - Site-to-site and remote access configurations
-- 🌐 **SD-WAN** - Dual ISP with intelligent failover
-- 🛡️ **Firewall Policies** - Zone-based security rules
-- 🔌 **Interface Configuration** - WAN/LAN/DMZ setup
-- ⚡ **High Availability** - Active-passive/active-active clustering
-- 🔑 **SAML/Entra ID** - Single sign-on integration
+- 🔐 **IPsec VPN** - Remote access configurations with Entra ID SAML
 - 💾 **Configuration Library** - Save, version, and manage configs
-- 📄 **Documentation Generator** - Auto-generate enterprise docs
-- 👥 **Team Collaboration** - Share configurations with colleagues
+- 📜 **Version History** - Track all changes with full audit trail
+- 📋 **Templates** - Save and reuse common configurations
+- 👥 **Multi-user** - Secure authentication with user isolation
+- 📊 **Audit Logging** - Complete activity tracking for compliance
 
 ## 🏗️ Architecture
 
-**Full-Stack Application:**
-- **Frontend:** React + TypeScript + Tailwind CSS
-- **Backend:** Flask + SQLAlchemy + JWT Authentication
-- **Database:** SQLite (dev) / PostgreSQL (prod)
-- **Deployment:** Docker containers
+**Serverless Stack:**
+- **Frontend:** React + TypeScript + Tailwind CSS (hosted on Vercel)
+- **Backend:** Supabase (PostgreSQL + Auth + Row Level Security)
+- **Database:** PostgreSQL with automatic backups
+- **Auth:** Supabase Auth with JWT tokens
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js 18+ and npm
-- Python 3.11+
-- Docker (optional, for deployment)
+- Supabase account (free tier works)
+- Vercel account (free tier works)
 
 ### Development Setup
 
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd fortigate-wizard
+   cd fortigate-wizard-project
    ```
 
-2. **Backend Setup:**
-   ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate  # Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   flask db upgrade
-   flask run
-   ```
+2. **Set up Supabase:**
+   - Create a new project at https://supabase.com
+   - Run the SQL from `supabase-setup.sql` in the SQL Editor
+   - Copy your project URL and anon key
 
 3. **Frontend Setup:**
    ```bash
    cd frontend
    npm install
+
+   # Create .env.local with your Supabase credentials
+   echo "VITE_SUPABASE_URL=https://your-project.supabase.co" > .env.local
+   echo "VITE_SUPABASE_ANON_KEY=your-anon-key" >> .env.local
+
    npm run dev
    ```
 
 4. **Access the application:**
    - Frontend: http://localhost:5173
-   - Backend API: http://localhost:5000
 
-### Docker Deployment
+### Production Deployment
 
-```bash
-docker-compose up -d
-```
+1. **Deploy to Vercel:**
+   ```bash
+   cd frontend
+   npx vercel
+   ```
 
-Access at: http://localhost:8080
+2. **Set environment variables in Vercel dashboard:**
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+
+3. **Deploy to production:**
+   ```bash
+   npx vercel --prod
+   ```
 
 ## 📖 Documentation
 
 - [Project Setup Guide](PROJECT_SETUP.md) - Comprehensive setup instructions
-- [Claude Code Instructions](CLAUDE.md) - Development workflow for AI assistance
-- [API Documentation](docs/API.md) - REST API reference
-- [Database Schema](docs/DATABASE.md) - Database design
-- [Deployment Guide](docs/DEPLOYMENT.md) - Production deployment
+- [Supabase Setup SQL](supabase-setup.sql) - Database schema and functions
 
 ## 🎨 Design Philosophy
 
 **Graphene Networks Brand:**
-- Cyan accent colors (#06b6d4, #22d3ee)
+- Red accent colors (enterprise theme)
 - Dark mode interface
 - Clean, professional aesthetic
 - Enterprise-grade UX
@@ -99,57 +101,22 @@ Access at: http://localhost:8080
 
 ## 🔒 Security Features
 
-- JWT-based authentication
-- Password hashing with bcrypt
-- Input validation (frontend + backend)
-- Rate limiting on sensitive endpoints
+- Supabase Auth with JWT tokens
+- Row Level Security (RLS) on all tables
+- Password hashing handled by Supabase
+- Input validation (frontend)
 - Audit logging for all actions
-- Role-based access control
-- CORS protection
+- User data isolation via RLS policies
 
 ## 📊 Configuration Types
 
-### 1. IPsec VPN
-Generate secure VPN tunnels with:
+### IPsec Remote Access VPN
+Generate secure VPN configurations with:
+- Azure/Entra ID SAML authentication
 - Phase 1 & Phase 2 configuration
 - Modern encryption (AES-256, SHA-256)
-- Dead Peer Detection (DPD)
-- NAT Traversal support
-
-### 2. SD-WAN
-Intelligent multi-ISP management:
-- Performance SLA monitoring
-- Automatic failover
-- Brownout detection
-- Link quality monitoring
-
-### 3. Firewall Policies
-Zone-based security:
-- Source/destination zone control
-- NAT configuration
-- Service-specific rules
-- Comprehensive logging
-
-### 4. Interface Configuration
-Network interface setup:
-- WAN/LAN/DMZ roles
-- VLAN support
-- Administrative access control
-- Bandwidth configuration
-
-### 5. High Availability
-Redundant FortiGate clustering:
-- Active-passive or active-active
-- Session synchronization
-- Link monitoring
-- Automatic failover
-
-### 6. SAML/Entra ID
-Single sign-on integration:
-- Microsoft Entra ID support
-- User/group mapping
-- Certificate management
-- SSO authentication flow
+- FortiClient XML export
+- CLI and GUI instructions
 
 ## 🛠️ Tech Stack
 
@@ -157,68 +124,54 @@ Single sign-on integration:
 - React 18 with TypeScript
 - Tailwind CSS for styling
 - React Router for navigation
-- Axios for API calls
-- React Hook Form for forms
-- Zod for validation
+- React Query for data fetching
+- Supabase JS Client
 
-### Backend
-- Flask 3.0 web framework
-- SQLAlchemy ORM
-- Flask-JWT-Extended for auth
-- Marshmallow for serialization
-- Flask-RESTX for API docs
-- Pytest for testing
+### Backend (Supabase)
+- PostgreSQL database
+- Supabase Auth (JWT-based)
+- Row Level Security policies
+- Database functions (SECURITY DEFINER)
+- Automatic backups
 
-### DevOps
-- Docker & Docker Compose
-- GitHub Actions for CI/CD
-- Nginx as reverse proxy
-- Let's Encrypt for SSL
+### Deployment
+- Vercel (frontend hosting)
+- Supabase (backend services)
+- Edge network for fast global access
 
 ## 📈 Development Roadmap
 
-### Phase 1 (MVP) ✅
-- [x] Basic configuration generation
-- [x] Six configuration types
-- [x] CLI/GUI/Script output
-- [ ] User authentication
-- [ ] Configuration save/load
+### Phase 1 (Backend API) ✅
+- [x] User authentication with JWT
+- [x] Configuration CRUD operations
+- [x] Version history tracking
+- [x] Audit logging
+- [x] 100% test coverage
 
-### Phase 2 (Core Features)
-- [ ] Version history
-- [ ] Configuration templates
-- [ ] Search and filtering
-- [ ] Bulk operations
-- [ ] Export to multiple formats
+### Phase 2 (Frontend) ✅
+- [x] React application with TypeScript
+- [x] IPsec Remote Access wizard
+- [x] Configuration library
+- [x] Real-time output generation
+- [x] Security scoring
 
-### Phase 3 (Advanced)
-- [ ] Team collaboration
-- [ ] Documentation generation
-- [ ] Audit logging
-- [ ] Configuration validation
-- [ ] Mobile app
+### Phase 3 (Polish) ✅
+- [x] Version history UI
+- [x] Template system
+- [x] Duplicate configurations
+- [x] Audit log viewer
 
-### Phase 4 (Enterprise)
-- [ ] Configuration comparison
-- [ ] Deployment tracking
+### Phase 4 (Production) ✅
+- [x] Supabase migration
+- [x] Vercel deployment
+- [x] Row Level Security
+- [x] Production-ready
+
+### Future Enhancements
+- [ ] Additional configuration types (SD-WAN, HA)
+- [ ] Configuration comparison/diff
 - [ ] FortiGate API integration
-- [ ] Multi-tenancy
-- [ ] Advanced analytics
-
-## 🧪 Testing
-
-```bash
-# Backend tests
-cd backend
-pytest
-
-# Frontend tests
-cd frontend
-npm test
-
-# E2E tests
-npm run test:e2e
-```
+- [ ] Team collaboration features
 
 ## 🤝 Contributing
 
@@ -227,12 +180,6 @@ npm run test:e2e
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-### Code Style
-
-- Python: Follow PEP 8, use type hints
-- TypeScript: Follow React best practices
-- Commit messages: Use conventional commits format
 
 ## 📄 License
 
@@ -244,35 +191,13 @@ This project is proprietary and confidential.
 - **Product Owner:** Frank (NOC Manager)
 - **Development:** Claude Code + Human oversight
 - **Design:** Based on Fortinet Spartan skill
-- **QA:** Network engineering team
-
-## 🆘 Support
-
-- **Internal Issues:** Contact Frank or create an issue
-- **FortiOS Questions:** Reference official Fortinet docs
-- **Bug Reports:** Use GitHub issues
-- **Feature Requests:** Use GitHub discussions
 
 ## 🔗 Resources
 
 - [Fortinet Documentation](https://docs.fortinet.com/)
 - [FortiOS 7.4 Admin Guide](https://docs.fortinet.com/document/fortigate/7.4.11/administration-guide)
-- [Fortinet Community](https://community.fortinet.com/)
-- [Graphene Networks Wiki](internal-link)
-
-## ⚡ Performance
-
-- Configuration generation: < 100ms
-- API response time: < 200ms (p95)
-- Database queries: Optimized with indexes
-- Frontend bundle: < 500KB gzipped
-
-## 🎓 Training Materials
-
-- [User Guide](docs/USER_GUIDE.md) - How to use the wizard
-- [Admin Guide](docs/ADMIN_GUIDE.md) - Administration tasks
-- [Video Tutorials](docs/VIDEOS.md) - Walkthrough videos
-- [Best Practices](docs/BEST_PRACTICES.md) - Configuration guidelines
+- [Supabase Documentation](https://supabase.com/docs)
+- [Vercel Documentation](https://vercel.com/docs)
 
 ---
 
@@ -288,6 +213,7 @@ Built with ⚔️ by network engineers, for network engineers.
 
 ---
 
-**Version:** 1.0.0
-**Last Updated:** 2026-02-11
+**Version:** 2.0.0
+**Last Updated:** 2026-02-14
 **FortiOS Version:** 7.4.0+
+**Stack:** React + Supabase + Vercel

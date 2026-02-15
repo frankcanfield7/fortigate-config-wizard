@@ -56,13 +56,10 @@ const Login: React.FC = () => {
 
     try {
       setIsSubmitting(true);
-      console.log('Attempting login with:', { username: formData.username });
       await login(formData);
-      console.log('Login successful, navigating to dashboard...');
       navigate('/dashboard');
-    } catch (err) {
+    } catch {
       // Error is handled by AuthContext
-      console.error('Login error:', err);
     } finally {
       setIsSubmitting(false);
     }

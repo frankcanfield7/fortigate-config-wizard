@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { authApi } from '../utils/api';
-import type { User, LoginCredentials, RegisterData, AuthResponse } from '../types';
+import { supabase } from '../lib/supabase';
+import type { User, LoginCredentials, RegisterData } from '../types';
 
 interface AuthContextType {
   user: User | null;
@@ -32,24 +32,54 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch profile from profiles table
+  const fetchProfile = async (userId: string): Promise<User | null> => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching profile:', error);
+      return null;
+    }
+
+    return data as User;
+  };
+
   // Check if user is already logged in on mount
   useEffect(() => {
     const initAuth = async () => {
-      const token = localStorage.getItem('access_token');
-      if (token) {
-        try {
-          const currentUser = await authApi.getCurrentUser();
-          setUser(currentUser);
-        } catch (err) {
-          console.error('Failed to get current user:', err);
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (session?.user) {
+          const profile = await fetchProfile(session.user.id);
+          setUser(profile);
         }
+      } catch (err) {
+        console.error('Failed to initialize auth:', err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     initAuth();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          const profile = await fetchProfile(session.user.id);
+          setUser(profile);
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const login = async (credentials: LoginCredentials) => {
@@ -57,21 +87,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(null);
       setLoading(true);
 
-      console.log('AuthContext: Calling login API...');
-      const response: AuthResponse = await authApi.login(credentials);
-      console.log('AuthContext: Login API response:', response);
+      // Look up email by username
+      const { data: profile, error: lookupError } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('username', credentials.username)
+        .maybeSingle();
 
-      // Store tokens
-      localStorage.setItem('access_token', response.access_token);
-      localStorage.setItem('refresh_token', response.refresh_token);
-      console.log('AuthContext: Tokens stored in localStorage');
+      if (lookupError || !profile) {
+        throw new Error('Invalid username or password');
+      }
 
-      // Set user
-      setUser(response.user);
-      console.log('AuthContext: User state set to:', response.user);
+      // Sign in with email and password
+      const userEmail = (profile as { email: string }).email;
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: userEmail,
+        password: credentials.password,
+      });
+
+      if (signInError) {
+        throw signInError;
+      }
+
+      // User will be set by onAuthStateChange listener
     } catch (err: any) {
-      console.error('AuthContext: Login error:', err);
-      const errorMessage = err.response?.data?.error || 'Login failed. Please try again.';
+      const errorMessage = err.message || 'Login failed. Please try again.';
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -84,16 +124,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(null);
       setLoading(true);
 
-      const response: AuthResponse = await authApi.register(userData);
+      // Check if username is already taken
+      const { data: existing } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('username', userData.username)
+        .single();
 
-      // Store tokens
-      localStorage.setItem('access_token', response.access_token);
-      localStorage.setItem('refresh_token', response.refresh_token);
+      if (existing) {
+        throw new Error('Username already taken');
+      }
 
-      // Set user
-      setUser(response.user);
+      // Sign up with email and password, include username in metadata
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: userData.email,
+        password: userData.password,
+        options: {
+          data: {
+            username: userData.username,
+          },
+        },
+      });
+
+      if (signUpError) {
+        throw signUpError;
+      }
+
+      // User will be set by onAuthStateChange listener
+      // The handle_new_user trigger will create the profile automatically
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Registration failed. Please try again.';
+      console.error('Registration error:', err);
+      const errorMessage = err.message || 'Registration failed. Please try again.';
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -103,13 +164,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     try {
-      await authApi.logout();
+      await supabase.auth.signOut();
+      setUser(null);
     } catch (err) {
       console.error('Logout error:', err);
-    } finally {
-      setUser(null);
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
     }
   };
 

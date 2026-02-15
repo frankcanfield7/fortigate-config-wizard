@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { configApi } from '../../utils/api';
 import type { ConfigurationCreate, ConfigurationUpdate, IPsecRemoteAccessConfig, TunnelConfig, UserGroupConfig } from '../../types';
 import { createDefaultIPsecRemoteAccessConfig } from '../../types';
@@ -10,6 +10,7 @@ import OutputPanel from './output/OutputPanel';
 
 const ConfigWizard: React.FC = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { id } = useParams<{ id: string }>();
   const isEditMode = !!id;
 
@@ -22,6 +23,7 @@ const ConfigWizard: React.FC = () => {
     queryKey: ['configuration', id],
     queryFn: () => configApi.getById(Number(id)),
     enabled: isEditMode,
+    staleTime: 0, // Always fetch fresh data when entering edit mode
   });
 
   // Pre-populate form when editing
@@ -43,7 +45,11 @@ const ConfigWizard: React.FC = () => {
   // Create mutation
   const createConfigMutation = useMutation({
     mutationFn: (data: ConfigurationCreate) => configApi.create(data),
-    onSuccess: () => navigate('/dashboard/library'),
+    onSuccess: async () => {
+      // Invalidate cache so fresh data loads on library page
+      await queryClient.invalidateQueries({ queryKey: ['configurations'] });
+      navigate('/dashboard/library');
+    },
     onError: (error: any) => {
       alert(error.response?.data?.error || 'Failed to save configuration');
     },
@@ -52,7 +58,12 @@ const ConfigWizard: React.FC = () => {
   // Update mutation
   const updateConfigMutation = useMutation({
     mutationFn: (data: ConfigurationUpdate) => configApi.update(Number(id), data),
-    onSuccess: () => navigate('/dashboard/library'),
+    onSuccess: () => {
+      // Invalidate cache so fresh data loads next time
+      queryClient.invalidateQueries({ queryKey: ['configuration', id] });
+      queryClient.invalidateQueries({ queryKey: ['configurations'] });
+      navigate('/dashboard/library');
+    },
     onError: (error: any) => {
       alert(error.response?.data?.error || 'Failed to update configuration');
     },

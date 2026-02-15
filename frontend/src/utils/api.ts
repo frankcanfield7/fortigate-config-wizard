@@ -1,234 +1,207 @@
-import axios, { AxiosError } from 'axios';
-import type { InternalAxiosRequestConfig } from 'axios';
+import { supabase } from '../lib/supabase';
 import type {
-  User,
-  LoginCredentials,
-  RegisterData,
-  AuthResponse,
   Configuration,
   ConfigurationCreate,
   ConfigurationUpdate,
   ConfigurationVersion,
-  ApiError,
   PaginatedResponse,
 } from '../types';
 
-// API base URL - defaults to localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
-// Create axios instance with default config
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Request interceptor to add JWT token to requests
-api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('access_token');
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  }
-);
-
-// Response interceptor to handle token refresh
-api.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError<ApiError>) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
-
-    // If error is 401 and we haven't retried yet, try to refresh token
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        const refreshToken = localStorage.getItem('refresh_token');
-        if (!refreshToken) {
-          throw new Error('No refresh token available');
-        }
-
-        const response = await axios.post<ApiResponse<{ access_token: string }>>(
-          `${API_BASE_URL}/api/auth/refresh`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${refreshToken}`,
-            },
-          }
-        );
-
-        const { access_token } = response.data.data;
-        localStorage.setItem('access_token', access_token);
-
-        // Retry original request with new token
-        if (originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${access_token}`;
-        }
-        return api(originalRequest);
-      } catch (refreshError) {
-        // Refresh failed, clear tokens and redirect to login
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        window.location.href = '/login';
-        return Promise.reject(refreshError);
-      }
-    }
-
-    return Promise.reject(error);
-  }
-);
-
-// Backend response wrapper type
-interface ApiResponse<T> {
-  success: boolean;
-  message?: string;
-  data: T;
-}
-
-// Authentication API
-export const authApi = {
-  login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    const response = await api.post<ApiResponse<AuthResponse>>('/api/auth/login', credentials);
-    return response.data.data;
-  },
-
-  register: async (userData: RegisterData): Promise<AuthResponse> => {
-    const response = await api.post<ApiResponse<AuthResponse>>('/api/auth/register', userData);
-    return response.data.data;
-  },
-
-  logout: async (): Promise<void> => {
-    await api.post('/api/auth/logout');
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-  },
-
-  getCurrentUser: async (): Promise<User> => {
-    const response = await api.get<ApiResponse<User>>('/api/auth/me');
-    return response.data.data;
-  },
-
-  refreshToken: async (): Promise<{ access_token: string }> => {
-    const refreshToken = localStorage.getItem('refresh_token');
-    const response = await api.post<ApiResponse<{ access_token: string }>>(
-      '/api/auth/refresh',
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${refreshToken}`,
-        },
-      }
-    );
-    return response.data.data;
-  },
-};
+// Type helper for RPC calls (Supabase's strict typing can be overly restrictive)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const rpc = supabase.rpc.bind(supabase) as (fn: string, args?: Record<string, unknown>) => any;
 
 // Configuration API
 export const configApi = {
   getAll: async (page = 1, perPage = 20): Promise<PaginatedResponse<Configuration>> => {
-    const response = await api.get<ApiResponse<PaginatedResponse<Configuration>>>(
-      `/api/configs?page=${page}&per_page=${perPage}`
-    );
-    return response.data.data;
+    const from = (page - 1) * perPage;
+    const to = from + perPage - 1;
+
+    // Get total count
+    const { count } = await supabase
+      .from('configurations')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_template', false);
+
+    // Get paginated data
+    const { data, error } = await supabase
+      .from('configurations')
+      .select('*')
+      .eq('is_template', false)
+      .order('updated_at', { ascending: false })
+      .range(from, to);
+
+    if (error) throw error;
+
+    return {
+      items: (data || []) as Configuration[],
+      total: count || 0,
+      page,
+      per_page: perPage,
+      pages: Math.ceil((count || 0) / perPage),
+    };
   },
 
   getById: async (id: number): Promise<Configuration> => {
-    const response = await api.get<ApiResponse<Configuration>>(`/api/configs/${id}`);
-    return response.data.data;
+    const { data, error } = await supabase
+      .from('configurations')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+    return data as Configuration;
   },
 
-  create: async (data: ConfigurationCreate): Promise<Configuration> => {
-    const response = await api.post<ApiResponse<Configuration>>('/api/configs', data);
-    return response.data.data;
+  create: async (configData: ConfigurationCreate): Promise<Configuration> => {
+    const { data, error } = await rpc('create_configuration_with_version', {
+      p_name: configData.name,
+      p_description: configData.description || null,
+      p_config_type: configData.config_type,
+      p_data_json: configData.data,
+    });
+
+    if (error) throw error;
+
+    // rpc returns an array, get the first item
+    const result = Array.isArray(data) ? data[0] : data;
+    return result as Configuration;
   },
 
-  update: async (id: number, data: ConfigurationUpdate): Promise<Configuration> => {
-    const response = await api.put<ApiResponse<Configuration>>(`/api/configs/${id}`, data);
-    return response.data.data;
+  update: async (id: number, configData: ConfigurationUpdate): Promise<Configuration> => {
+    // First get current config to merge data
+    const current = await configApi.getById(id);
+
+    const { data, error } = await rpc('update_configuration_with_version', {
+      p_id: id,
+      p_name: configData.name || current.name,
+      p_description: configData.description !== undefined ? configData.description : current.description,
+      p_data_json: configData.data || current.data_json,
+      p_change_description: configData.change_description || 'Updated',
+    });
+
+    if (error) throw error;
+
+    const result = Array.isArray(data) ? data[0] : data;
+    return result as Configuration;
   },
 
   delete: async (id: number): Promise<void> => {
-    await api.delete(`/api/configs/${id}`);
+    const { error } = await supabase
+      .from('configurations')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
   },
 
   duplicate: async (id: number): Promise<Configuration> => {
-    const response = await api.post<ApiResponse<Configuration>>(`/api/configs/${id}/duplicate`);
-    return response.data.data;
+    const { data, error } = await rpc('duplicate_configuration', { p_id: id });
+
+    if (error) throw error;
+
+    const result = Array.isArray(data) ? data[0] : data;
+    return result as Configuration;
   },
 
   export: async (
     id: number,
     format: 'cli' | 'json' | 'yaml'
   ): Promise<{ data: string; filename: string }> => {
-    const response = await api.get<ApiResponse<{ data: string; filename: string }>>(
-      `/api/configs/${id}/export?format=${format}`
-    );
-    return response.data.data;
+    const config = await configApi.getById(id);
+
+    // For CLI format, the generators handle this client-side
+    // For JSON/YAML, return the data_json
+    const exportData = JSON.stringify(config.data_json, null, 2);
+    const filename = `${config.name.replace(/\s+/g, '-').toLowerCase()}.${format === 'cli' ? 'txt' : format}`;
+
+    return { data: exportData, filename };
   },
 
   getVersions: async (id: number): Promise<{ versions: ConfigurationVersion[] }> => {
-    const response = await api.get<ApiResponse<{ versions: ConfigurationVersion[] }>>(
-      `/api/configs/${id}/versions`
-    );
-    return response.data.data;
+    const { data, error } = await supabase
+      .from('configuration_versions')
+      .select('*')
+      .eq('configuration_id', id)
+      .order('version_number', { ascending: false });
+
+    if (error) throw error;
+    return { versions: (data || []) as ConfigurationVersion[] };
   },
 
   getVersion: async (id: number, versionNumber: number): Promise<ConfigurationVersion> => {
-    const response = await api.get<ApiResponse<ConfigurationVersion>>(
-      `/api/configs/${id}/versions/${versionNumber}`
-    );
-    return response.data.data;
+    const { data, error } = await supabase
+      .from('configuration_versions')
+      .select('*')
+      .eq('configuration_id', id)
+      .eq('version_number', versionNumber)
+      .single();
+
+    if (error) throw error;
+    return data as ConfigurationVersion;
   },
 
   restoreVersion: async (id: number, versionId: number): Promise<Configuration> => {
-    const response = await api.post<ApiResponse<Configuration>>(
-      `/api/configs/${id}/restore/${versionId}`
-    );
-    return response.data.data;
+    const { data, error } = await rpc('restore_configuration_version', {
+      p_config_id: id,
+      p_version_id: versionId,
+    });
+
+    if (error) throw error;
+
+    const result = Array.isArray(data) ? data[0] : data;
+    return result as Configuration;
   },
 
   makeTemplate: async (id: number): Promise<Configuration> => {
-    const response = await api.put<ApiResponse<Configuration>>(
-      `/api/configs/${id}`,
-      { is_template: true }
-    );
-    return response.data.data;
+    const { data, error } = await supabase
+      .from('configurations')
+      .update({ is_template: true } as never)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Configuration;
   },
 };
 
 // Template API
 export const templateApi = {
   getAll: async (): Promise<Configuration[]> => {
-    const response = await api.get<ApiResponse<Configuration[]>>('/api/templates');
-    return response.data.data;
+    const { data, error } = await supabase
+      .from('configurations')
+      .select('*')
+      .eq('is_template', true)
+      .order('name');
+
+    if (error) throw error;
+    return (data || []) as Configuration[];
   },
 
   createFromTemplate: async (templateId: number, name: string): Promise<Configuration> => {
-    const response = await api.post<ApiResponse<Configuration>>(`/api/templates/${templateId}/create`, {
-      name,
+    const { data, error } = await rpc('create_from_template', {
+      p_template_id: templateId,
+      p_name: name,
     });
-    return response.data.data;
+
+    if (error) throw error;
+
+    const result = Array.isArray(data) ? data[0] : data;
+    return result as Configuration;
   },
 };
 
-// Audit log entry type
+// Audit log entry type (for admin API)
 export interface AuditLogEntry {
   id: number;
-  user_id: number;
+  user_id: string | null;
   username: string | null;
   action: string;
-  resource_type: string;
-  resource_id: number | null;
-  details: Record<string, any>;
+  resource_type: string | null;
+  resource_id: string | null;
+  details: Record<string, unknown> | null;
   ip_address: string | null;
-  user_agent: string | null;
   created_at: string;
 }
 
@@ -237,32 +210,66 @@ export const adminApi = {
   getAuditLogs: async (
     page = 1,
     perPage = 50,
-    filters?: { action?: string; user_id?: number; resource_type?: string }
+    filters?: { action?: string; user_id?: string; resource_type?: string }
   ): Promise<PaginatedResponse<AuditLogEntry>> => {
-    const params = new URLSearchParams({ page: String(page), per_page: String(perPage) });
-    if (filters?.action) params.set('action', filters.action);
-    if (filters?.user_id) params.set('user_id', String(filters.user_id));
-    if (filters?.resource_type) params.set('resource_type', filters.resource_type);
+    const offset = (page - 1) * perPage;
 
-    const response = await api.get<ApiResponse<PaginatedResponse<AuditLogEntry>>>(
-      `/api/admin/audit-logs?${params.toString()}`
-    );
-    return response.data.data;
+    const { data, error } = await rpc('get_audit_logs', {
+      p_limit: perPage,
+      p_offset: offset,
+      p_action: filters?.action || null,
+      p_user_id: filters?.user_id || null,
+    });
+
+    if (error) throw error;
+
+    const items = (data || []) as AuditLogEntry[];
+
+    return {
+      items,
+      total: items.length < perPage ? offset + items.length : offset + perPage + 1,
+      page,
+      per_page: perPage,
+      pages: items.length < perPage ? page : page + 1,
+    };
   },
 
   exportAuditLogs: async (
-    filters?: { action?: string; user_id?: number; resource_type?: string }
+    filters?: { action?: string; user_id?: string; resource_type?: string }
   ): Promise<Blob> => {
-    const params = new URLSearchParams();
-    if (filters?.action) params.set('action', filters.action);
-    if (filters?.user_id) params.set('user_id', String(filters.user_id));
-    if (filters?.resource_type) params.set('resource_type', filters.resource_type);
-
-    const response = await api.get(`/api/admin/audit-logs/export?${params.toString()}`, {
-      responseType: 'blob',
+    const { data, error } = await rpc('get_audit_logs', {
+      p_limit: 10000,
+      p_offset: 0,
+      p_action: filters?.action || null,
+      p_user_id: filters?.user_id || null,
     });
-    return response.data;
+
+    if (error) throw error;
+
+    const items = (data || []) as AuditLogEntry[];
+    const headers = ['id', 'username', 'action', 'resource_type', 'resource_id', 'details', 'created_at'];
+    const csvContent = [
+      headers.join(','),
+      ...items.map((item: AuditLogEntry) =>
+        headers.map(h => {
+          const value = item[h as keyof AuditLogEntry];
+          if (value === null || value === undefined) return '';
+          if (typeof value === 'object') return JSON.stringify(value).replace(/,/g, ';');
+          return String(value).replace(/,/g, ';');
+        }).join(',')
+      )
+    ].join('\n');
+
+    return new Blob([csvContent], { type: 'text/csv' });
   },
 };
 
-export default api;
+// Auth API is now handled by AuthContext directly using supabase.auth
+// Keeping this export for backwards compatibility but it's not used
+export const authApi = {
+  login: async () => { throw new Error('Use useAuth().login() instead'); },
+  register: async () => { throw new Error('Use useAuth().register() instead'); },
+  logout: async () => { throw new Error('Use useAuth().logout() instead'); },
+  getCurrentUser: async () => { throw new Error('Use useAuth().user instead'); },
+  refreshToken: async () => { throw new Error('Token refresh is handled automatically by Supabase'); },
+};

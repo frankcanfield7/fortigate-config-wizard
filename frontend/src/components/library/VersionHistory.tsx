@@ -104,7 +104,7 @@ const VersionHistory: React.FC<VersionHistoryProps> = ({ configId, configName, o
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium text-white">
-                              Version {version.version}
+                              Version {version.version_number}
                             </span>
                             {index === 0 && (
                               <span className="px-2 py-0.5 text-[10px] font-medium bg-red-700/20 text-red-400 rounded border border-red-700/30 uppercase">
