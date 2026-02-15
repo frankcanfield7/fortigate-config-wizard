@@ -66,33 +66,43 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-8">
+      <div className="w-full max-w-md animate-fade-in">
+        {/* Decorative accent element */}
+        <div className="flex justify-center mb-8">
+          <div className="w-12 h-1 bg-accent-primary/40 rounded-full" />
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-semibold mb-2">
-            <span className="bg-gradient-to-r from-red-700 to-red-500 bg-clip-text text-transparent">
-              FortiGate Spartan Wizard
-            </span>
+          <h1 className="font-display text-3xl tracking-wide text-dark-text">
+            FortiGate Spartan Wizard
           </h1>
-          <p className="text-gray-400 text-sm">Precision. Excellence. No compromise.</p>
+          <p className="text-dark-muted mt-2 tracking-wide text-sm">
+            Precision. Excellence. No compromise.
+          </p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-[#262626] border-2 border-[#404040] rounded-2xl p-8 shadow-2xl">
-          <h2 className="text-2xl font-medium text-red-400 mb-6">Login</h2>
+        <div className="card-elevated rounded-lg p-8">
+          <h2 className="font-display text-xl tracking-wide text-dark-text/90 mb-6 text-center">
+            Sign In
+          </h2>
 
           {/* Error Alert */}
           {error && (
-            <div className="mb-6 p-4 bg-red-900/30 border border-red-500 rounded-lg">
-              <p className="text-red-300 text-sm">{error}</p>
+            <div className="mb-6 px-4 py-3 bg-status-offline/10 border border-status-offline/30 rounded-lg">
+              <p className="text-sm text-status-offline">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Username Field */}
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
+            <div className="space-y-2">
+              <label
+                htmlFor="username"
+                className="block text-sm tracking-wide text-dark-muted"
+              >
                 Username
               </label>
               <input
@@ -101,20 +111,23 @@ const Login: React.FC = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 bg-[#171717] border-2 ${
-                  validationErrors.username ? 'border-red-500' : 'border-[#404040]'
-                } rounded-lg text-white placeholder-gray-500 focus:border-red-700 focus:outline-none transition-colors`}
+                className={`input-field ${
+                  validationErrors.username ? 'border-status-offline focus:border-status-offline' : ''
+                }`}
                 placeholder="Enter your username"
                 disabled={isSubmitting}
               />
               {validationErrors.username && (
-                <p className="mt-1 text-sm text-red-400">{validationErrors.username}</p>
+                <p className="text-sm text-status-offline">{validationErrors.username}</p>
               )}
             </div>
 
             {/* Password Field */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+            <div className="space-y-2">
+              <label
+                htmlFor="password"
+                className="block text-sm tracking-wide text-dark-muted"
+              >
                 Password
               </label>
               <input
@@ -123,14 +136,14 @@ const Login: React.FC = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 bg-[#171717] border-2 ${
-                  validationErrors.password ? 'border-red-500' : 'border-[#404040]'
-                } rounded-lg text-white placeholder-gray-500 focus:border-red-700 focus:outline-none transition-colors`}
+                className={`input-field ${
+                  validationErrors.password ? 'border-status-offline focus:border-status-offline' : ''
+                }`}
                 placeholder="Enter your password"
                 disabled={isSubmitting}
               />
               {validationErrors.password && (
-                <p className="mt-1 text-sm text-red-400">{validationErrors.password}</p>
+                <p className="text-sm text-status-offline">{validationErrors.password}</p>
               )}
             </div>
 
@@ -138,24 +151,43 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-4 bg-gradient-to-r from-red-800 to-red-700 text-white font-medium rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+              className="btn-primary w-full flex items-center justify-center gap-2"
             >
-              {isSubmitting ? 'Logging in...' : 'Login'}
+              {isSubmitting ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                'Sign In'
+              )}
             </button>
           </form>
 
           {/* Contact admin for account */}
-          <div className="mt-6 text-center">
-            <p className="text-gray-400 text-sm">
-              Need an account? Contact your administrator.
-            </p>
-          </div>
+          <p className="mt-6 text-center text-xs text-dark-muted">
+            Contact your administrator for account access
+          </p>
         </div>
 
-        {/* Footer */}
-        <div className="mt-6 text-center text-gray-500 text-xs">
-          <p>FortiGate Spartan Configuration Wizard</p>
-          <p>Enterprise Configuration Management</p>
+        {/* Footer accent */}
+        <div className="flex justify-center mt-8">
+          <div className="w-24 h-px bg-dark-border" />
         </div>
       </div>
     </div>

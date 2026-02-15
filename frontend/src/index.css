@@ -2,49 +2,250 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global Styles */
-@layer base {
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Refined dark theme variables */
+:root {
+  --dark-bg: #0c0f14;
+  --dark-surface: #14181f;
+  --dark-elevated: #1a1f28;
+  --dark-border: #252b37;
+  --dark-border-light: #323a4a;
+  --dark-text: #e8e6e3;
+  --dark-muted: #8a8f98;
+  --dark-accent: #a39382;
+
+  /* Status colors - refined */
+  --status-online: #5d9e7a;
+  --status-offline: #c45c5c;
+  --status-degraded: #c4975c;
+  --status-silenced: #6b7280;
+
+  /* Accent colors */
+  --accent-primary: #7c9aa6;
+  --accent-warm: #a39382;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+  font-feature-settings: "liga" 1, "calt" 1, "kern" 1;
+  letter-spacing: 0.01em;
+  line-height: 1.6;
+}
+
+/* Premium noise overlay for depth */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Elegant scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dark-border);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-muted);
+}
+
+/* Refined focus styles */
+:focus-visible {
+  outline: 1px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Typography refinements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* Interactive card base */
+@layer components {
+  .card-interactive {
+    @apply relative overflow-hidden transition-all duration-300;
+    background: linear-gradient(180deg, var(--dark-surface) 0%, rgba(20, 24, 31, 0.8) 100%);
+    border: 1px solid var(--dark-border);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  body {
-    font-family: 'Geist', 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #171717 0%, #262626 100%);
-    color: #e5e5e5;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  .card-interactive::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 50%);
+    pointer-events: none;
   }
 
-  /* Custom scrollbar for dark theme */
-  ::-webkit-scrollbar {
-    width: 12px;
+  .card-interactive:hover {
+    border-color: var(--dark-border-light);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 32px -8px rgba(0,0,0,0.4);
   }
 
-  ::-webkit-scrollbar-track {
-    background: #262626;
+  /* Elevated card style */
+  .card-elevated {
+    background: var(--dark-surface);
+    border: 1px solid var(--dark-border);
+    box-shadow: 0 2px 12px -2px rgba(0,0,0,0.3), inset 0 1px 0 0 rgba(255,255,255,0.02);
   }
 
-  ::-webkit-scrollbar-thumb {
-    background: #404040;
-    border-radius: 6px;
+  /* Status indicator pulse */
+  .status-indicator {
+    @apply relative;
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: #525252;
+  .status-indicator::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    animation: pulse-ring 2s ease-out infinite;
+    opacity: 0;
+  }
+
+  .status-indicator.online::after {
+    background: var(--status-online);
+  }
+
+  /* Subtle glow effect */
+  .glow-subtle {
+    box-shadow: 0 0 20px -5px currentColor;
+  }
+
+  /* Button styles */
+  .btn-primary {
+    @apply px-4 py-3 rounded-lg tracking-wide transition-all duration-200;
+    background: rgba(124, 154, 166, 0.2);
+    color: var(--accent-primary);
+    border: 1px solid rgba(124, 154, 166, 0.3);
+  }
+
+  .btn-primary:hover {
+    background: rgba(124, 154, 166, 0.3);
+  }
+
+  .btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-3 rounded-lg tracking-wide transition-all duration-200;
+    background: var(--dark-elevated);
+    color: var(--dark-text);
+    border: 1px solid var(--dark-border);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--dark-border-light);
+    background: var(--dark-border);
+  }
+
+  /* Input styles */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg transition-all duration-200;
+    background: var(--dark-bg);
+    border: 1px solid var(--dark-border);
+    color: var(--dark-text);
+  }
+
+  .input-field::placeholder {
+    color: rgba(138, 143, 152, 0.5);
+  }
+
+  .input-field:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 1px var(--accent-primary);
   }
 }
 
-/* Focus styles using red theme */
+/* Staggered fade-in for lists */
 @layer utilities {
-  button:focus-visible,
-  input:focus-visible,
-  textarea:focus-visible,
-  select:focus-visible {
-    outline: 2px solid #991b1b;
-    outline-offset: 2px;
+  .stagger-fade-in > * {
+    animation: fadeInUp 0.4s ease-out both;
   }
+
+  .stagger-fade-in > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-fade-in > *:nth-child(2) { animation-delay: 50ms; }
+  .stagger-fade-in > *:nth-child(3) { animation-delay: 100ms; }
+  .stagger-fade-in > *:nth-child(4) { animation-delay: 150ms; }
+  .stagger-fade-in > *:nth-child(5) { animation-delay: 200ms; }
+  .stagger-fade-in > *:nth-child(6) { animation-delay: 250ms; }
+  .stagger-fade-in > *:nth-child(n+7) { animation-delay: 300ms; }
+}
+
+/* Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(124, 154, 166, 0.3);
+  color: var(--dark-text);
+}
+
+/* Smooth transitions globally */
+*, *::before, *::after {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Link hover states */
+a {
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Button base refinements */
+button {
+  font-family: inherit;
+  letter-spacing: 0.01em;
 }
