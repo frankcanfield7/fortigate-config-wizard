@@ -75,8 +75,8 @@ function getScoreColor(score: number): string {
 function getDhBadge(config: IPsecRemoteAccessConfig): { label: string; color: string } | null {
   const dh = config.p1d.map(Number);
   if (!dh.length) return null;
-  if (dh.every(g => g >= 19)) return { label: 'STRONG', color: 'text-green-500' };
-  if (dh.some(g => g < 15)) return { label: 'WEAK', color: 'text-red-500' };
+  if (dh.every(g => g >= 19)) return { label: 'STRONG', color: 'text-status-online' };
+  if (dh.some(g => g < 15)) return { label: 'WEAK', color: 'text-status-offline' };
   return null;
 }
 
@@ -100,7 +100,7 @@ const SecurityScore: React.FC<SecurityScoreProps> = ({ config }) => {
               r={RADIUS}
               fill="none"
               strokeWidth="4"
-              className="stroke-neutral-700"
+              className="stroke-dark-border"
             />
             {/* Foreground circle (score arc) */}
             <circle
@@ -127,7 +127,7 @@ const SecurityScore: React.FC<SecurityScoreProps> = ({ config }) => {
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="text-xs font-medium text-neutral-500">
+          <span className="text-xs font-medium text-dark-muted">
             Security
           </span>
           {dhBadge && (
@@ -139,21 +139,21 @@ const SecurityScore: React.FC<SecurityScoreProps> = ({ config }) => {
       </div>
 
       {/* Divider */}
-      <div className="w-px h-8 bg-neutral-600" />
+      <div className="w-px h-8 bg-dark-border" />
 
       {/* Completeness Bar */}
       <div className="flex flex-col gap-1 min-w-[100px]">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-neutral-500">
+          <span className="text-xs font-medium text-dark-muted">
             Completeness
           </span>
-          <span className="text-xs font-medium text-neutral-300">
+          <span className="text-xs font-medium text-dark-text">
             {completeness}%
           </span>
         </div>
-        <div className="h-1.5 w-full rounded-full bg-neutral-700 overflow-hidden">
+        <div className="h-1.5 w-full rounded-full bg-dark-border overflow-hidden">
           <div
-            className="h-full rounded-full bg-red-700 transition-all duration-500 ease-in-out"
+            className="h-full rounded-full bg-accent-primary transition-all duration-500 ease-in-out"
             style={{ width: `${Math.min(completeness, 100)}%` }}
           />
         </div>

@@ -5,15 +5,15 @@ import { adminApi } from '../../utils/api';
 import type { AuditLogEntry } from '../../utils/api';
 
 const ACTION_LABELS: Record<string, { label: string; color: string }> = {
-  create: { label: 'Create', color: 'bg-green-700/20 text-green-400 border-green-700/30' },
-  update: { label: 'Update', color: 'bg-blue-700/20 text-blue-400 border-blue-700/30' },
-  delete: { label: 'Delete', color: 'bg-red-700/20 text-red-400 border-red-700/30' },
-  duplicate: { label: 'Duplicate', color: 'bg-yellow-700/20 text-yellow-400 border-yellow-700/30' },
-  export: { label: 'Export', color: 'bg-purple-700/20 text-purple-400 border-purple-700/30' },
-  restore: { label: 'Restore', color: 'bg-cyan-700/20 text-cyan-400 border-cyan-700/30' },
-  login: { label: 'Login', color: 'bg-neutral-700/20 text-neutral-400 border-neutral-700/30' },
-  register: { label: 'Register', color: 'bg-neutral-700/20 text-neutral-400 border-neutral-700/30' },
-  create_from_template: { label: 'From Template', color: 'bg-amber-700/20 text-amber-400 border-amber-700/30' },
+  create: { label: 'Create', color: 'bg-status-online/20 text-status-online border-status-online/30' },
+  update: { label: 'Update', color: 'bg-accent-cool/20 text-accent-cool border-accent-cool/30' },
+  delete: { label: 'Delete', color: 'bg-status-offline/20 text-status-offline border-status-offline/30' },
+  duplicate: { label: 'Duplicate', color: 'bg-status-degraded/20 text-status-degraded border-status-degraded/30' },
+  export: { label: 'Export', color: 'bg-accent-primary/20 text-accent-primary border-accent-primary/30' },
+  restore: { label: 'Restore', color: 'bg-accent-cool/20 text-accent-cool border-accent-cool/30' },
+  login: { label: 'Login', color: 'bg-dark-border/20 text-dark-muted border-dark-border/30' },
+  register: { label: 'Register', color: 'bg-dark-border/20 text-dark-muted border-dark-border/30' },
+  create_from_template: { label: 'From Template', color: 'bg-accent-warm/20 text-accent-warm border-accent-warm/30' },
 };
 
 const AuditLogViewer: React.FC = () => {
@@ -62,7 +62,7 @@ const AuditLogViewer: React.FC = () => {
   };
 
   const getActionBadge = (action: string) => {
-    const info = ACTION_LABELS[action] || { label: action, color: 'bg-gray-700/20 text-gray-400 border-gray-700/30' };
+    const info = ACTION_LABELS[action] || { label: action, color: 'bg-dark-muted/20 text-dark-muted border-dark-muted/30' };
     return (
       <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded border ${info.color}`}>
         {info.label}
@@ -78,26 +78,29 @@ const AuditLogViewer: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#171717]">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-gradient-to-r from-red-900 to-red-800 shadow-lg">
+      <header className="border-b border-dark-border bg-dark-surface/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
               <button
                 onClick={() => navigate('/dashboard')}
-                className="text-white hover:text-[#262626] transition-colors mb-2 flex items-center gap-2"
+                className="text-dark-muted hover:text-dark-text transition-colors mb-2 flex items-center gap-2 text-sm tracking-wide"
               >
-                <span>←</span> Back to Dashboard
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
+                Back to Dashboard
               </button>
-              <h1 className="text-3xl font-semibold text-white">Audit Log</h1>
-              <p className="text-white/70 text-sm mt-1">
+              <h1 className="font-display text-2xl tracking-wide text-dark-text">Audit Log</h1>
+              <p className="text-dark-muted text-sm mt-1 tracking-wide">
                 Track all user actions and system events
               </p>
             </div>
             <button
               onClick={handleExportCsv}
-              className="px-5 py-2.5 bg-neutral-200 text-neutral-900 rounded-lg hover:bg-neutral-300 transition-colors font-medium text-sm"
+              className="btn-secondary text-sm"
             >
               Export CSV
             </button>
@@ -107,15 +110,15 @@ const AuditLogViewer: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
-        <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-4 mb-6 flex gap-4 flex-wrap">
+        <div className="card-elevated rounded-lg p-4 mb-6 flex gap-4 flex-wrap">
           <div className="flex-1 min-w-[180px]">
-            <label className="block text-xs font-medium text-neutral-400 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-medium text-dark-muted uppercase tracking-wide mb-1.5">
               Action
             </label>
             <select
               value={actionFilter}
               onChange={(e) => { setActionFilter(e.target.value); setPage(1); }}
-              className="w-full px-3 py-2.5 bg-[#171717] border-2 border-[#404040] rounded-lg text-white focus:border-red-700 focus:outline-none text-sm"
+              className="input-field text-sm"
             >
               <option value="">All Actions</option>
               <option value="create">Create</option>
@@ -129,13 +132,13 @@ const AuditLogViewer: React.FC = () => {
             </select>
           </div>
           <div className="flex-1 min-w-[180px]">
-            <label className="block text-xs font-medium text-neutral-400 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-medium text-dark-muted uppercase tracking-wide mb-1.5">
               Resource Type
             </label>
             <select
               value={resourceFilter}
               onChange={(e) => { setResourceFilter(e.target.value); setPage(1); }}
-              className="w-full px-3 py-2.5 bg-[#171717] border-2 border-[#404040] rounded-lg text-white focus:border-red-700 focus:outline-none text-sm"
+              className="input-field text-sm"
             >
               <option value="">All Types</option>
               <option value="configuration">Configuration</option>
@@ -148,15 +151,15 @@ const AuditLogViewer: React.FC = () => {
         {/* Loading */}
         {isLoading && (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-700 border-t-transparent" />
-            <p className="mt-4 text-gray-400">Loading audit logs...</p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-accent-primary border-t-transparent" />
+            <p className="mt-4 text-dark-muted tracking-wide">Loading audit logs...</p>
           </div>
         )}
 
         {/* Error */}
         {error && (
-          <div className="bg-red-900/30 border-2 border-red-500 rounded-xl p-6 text-center">
-            <p className="text-red-300">
+          <div className="bg-status-offline/10 border border-status-offline/30 rounded-lg p-6 text-center">
+            <p className="text-status-offline">
               {(error as any)?.response?.status === 403
                 ? 'Admin privileges required to view audit logs'
                 : 'Failed to load audit logs'}
@@ -166,37 +169,37 @@ const AuditLogViewer: React.FC = () => {
 
         {/* Table */}
         {!isLoading && !error && data && (
-          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl overflow-hidden">
+          <div className="card-elevated rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-[#171717] border-b-2 border-[#404040]">
+                <thead className="bg-dark-bg border-b border-dark-border">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-red-400 uppercase">Timestamp</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-red-400 uppercase">User</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-red-400 uppercase">Action</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-red-400 uppercase">Resource</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-red-400 uppercase">Details</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-red-400 uppercase">IP</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-dark-muted tracking-wide">Timestamp</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-dark-muted tracking-wide">User</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-dark-muted tracking-wide">Action</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-dark-muted tracking-wide">Resource</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-dark-muted tracking-wide">Details</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-dark-muted tracking-wide">IP</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#404040]">
+                <tbody className="divide-y divide-dark-border">
                   {data.items.map((log: AuditLogEntry) => (
-                    <tr key={log.id} className="hover:bg-[#171717]/50 transition-colors">
-                      <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">
+                    <tr key={log.id} className="hover:bg-dark-bg/50 transition-colors">
+                      <td className="px-4 py-3 text-xs text-dark-muted whitespace-nowrap">
                         {formatDate(log.created_at)}
                       </td>
-                      <td className="px-4 py-3 text-sm text-white">
+                      <td className="px-4 py-3 text-sm text-dark-text">
                         {log.username || `User #${log.user_id}`}
                       </td>
                       <td className="px-4 py-3">{getActionBadge(log.action)}</td>
-                      <td className="px-4 py-3 text-sm text-gray-400">
+                      <td className="px-4 py-3 text-sm text-dark-muted">
                         {log.resource_type}
                         {log.resource_id ? ` #${log.resource_id}` : ''}
                       </td>
-                      <td className="px-4 py-3 text-xs text-gray-500 max-w-xs truncate">
+                      <td className="px-4 py-3 text-xs text-dark-muted/70 max-w-xs truncate">
                         {formatDetails(log.details)}
                       </td>
-                      <td className="px-4 py-3 text-xs text-gray-500 font-mono">
+                      <td className="px-4 py-3 text-xs text-dark-muted/70 font-mono">
                         {log.ip_address || '—'}
                       </td>
                     </tr>
@@ -207,29 +210,29 @@ const AuditLogViewer: React.FC = () => {
 
             {/* Empty */}
             {data.items.length === 0 && (
-              <div className="px-6 py-12 text-center text-gray-400">
+              <div className="px-6 py-12 text-center text-dark-muted">
                 No audit log entries found
               </div>
             )}
 
             {/* Pagination */}
             {data.total > 50 && (
-              <div className="bg-[#171717] border-t-2 border-[#404040] px-6 py-4 flex items-center justify-between">
-                <div className="text-sm text-gray-400">
+              <div className="bg-dark-bg border-t border-dark-border px-6 py-4 flex items-center justify-between">
+                <div className="text-sm text-dark-muted">
                   Showing {(page - 1) * 50 + 1} to {Math.min(page * 50, data.total)} of {data.total} entries
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="px-4 py-2 bg-[#262626] border border-[#404040] rounded text-white hover:bg-[#404040] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                    className="btn-secondary px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => setPage((p) => p + 1)}
                     disabled={page * 50 >= data.total}
-                    className="px-4 py-2 bg-[#262626] border border-[#404040] rounded text-white hover:bg-[#404040] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                    className="btn-secondary px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>

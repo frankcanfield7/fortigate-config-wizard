@@ -33,30 +33,33 @@ const TemplateLibrary: React.FC = () => {
 
   const getConfigTypeInfo = (type: string) => {
     const types: Record<string, { label: string; color: string }> = {
-      ipsec: { label: 'IPSEC Remote Access', color: 'bg-red-700/10 text-red-400 border-red-700/30' },
-      sdwan: { label: 'SD-WAN', color: 'bg-blue-500/10 text-blue-400 border-blue-500/30' },
-      firewall: { label: 'Firewall', color: 'bg-red-500/10 text-red-400 border-red-500/30' },
+      ipsec: { label: 'IPSEC Remote Access', color: 'bg-accent-primary/10 text-accent-primary border-accent-primary/30' },
+      sdwan: { label: 'SD-WAN', color: 'bg-accent-cool/10 text-accent-cool border-accent-cool/30' },
+      firewall: { label: 'Firewall', color: 'bg-status-offline/10 text-status-offline border-status-offline/30' },
     };
-    return types[type] || { label: type, color: 'bg-gray-500/10 text-gray-400 border-gray-500/30' };
+    return types[type] || { label: type, color: 'bg-dark-muted/10 text-dark-muted border-dark-muted/30' };
   };
 
   return (
-    <div className="min-h-screen bg-[#171717]">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-gradient-to-r from-red-900 to-red-800 shadow-lg">
+      <header className="border-b border-dark-border bg-dark-surface/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
               <button
                 onClick={() => navigate('/dashboard')}
-                className="text-white hover:text-[#262626] transition-colors mb-2 flex items-center gap-2"
+                className="text-dark-muted hover:text-dark-text transition-colors mb-2 flex items-center gap-2 text-sm tracking-wide"
               >
-                <span>←</span> Back to Dashboard
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
+                Back to Dashboard
               </button>
-              <h1 className="text-3xl font-semibold text-white">
+              <h1 className="font-display text-2xl tracking-wide text-dark-text">
                 Template Library
               </h1>
-              <p className="text-white/70 text-sm mt-1">
+              <p className="text-dark-muted text-sm mt-1 tracking-wide">
                 Pre-built configurations to get started quickly
               </p>
             </div>
@@ -68,29 +71,28 @@ const TemplateLibrary: React.FC = () => {
         {/* Loading */}
         {isLoading && (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-700 border-t-transparent" />
-            <p className="mt-4 text-gray-400">Loading templates...</p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-accent-primary border-t-transparent" />
+            <p className="mt-4 text-dark-muted tracking-wide">Loading templates...</p>
           </div>
         )}
 
         {/* Error */}
         {error && (
-          <div className="bg-red-900/30 border-2 border-red-500 rounded-xl p-6 text-center">
-            <p className="text-red-300">Failed to load templates</p>
+          <div className="bg-status-offline/10 border border-status-offline/30 rounded-lg p-6 text-center">
+            <p className="text-status-offline">Failed to load templates</p>
           </div>
         )}
 
         {/* Empty State */}
         {!isLoading && !error && (!templates || templates.length === 0) && (
-          <div className="bg-[#262626] border-2 border-[#404040] rounded-xl p-12 text-center">
-            <div className="text-2xl text-gray-500 mb-4">No items</div>
-            <h2 className="text-2xl font-medium text-red-400 mb-2">No Templates Yet</h2>
-            <p className="text-gray-400 mb-6">
+          <div className="card-elevated rounded-lg p-12 text-center">
+            <h2 className="font-display text-xl tracking-wide text-dark-text/90 mb-2">No Templates Yet</h2>
+            <p className="text-dark-muted mb-6">
               Save a configuration as a template from the Configuration Library to see it here.
             </p>
             <button
               onClick={() => navigate('/dashboard/library')}
-              className="px-6 py-3 bg-gradient-to-r from-red-900 to-red-800 text-white rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all font-medium"
+              className="btn-primary"
             >
               Go to Library
             </button>
@@ -105,7 +107,7 @@ const TemplateLibrary: React.FC = () => {
               return (
                 <div
                   key={template.id}
-                  className="bg-[#262626] border-2 border-[#404040] rounded-xl p-6 hover:border-red-700 transition-all flex flex-col"
+                  className="card-interactive rounded-lg p-6 flex flex-col"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-lg border text-xs ${typeInfo.color}`}>
@@ -113,15 +115,15 @@ const TemplateLibrary: React.FC = () => {
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-medium text-white mb-1">{template.name}</h3>
-                  <p className="text-sm text-gray-400 mb-4 flex-1">
+                  <h3 className="font-display text-lg tracking-wide text-dark-text mb-1">{template.name}</h3>
+                  <p className="text-sm text-dark-muted mb-4 flex-1">
                     {template.description || 'No description'}
                   </p>
 
                   <button
                     onClick={() => handleUseTemplate(template.id, template.name)}
                     disabled={createFromTemplateMutation.isPending}
-                    className="w-full py-2.5 px-4 bg-gradient-to-r from-red-900 to-red-800 text-white font-medium rounded-lg hover:shadow-lg hover:shadow-red-700/50 transition-all mt-auto disabled:opacity-50"
+                    className="btn-primary w-full mt-auto disabled:opacity-50"
                   >
                     {createFromTemplateMutation.isPending ? 'Creating...' : 'Use Template'}
                   </button>

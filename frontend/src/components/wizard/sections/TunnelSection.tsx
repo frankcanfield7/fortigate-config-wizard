@@ -27,14 +27,14 @@ const WAN_OPTIONS = [
  * Returns neutral border for empty values, green for valid, red for invalid.
  */
 function borderClass(value: string, validate: (v: string) => { isValid: boolean }): string {
-  if (!value || value.trim() === '') return 'border-neutral-600';
-  return validate(value).isValid ? 'border-green-500' : 'border-red-500';
+  if (!value || value.trim() === '') return 'border-dark-border';
+  return validate(value).isValid ? 'border-status-online' : 'border-status-offline';
 }
 
 const INPUT_BASE =
-  'w-full rounded-lg border bg-neutral-900 px-3 py-2.5 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-600 hover:border-neutral-400 hover:bg-neutral-800/80 hover:shadow-[0_0_12px_rgba(120,120,120,0.06)] text-white placeholder-neutral-500 transition-all duration-200';
+  'input-field text-sm';
 
-const HELP_CLASS = 'text-xs text-neutral-400 mt-1.5 leading-relaxed';
+const HELP_CLASS = 'text-xs text-dark-muted mt-1.5 leading-relaxed';
 
 const TunnelSection: React.FC<TunnelSectionProps> = ({
   tunnels,
@@ -66,7 +66,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
     value: string,
     validate: (v: string) => { isValid: boolean },
   ): string => {
-    if (!isTouched(index, field)) return 'border-neutral-600';
+    if (!isTouched(index, field)) return 'border-dark-border';
     return borderClass(value, validate);
   };
 
@@ -75,11 +75,11 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
       {tunnels.map((tunnel, index) => (
         <div
           key={index}
-          className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 shadow-sm transition-all duration-300 relative"
+          className="card-elevated rounded-lg p-4 transition-all duration-300 relative"
         >
           {/* Tunnel number badge */}
           <div className="flex items-center justify-between mb-3">
-            <span className="inline-flex items-center justify-center bg-red-800 text-white text-xs font-medium rounded px-2 py-0.5">
+            <span className="inline-flex items-center justify-center bg-accent-primary/20 text-accent-primary text-xs font-medium rounded px-2 py-0.5 border border-accent-primary/30">
               #{index + 1}
             </span>
 
@@ -88,7 +88,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
               <button
                 type="button"
                 onClick={() => removeTunnel(index)}
-                className="absolute top-3 right-3 inline-flex items-center justify-center w-7 h-7 rounded-full bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors"
+                className="absolute top-3 right-3 inline-flex items-center justify-center w-7 h-7 rounded-full bg-status-offline/20 hover:bg-status-offline/30 text-status-offline text-sm font-medium transition-colors border border-status-offline/30"
                 aria-label={`Remove tunnel #${index + 1}`}
               >
                 <svg
@@ -111,7 +111,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* VPN Tunnel Name */}
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">
+              <label className="block text-xs font-medium text-dark-text mb-1">
                 VPN Tunnel Name
               </label>
               <input
@@ -128,7 +128,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
               {isTouched(index, 'name') &&
                 tunnel.name.trim() !== '' &&
                 !validateTunnelName(tunnel.name).isValid && (
-                  <p className="mt-1 text-xs text-red-500">
+                  <p className="mt-1 text-xs text-status-offline">
                     {validateTunnelName(tunnel.name).error}
                   </p>
                 )}
@@ -137,7 +137,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
 
             {/* Description / Comments */}
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">
+              <label className="block text-xs font-medium text-dark-text mb-1">
                 Description / Comments
               </label>
               <input
@@ -145,20 +145,20 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
                 value={tunnel.comments}
                 placeholder="Optional"
                 onChange={(e) => updateTunnel(index, 'comments', e.target.value)}
-                className={`${INPUT_BASE} border-neutral-600`}
+                className={`${INPUT_BASE} border-dark-border`}
               />
               <p className={HELP_CLASS}>Optional note for identifying this tunnel's purpose.</p>
             </div>
 
             {/* WAN Interface */}
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">
+              <label className="block text-xs font-medium text-dark-text mb-1">
                 WAN Interface
               </label>
               <select
                 value={tunnel.wanIf}
                 onChange={(e) => updateTunnel(index, 'wanIf', e.target.value)}
-                className={`${INPUT_BASE} border-neutral-600`}
+                className={`${INPUT_BASE} border-dark-border`}
               >
                 {WAN_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -171,7 +171,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
 
             {/* FortiGate Public FQDN / IP */}
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">
+              <label className="block text-xs font-medium text-dark-text mb-1">
                 FortiGate Public FQDN / IP
               </label>
               <input
@@ -188,7 +188,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
               {isTouched(index, 'fqdn') &&
                 tunnel.fqdn.trim() !== '' &&
                 !validateFQDN(tunnel.fqdn).isValid && (
-                  <p className="mt-1 text-xs text-red-500">
+                  <p className="mt-1 text-xs text-status-offline">
                     {validateFQDN(tunnel.fqdn).error}
                   </p>
                 )}
@@ -197,7 +197,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
 
             {/* IKE-SAML Port */}
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">
+              <label className="block text-xs font-medium text-dark-text mb-1">
                 IKE-SAML Port
               </label>
               <input
@@ -215,7 +215,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
               {isTouched(index, 'port') &&
                 tunnel.port.trim() !== '' &&
                 !validateSAMLPort(tunnel.port).isValid && (
-                  <p className="mt-1 text-xs text-red-500">
+                  <p className="mt-1 text-xs text-status-offline">
                     {validateSAMLPort(tunnel.port).error}
                   </p>
                 )}
@@ -229,7 +229,7 @@ const TunnelSection: React.FC<TunnelSectionProps> = ({
       <button
         type="button"
         onClick={addTunnel}
-        className="bg-red-800 hover:bg-red-900 text-white rounded-lg px-4 py-2 text-sm font-medium inline-flex items-center gap-1.5 transition-colors"
+        className="btn-primary rounded-lg px-4 py-2 text-sm font-medium inline-flex items-center gap-1.5"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
