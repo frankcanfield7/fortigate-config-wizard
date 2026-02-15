@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import Login from './components/auth/Login';
-import Register from './components/auth/Register';
+// NOTE: Registration disabled - users are added manually via Supabase dashboard
+// import Register from './components/auth/Register';
 import Dashboard from './components/layout/Dashboard';
 import ConfigWizard from './components/wizard/ConfigWizard';
 import ConfigLibrary from './components/library/ConfigLibrary';
@@ -29,7 +30,8 @@ function App() {
           <Routes>
             {/* Public routes */}
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            {/* Registration disabled - redirect to login */}
+            <Route path="/register" element={<Navigate to="/login" replace />} />
 
             {/* Protected routes */}
             <Route

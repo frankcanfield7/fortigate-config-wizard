@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Login: React.FC = () => {
@@ -144,16 +144,10 @@ const Login: React.FC = () => {
             </button>
           </form>
 
-          {/* Register Link */}
+          {/* Contact admin for account */}
           <div className="mt-6 text-center">
             <p className="text-gray-400 text-sm">
-              Don't have an account?{' '}
-              <Link
-                to="/register"
-                className="text-red-400 hover:text-red-300 font-medium transition-colors"
-              >
-                Register here
-              </Link>
+              Need an account? Contact your administrator.
             </p>
           </div>
         </div>
